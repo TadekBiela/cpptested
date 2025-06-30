@@ -44,6 +44,9 @@ author:
   avatar : "/assets/images/bio-photo.jpg"
   bio    : "Jestem programistą C++ z wieloletnim doświadczeniem i pasją do jakościowego kodu. Na blogu dzielę się wiedzą o C++, TDD, testach jednostkowych, refaktoryzacji i wielowątkowości."
   links:
+    - label: "E-mail"
+      icon: "fas fa-fw fa-envelope"
+      url: "mailto:tadek.biela@gmail.com"
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
       url: "https://www.linkedin.com/in/tadeuszbiela/"
