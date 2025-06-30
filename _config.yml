@@ -73,6 +73,7 @@ defaults:
       path: ""
       type: posts
     values:
+      title_recent_posts: "Najnowsze wpisy"
       layout: single
       author_profile: true
       read_time: true
