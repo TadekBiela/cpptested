@@ -65,6 +65,7 @@ footer:
     - label: "RSS"
       icon: "fas fa-fw fa-rss"
       url: "/feed.xml"
+show_feed: false
 
 defaults:
   # _posts
