@@ -1,5 +1,6 @@
-title: Cpp Tested
+title: CppTested
 locale: pl
+theme: minimal-mistakes-jekyll
 email: tadek.biela@gmail.com
 description: >-
   Blog o Test Driven Development, testach jednostkowych i nowoczesnym C++. Dla programistów, którzy chcą pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.
@@ -9,7 +10,7 @@ search: true
 
 # Build settings
 markdown: kramdown
-remote_theme: mmistakes/minimal-mistakes
+
 # Outputting
 permalink: /:categories/:title/
 paginate: 5 # amount of posts to show
@@ -63,10 +64,6 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/TadekBiela"
-    - label: "RSS"
-      icon: "fas fa-fw fa-rss"
-      url: "/feed.xml"
-show_feed: false
 
 defaults:
   # _posts

@@ -8,22 +8,95 @@ search: false
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
-.site-header {
+.masthead,
+.greedy-nav {
   background-color: #4F4F4F;
+  font-family: Courier, monospace;
+  font-weight: bold;
+  text-transform: none;
 }
 
-.site-title {
-  font-family: Consolas, monospace;
+.greedy-nav .visible-links a:before {
+  background-color: #10A63E;
+}
+
+.greedy-nav .site-title {
+  display: none;
+}
+
+.greedy-nav .site-logo span {
+  display: table-cell;
   font-weight: normal;
-  font-size: 1.6rem;
-  text-transform: none;
+  font-size: 2rem;
+  margin: 0;
+  padding: 0;
 }
 
 .masthead a,
 .masthead a:visited {
+  background-color: #4F4F4F;
   color: #FAFAFA;
 }
 
 .masthead a:hover {
   color: #10A63E;
 }
+
+.search__toggle {
+  color: #FAFAFA;
+}
+
+.search__toggle:hover {
+  color: #10A63F;
+}
+
+.navicon,
+.navicon:before,
+.navicon:after,
+.greedy-nav__toggle:hover .navicon,
+.greedy-nav__toggle:hover .navicon:before,
+.greedy-nav__toggle:hover .navicon:after {
+  background: #FAFAFA;
+}
+
+.greedy-nav__toggle:hover.close .navicon:before,
+.greedy-nav__toggle:hover.close .navicon:after {
+  background: #10A63F;
+}
+
+.blinking-cursor {
+  color: #FAFAFA;
+  animation: blink 1s step-start infinite;
+  font-family: none;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.u-photo,
+.sidebar .author__name {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sidebar p, .sidebar li {
+  text-align: center;
+}
+
+.page__content {
+  color: #646769;
+  text-align: justify;
+}
+
+.page__title {
+  color: #646769;
+}
+
+h1 {
+  font-size: 1.3rem
+}
+
