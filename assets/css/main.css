@@ -4252,3 +4252,10 @@ body {
 
 h1 {
   font-size: 1.3rem; }
+
+.author__avatar {
+  width: 50px;
+  height: 50px; }
+
+.author__urls-wrapper {
+  vertical-align: top; }
