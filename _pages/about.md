@@ -13,4 +13,3 @@ Chcę przekonać programistów C++, że dobry kod to kod, któremu można zaufa�
 
 Zapraszam Cię do lektury wpisów, komentowania, obserwowania mnie na LinkedIn oraz GitHubie i kontaktu — jeśli szukasz wsparcia w TDD, testowaniu wielowątkowości lub chcesz wprowadzić lepsze praktyki testowe w swoim zespole.
 
-Działajmy razem, by kod w C++ był bezpieczniejszy, bardziej przewidywalny i łatwiejszy w utrzymaniu.
