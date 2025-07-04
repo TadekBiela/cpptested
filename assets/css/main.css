@@ -4264,4 +4264,20 @@ h1 {
 
 @media (min-width: 64em) {
   .sidebar.sticky {
-    overflow-y: unset; } }
+    overflow-y: unset; }
+
+  .sidebar__right {
+    top: -60px; } }
+a,
+a::before,
+a:visited {
+  color: #4F4F4F; }
+
+.toc .nav__title,
+.nav__title {
+  background: #4F4F4F; }
+
+a:hover,
+.toc__menu a:hover,
+.page__taxonomy-item:hover {
+  color: #10A63F; }
