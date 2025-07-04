@@ -71,11 +71,11 @@ defaults:
       type: posts
     values:
       layout: single
-      author_profile: true
-      read_time: true
       comments: true
-      share: true
+      read_time: true
       related: true
+      share: true
+      toc: true
   # _pages
   - scope:
       path: _pages
@@ -100,3 +100,20 @@ social:
     - "https://github.com/TadekBiela"
 
 google_analytics: G-HKF97SJC9Z
+
+comments:
+  provider: "giscus"
+  giscus:
+    repo: "TadekBiela/cpptested"
+    repo_id: "R_kgDOPEW3uQ"
+    category: "Announcements"
+    category_id: "DIC_kwDOPEW3uc4CsbpH"
+    mapping: "pathname"
+    strict: "0"
+    reactions_enabled: "1"
+    emit_metadata: "0"
+    input_position: "top"
+    theme: "light"
+    lang: "pl"
+    loading: "lazy"
+
