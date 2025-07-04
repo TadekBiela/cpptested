@@ -1094,7 +1094,7 @@ pl: &DEFAULT_PL
   comments_title             : "Komentarze"
   more_label                 : "Dowiedz się więcej"
   related_label              : "Także może Ci się spodobać"
-  follow_label               : "Subskrybuj:"
+  follow_label               : "Obserwuj:"
   feed_label                 : "RSS"
   powered_by                 : "Powstało dzięki"
   website_label              : "Strona"
