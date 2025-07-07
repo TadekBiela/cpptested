@@ -2,7 +2,7 @@ title: CppTested
 locale: pl
 email: tadek.biela@gmail.com
 description: >-
-  Blog o Test Driven Development, testach jednostkowych i nowoczesnym C++. Dla programistów, którzy chcą pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.
+  Blog o&nbsp;Test Driven Development, testach jednostkowych i&nbsp;nowoczesnym C++. Dla programistów, którzy chcą pisać lepszy, bezpieczniejszy i&nbsp;bardziej przewidywalny kod.
 github_username: TadekBiela
 minimal_mistakes_skin: default
 search: true
@@ -43,7 +43,7 @@ plugins:
 author:
   name   : "Tadeusz Biela"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Jestem programistą C++ z wieloletnim doświadczeniem i pasją do jakościowego kodu. Na blogu dzielę się wiedzą o C++, TDD, testach jednostkowych, refaktoryzacji i wielowątkowości."
+  bio    : "Jestem programistą C++ z&nbsp;wieloletnim doświadczeniem i&nbsp;pasją do jakościowego kodu. Na blogu dzielę się wiedzą o&nbsp;C++, TDD, testach jednostkowych, refaktoryzacji i&nbsp;wielowątkowości."
   links:
     - label: "E-mail"
       icon: "fas fa-fw fa-envelope"
