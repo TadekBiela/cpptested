@@ -73,6 +73,7 @@ defaults:
       layout: single
       comments: true
       read_time: true
+      show_date: true
       related: true
       share: true
       toc: true
