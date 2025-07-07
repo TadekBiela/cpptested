@@ -2,7 +2,7 @@ title: CppTested
 locale: pl
 email: tadek.biela@gmail.com
 description: >-
-  Blog o&nbsp;Test Driven Development, testach jednostkowych i&nbsp;nowoczesnym C++. Dla programistów, którzy chcą pisać lepszy, bezpieczniejszy i&nbsp;bardziej przewidywalny kod.
+  Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.
 github_username: TadekBiela
 minimal_mistakes_skin: default
 search: true
