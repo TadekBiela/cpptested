@@ -4281,3 +4281,15 @@ a:hover,
 .toc__menu a:hover,
 .page__taxonomy-item:hover {
   color: #10A63F; }
+
+@media (min-width: 80em) {
+  .page {
+    width: 100%; } }
+@media (min-width: 80em) {
+  .archive {
+    padding-inline-end: 0px; } }
+@media (min-width: 64em) {
+  .archive {
+    padding-inline-end: 0px; } }
+.archive {
+  margin-top: 0em; }
