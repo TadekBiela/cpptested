@@ -1,6 +1,7 @@
 ---
 permalink: /about/
 title: "O mnie"
+layout: page
 ---
 
 Witam na moim blogu, nazywam się Tadeusz Biela. Od ponad 8&nbsp;lat programuję w&nbsp;C++ i&nbsp;pokazuję, że TDD oraz dobre testy jednostkowe mają realne zastosowanie także w&nbsp;tym języku.
