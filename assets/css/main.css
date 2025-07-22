@@ -4183,12 +4183,12 @@ body {
 .masthead,
 .greedy-nav {
   background-color: #4F4F4F;
-  font-family: Courier, monospace;
+  font-family: "Consolas", monospace;
   font-weight: bold;
   text-transform: none; }
 
 .greedy-nav .visible-links a:before {
-  background-color: #10A63E; }
+  background-color: #10A63F; }
 
 .greedy-nav .site-title {
   display: none; }
@@ -4206,7 +4206,7 @@ body {
   color: #FAFAFA; }
 
 .masthead a:hover {
-  color: #10A63E; }
+  color: #10A63F; }
 
 .search__toggle {
   color: #FAFAFA; }
@@ -4238,17 +4238,20 @@ body {
 .sidebar .author__name {
   display: table;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  font-family: "Consolas"; }
 
 .sidebar p, .sidebar li {
-  text-align: center; }
+  text-align: center;
+  font-family: "Consolas"; }
 
 .page__content {
   color: #646769;
   text-align: justify; }
 
 .page__title {
-  color: #646769; }
+  color: #646769;
+  margin-top: 1em; }
 
 h1 {
   font-size: 1.3rem; }
@@ -4273,19 +4276,42 @@ a::before,
 a:visited {
   color: #4F4F4F; }
 
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.archive__item-title,
+.comment__date,
+.page__meta,
+.comment__date,
+.page__footer-copyright,
+.page__footer-follow li,
+.toc {
+  font-family: "Consolas"; }
+
 .toc .nav__title,
 .nav__title {
-  background: #4F4F4F; }
+  background: #4F4F4F;
+  font-family: "Consolas"; }
 
 a:hover,
 .toc__menu a:hover,
 .page__taxonomy-item:hover {
   color: #10A63F; }
 
+.layout--single .page {
+  width: 100%; }
+
+.layout--page .page {
+  padding-inline-end: 0px; }
+
 @media (min-width: 80em) {
-  .page {
-    width: 100%; } }
-@media (min-width: 80em) {
+  .page__content {
+    width: auto; }
+
   .archive {
     padding-inline-end: 0px; } }
 @media (min-width: 64em) {
