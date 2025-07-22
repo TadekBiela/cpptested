@@ -4239,11 +4239,11 @@ body {
   display: table;
   margin-left: auto;
   margin-right: auto;
-  font-family: "Consolas"; }
+  font-family: "Consolas", Courier, monospace; }
 
 .sidebar p, .sidebar li {
   text-align: center;
-  font-family: "Consolas"; }
+  font-family: "Consolas", Courier, monospace; }
 
 .page__content {
   color: #646769;
@@ -4290,12 +4290,12 @@ h6,
 .page__footer-copyright,
 .page__footer-follow li,
 .toc {
-  font-family: "Consolas"; }
+  font-family: "Consolas", Courier, monospace; }
 
 .toc .nav__title,
 .nav__title {
   background: #4F4F4F;
-  font-family: "Consolas"; }
+  font-family: "Consolas", Courier, monospace; }
 
 a:hover,
 .toc__menu a:hover,
