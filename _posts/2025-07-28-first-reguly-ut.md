@@ -49,7 +49,7 @@ Sytuacja, w&nbsp;której jeden test nie przechodzi tylko dlatego, że&nbsp;inny 
 Framework testowy Google Test domyślnie uruchamia testy w&nbsp;sposób losowy, dzięki czemu złamanie tej reguły powinno wyjść bardzo szybko.
 
 Częstym powodem zależności między testami są&nbsp;zmienne globalne. Istnieją techniki odcinania zależności od&nbsp;zmiennych globalnych czy wolnych funkcji (niezwiązanych z&nbsp;żadnym obiektem).
-W mojej ocenie jedną z&nbsp;najlepszych jest opakowanie użycia zmiennej globalnej (czy też funkcji) w&nbsp;metodę klasy w&nbsp;sekcji protected. Tak, aby&nbsp;można było przysłonić jej zachowanie w&nbsp;testach, tworząc klasę Testable.
+W&nbsp;mojej ocenie jedną z&nbsp;najlepszych jest opakowanie użycia zmiennej globalnej (czy też funkcji) w&nbsp;metodę klasy w&nbsp;sekcji protected. Tak, aby&nbsp;można było przysłonić jej zachowanie w&nbsp;testach, tworząc klasę Testable.
 
 Technik radzenia sobie ze zmiennymi globalnymi jest więcej i&nbsp;można je znaleźć w&nbsp;tak świetnych książkach jak "Praca z&nbsp;zastanym kodem" czy "Refaktoryzacja. Ulepszanie struktury istniejącego kodu".
 
@@ -66,7 +66,7 @@ Tutaj znów przyczyną może być dostęp do&nbsp;systemu plików. Gdy w&nbsp;je
 Inną przyczyną może być korzystanie ze zmiennych środowiskowych.
 Tak czy inaczej – takie praktyki przeczą idei unit testów, jaką jest izolacja: odcięcie zewnętrznych zależności i&nbsp;testowanie małego fragmentu w&nbsp;przygotowanym do&nbsp;tego środowisku i&nbsp;scenariuszu.
 
-W mojej ocenie korzystanie z&nbsp;zewnętrznych zależności w&nbsp;testach to&nbsp;droga na skróty, która w&nbsp;dłuższej perspektywie rodzi więcej problemów, niż&nbsp;daje korzyści.
+W&nbsp;mojej ocenie korzystanie z&nbsp;zewnętrznych zależności w&nbsp;testach to&nbsp;droga na skróty, która w&nbsp;dłuższej perspektywie rodzi więcej problemów, niż&nbsp;daje korzyści.
 
 
 ### S jak Self-Validating
@@ -94,7 +94,7 @@ Timely nie odnosi się już do&nbsp;tego, jak&nbsp;pisać unit testy, tylko jak 
 
 ### Podsumowanie
 
-W tym wpisie starałem się przybliżyć pięć cech dobrych unit testów. Są&nbsp;to&nbsp;drogowskazy pomagające nam nie tylko pisać testy lepiej, ale przede wszystkim pracować z&nbsp;nimi na co dzień.
+W&nbsp;tym wpisie starałem się przybliżyć pięć cech dobrych unit testów. Są&nbsp;to&nbsp;drogowskazy pomagające nam nie tylko pisać testy lepiej, ale przede wszystkim pracować z&nbsp;nimi na co dzień.
 Trzymając się tych reguł, z&nbsp;pewnością odczujemy różnicę w&nbsp;codziennej pracy – zyskując kontrolę nad zmianami, większe zaufanie do&nbsp;kodu i&nbsp;pewność, że&nbsp;nie wprowadzimy regresji.
 
 **Autor:** Tadeusz Biela  
