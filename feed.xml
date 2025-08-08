@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2025-07-28T08:49:38+02:00</updated><id>/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">F.I.R.S.T. - jak pisać unit testy lepiej.</title><link href="/unit%20testing/first-reguly-ut/" rel="alternate" type="text/html" title="F.I.R.S.T. - jak pisać unit testy lepiej." /><published>2025-07-28T00:00:00+02:00</published><updated>2025-07-28T00:00:00+02:00</updated><id>/unit%20testing/first-reguly-ut</id><content type="html" xml:base="/unit%20testing/first-reguly-ut/"><![CDATA[<p>F.I.R.S.T. to pewien standard, jaki unit testy powinny spełniać. To zbiór założeń, które wyznaczają kierunek, jaki powinniśmy obierać, pisząc testy.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2025-08-09T00:35:13+02:00</updated><id>/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">F.I.R.S.T. - jak pisać unit testy lepiej.</title><link href="/unit%20testing/first-reguly-ut/" rel="alternate" type="text/html" title="F.I.R.S.T. - jak pisać unit testy lepiej." /><published>2025-07-28T00:00:00+02:00</published><updated>2025-07-28T00:00:00+02:00</updated><id>/unit%20testing/first-reguly-ut</id><content type="html" xml:base="/unit%20testing/first-reguly-ut/"><![CDATA[<p>F.I.R.S.T. to pewien standard, jaki unit testy powinny spełniać. To zbiór założeń, które wyznaczają kierunek, jaki powinniśmy obierać, pisząc testy.</p>
 
 <h3 id="f-jak-fast">F jak Fast</h3>
 
@@ -33,7 +33,7 @@ Gdy zaczynamy myśleć o zrobieniu czegoś innego, oczekując na wyniki unit te
 Framework testowy Google Test domyślnie uruchamia testy w sposób losowy, dzięki czemu złamanie tej reguły powinno wyjść bardzo szybko.</p>
 
 <p>Częstym powodem zależności między testami są zmienne globalne. Istnieją techniki odcinania zależności od zmiennych globalnych czy wolnych funkcji (niezwiązanych z żadnym obiektem).
-W mojej ocenie jedną z najlepszych jest opakowanie użycia zmiennej globalnej (czy też funkcji) w metodę klasy w sekcji protected. Tak, aby można było przysłonić jej zachowanie w testach, tworząc klasę Testable.</p>
+W mojej ocenie jedną z najlepszych jest opakowanie użycia zmiennej globalnej (czy też funkcji) w metodę klasy w sekcji protected. Tak, aby można było przysłonić jej zachowanie w testach, tworząc klasę Testable.</p>
 
 <p>Technik radzenia sobie ze zmiennymi globalnymi jest więcej i można je znaleźć w tak świetnych książkach jak “Praca z zastanym kodem” czy “Refaktoryzacja. Ulepszanie struktury istniejącego kodu”.</p>
 
@@ -49,7 +49,7 @@ Gdy unit test zwraca jeden wynik w środowisku A, a inny wynik w środowisku
 <p>Inną przyczyną może być korzystanie ze zmiennych środowiskowych.
 Tak czy inaczej – takie praktyki przeczą idei unit testów, jaką jest izolacja: odcięcie zewnętrznych zależności i testowanie małego fragmentu w przygotowanym do tego środowisku i scenariuszu.</p>
 
-<p>W mojej ocenie korzystanie z zewnętrznych zależności w testach to droga na skróty, która w dłuższej perspektywie rodzi więcej problemów, niż daje korzyści.</p>
+<p>W mojej ocenie korzystanie z zewnętrznych zależności w testach to droga na skróty, która w dłuższej perspektywie rodzi więcej problemów, niż daje korzyści.</p>
 
 <h3 id="s-jak-self-validating">S jak Self-Validating</h3>
 
@@ -74,7 +74,7 @@ Timely nie odnosi się już do tego, jak pisać unit testy, tylko jak ich uży
 
 <h3 id="podsumowanie">Podsumowanie</h3>
 
-<p>W tym wpisie starałem się przybliżyć pięć cech dobrych unit testów. Są to drogowskazy pomagające nam nie tylko pisać testy lepiej, ale przede wszystkim pracować z nimi na co dzień.
+<p>W tym wpisie starałem się przybliżyć pięć cech dobrych unit testów. Są to drogowskazy pomagające nam nie tylko pisać testy lepiej, ale przede wszystkim pracować z nimi na co dzień.
 Trzymając się tych reguł, z pewnością odczujemy różnicę w codziennej pracy – zyskując kontrolę nad zmianami, większe zaufanie do kodu i pewność, że nie wprowadzimy regresji.</p>
 
 <p><strong>Autor:</strong> Tadeusz Biela<br />
