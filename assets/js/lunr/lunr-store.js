@@ -4,4 +4,10 @@ var store = [{
         "tags": ["clean code","software testing","code quality","refactoring","developer practices"],
         "url": "/unit%20testing/first-reguly-ut/",
         "teaser": null
+      },{
+        "title": "Czym jest TDD i czy warto je stosować?",
+        "excerpt":"Test Driven Development to metoda pracy, która bazuje głównie na unit testach. Tworzymy oprogramowanie w cyklach, przyrostowo, a każda zmiana poprzedzona jest testem. Czym jest TDD. Dla niektórych TDD to zasada, najpierw test (test first), dla innych wręcz wszystkie testy trzeba napisać przed implementacją. Część będzie twierdziła, że to tylko zbędne ograniczenie podczas implementacji, hamujące...","categories": ["tdd"],
+        "tags": ["clean code","code quality","developer practices","refactoring","test driven development"],
+        "url": "/tdd/about-tdd/",
+        "teaser": null
       }]
