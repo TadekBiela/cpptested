@@ -4273,7 +4273,10 @@ h1 {
     top: -60px; }
 
   .sticky {
-    position: relative; } }
+    position: relative; }
+
+  .page__related {
+    float: inline-start; } }
 a,
 a::before,
 a:visited {
