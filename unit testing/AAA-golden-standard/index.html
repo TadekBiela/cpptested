@@ -1,0 +1,729 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.0 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="pl" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>AAA - złoty standard unit testów. - CppTested</title>
+<meta name="description" content="Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl">
+<meta property="og:site_name" content="CppTested">
+<meta property="og:title" content="AAA - złoty standard unit testów.">
+<meta property="og:url" content="/unit%20testing/AAA-golden-standard/">
+
+
+  <meta property="og:description" content="Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-09-15T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="/unit%20testing/AAA-golden-standard/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CppTested Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HKF97SJC9Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HKF97SJC9Z');
+</script>
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Przejdź do nawigacji</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Przejdź do treści</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Przejdź do stopki</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+	<a href="/" class="site-logo">
+	  <span style="color: white; font-family: Courier, monospace;">Cpp</span>
+  	  <span style="color: #28a745; font-family: Courier, monospace;">Tested</span>
+	  <span class="blinking-cursor">|</span>
+	</a>	
+        <a class="site-title" href="/">
+          CppTested
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/posts/"
+                
+                
+              >Wpisy</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/categories/"
+                
+                
+              >Kategorie</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/tags/"
+                
+                
+              >Tagi</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/about/"
+                
+                
+              >O mnie</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Przełącz wyszukiwanie</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Przełącz menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AAA - złoty standard unit testów.">
+    <meta itemprop="description" content="Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki.">
+    <meta itemprop="datePublished" content="2025-09-15T00:00:00+02:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="/unit%20testing/AAA-golden-standard/" itemprop="url">AAA - złoty standard unit testów.
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-09-15T00:00:00+02:00">September 15, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Spis treści</h4></header>
+              <ul class="toc__menu"><li><a href="#aaa---złoty-standard">AAA - złoty standard</a></li><li><a href="#arrange">Arrange</a></li><li><a href="#act">Act</a></li><li><a href="#assert">Assert</a></li><li><a href="#przykład-użycia-triplea">Przykład użycia triple A</a></li><li><a href="#nazwa-testu">Nazwa testu</a></li><li><a href="#wyjątki-od-aaa">Wyjątki od AAA</a></li><li><a href="#gwt">GWT</a></li><li><a href="#podsumowanie">Podsumowanie</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki.</p>
+
+<p>A czym jest to całe AAA? Zacznijmy od początku.</p>
+
+<h3 id="aaa---złoty-standard">AAA - złoty standard</h3>
+
+<p>O zasadzie AAA (triple A) piszę w swojej świetnej książce: <a href="https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji" target="_blank" rel="noopener">“Testy jednostkowe. Świat niezawodnych aplikacji”</a> (The Art of Unit Testing) - Roy Osherove. Nie jest on wprawdzie jej bezpośrednim autorem, lecz wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie jest zależna od użytej technologii. Świetnie sprawdza się również w świecie C++.</p>
+
+<p>No dobrze, ale czym ta zasada jest i o czym mówi?</p>
+
+<p>AAA - mówi o tym, by podzielić test na trzy logiczne bloki: Arrange, Act i Assert.</p>
+
+<h3 id="arrange">Arrange</h3>
+
+<p>W pierwszym bloku kodu naszego testu przygotowujemy wszystko, co niezbędne, aby naszą testowaną metodę lub funkcję sprawdzić. Przygotowujemy dane wejściowe oraz oczekiwane dane wyjściowe. Tworzymy stuby i mocki oraz ustawiamy ich niezbędne zachowanie względem naszej testowanej jednostki. W tym bloku możemy także wywołać inne metody testowanej klasy, jeśli są nam potrzebne do uzyskania odpowiedniego stanu obiektu. Oczywiście te metody również powinny być zweryfikowane w osobnych testach.</p>
+
+<h3 id="act">Act</h3>
+
+<p>Drugim blokiem jest uruchomienie naszej testowanej metody/funkcji. Najczęściej będzie to pojedyncza linijka kodu, ale nie zawsze. Czasem bywa tak, że działanie naszej testowanej metody jest inne, gdy wywołamy ją kilkukrotnie. Jeśli to jest przedmiotem naszego unit testu, to wtedy jak najbardziej również umieszczamy wszystkie wywołania w bloku <strong>Act</strong>.</p>
+
+<h3 id="assert">Assert</h3>
+
+<p>Trzecim i ostatnim blokiem jest weryfikacja. Tutaj sprawdzamy, czy wartości zwracane przez naszą jednostkę są zgodne z oczekiwanymi. Również tutaj weryfikujemy stan obiektu, jeśli jest to oczekiwane zachowanie testowanej metody. Można spotkać się z zasadą “jedna asercja na test”. Jeśli potraktujemy ją dosłownie, to powielimy testy tylko po to, by zachować tę zasadę i wywoływać pojedynczy ASSERT w teście. Lecz nie o to w niej chodzi, tylko o spójny kontekst asercji. Samych wywołań może być więcej, jeśli tylko są one ściśle powiązane.</p>
+
+<h3 id="przykład-użycia-triplea">Przykład użycia triple A</h3>
+
+<p>Spójrz na poniższy przykład testu niekorzystającego z AAA, czy potrafisz odgadnąć co jest w zasadzie testowane?</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">testCollectingTemperatures</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+
+    <span class="n">TemperatureSensorFactoryStub</span> <span class="n">factory</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName1</span><span class="p">{</span> <span class="s">"temp_core_1"</span> <span class="p">};</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="mf">47.3</span><span class="p">));</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName2</span><span class="p">{</span> <span class="s">"temp_core_2"</span> <span class="p">};</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName2</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">));</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName3</span><span class="p">{</span> <span class="s">"temp_board_0"</span> <span class="p">};</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName3</span><span class="p">,</span> <span class="mf">65.1</span><span class="p">));</span>
+
+    <span class="k">auto</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">();</span>
+    <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName2</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
+
+    <span class="n">EXPECT_FLOAT_EQ</span><span class="p">(</span><span class="mf">34.13</span><span class="p">,</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A teraz ten sam test, tylko sformatowany zgodnie z triple A(na co dzień nie dodaję takich komentarzy ;) ):</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">testCollectingTemperatures</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//Arrange</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName1</span><span class="p">{</span> <span class="s">"temp_core_1"</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName2</span><span class="p">{</span> <span class="s">"temp_core_2"</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName3</span><span class="p">{</span> <span class="s">"temp_board_0"</span> <span class="p">};</span>
+    <span class="n">TemperatureSensorFactoryStub</span> <span class="n">factory</span><span class="p">;</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+
+    <span class="c1">//Act</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="mf">47.3</span><span class="p">));</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName2</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">));</span>
+    <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName3</span><span class="p">,</span> <span class="mf">65.1</span><span class="p">));</span>
+
+    <span class="c1">//Assert</span>
+    <span class="k">auto</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">();</span>
+    <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName2</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
+    <span class="n">EXPECT_FLOAT_EQ</span><span class="p">(</span><span class="mf">34.13</span><span class="p">,</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Od razu widać, co jest przedmiotem testu, co jest wymagane na początku oraz jaki wynik będzie oczekiwany. Mimo iż sama nazwa testu nie mówi nam wiele, szybkie spojrzenie na kod daje jednak jasny obraz tego, co unit test sprawdza. No właśnie, nazwa testu… czy można coś z tym zrobić?</p>
+
+<h3 id="nazwa-testu">Nazwa testu</h3>
+
+<p>Standard AAA możemy również wykorzystać przy nadawaniu nazw unit testów. Główną zaletą AAA jest poprawa czytelności testów. Dobra nazwa to nie taka prosta sprawa, jeśli nie zna się przydatnych wytycznych.
+Dla przykładu zwykła lub “zła” nazwa testu:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorTests</span><span class="p">,</span> <span class="n">test_no_avg_temp</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Czy domyślasz się, co jest testowane? W jakich warunkach? Co jest wynikiem testu?
+Jeśli się domyślasz, ale tego nie wiesz, już po samej nazwie, to nie jest ona do końca trafiona, prawda?</p>
+
+<p>Ok, spróbujmy teraz z taką nazwą:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorTests</span><span class="p">,</span> <span class="n">calculateAverageTemp_emptyTemperatureInput_ReturnZero</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Lepiej? Nie wiem jak dla Ciebie, ale dla mnie, tak! Zdecydowanie widać co jest testowane, jak i co będzie wynikiem.
+Tym właśnie jest AAA - trzy części nazwy unit testu, w skrócie, schemat budowy nazwy testów wygląda tak:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TestowanaKlasaTest</span><span class="p">,</span> <span class="n">nazwaTestowanejMetody_ScenariuszTestowyZawieraj</span><span class="err">ą</span><span class="n">cyDaneWej</span><span class="err">ś</span><span class="n">ciowe_WynikCzyliToCoMaSi</span><span class="err">ę</span><span class="n">Sta</span><span class="err">ć</span><span class="n">PoWykonaniuTestowanejMetody</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Powróćmy do naszego przykładowego unit testu i zastosujmy AAA do jego nazwy. Znając wytyczne, zamiast takiej nazwy:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">testCollectingTemperatures</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Powinniśmy otrzymać coś w tym rodzaju:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">addSensor_AddThreeValidSensors_StoreAllSensorsAndReturnCorrectAverageTemperature</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Teraz, nie znając ciała testu, łatwo możemy określić co on robi. A dlaczego taki format, a nie inny? Dla przykładu zróbmy listę kilku takich nazw:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">addSensor_AddOneValidSensor_StoreSensorAndReturnAverageTemperatureSameAsSensorTemperature</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">addSensor_AddTwoSensorsOneValid_StoreOneSensorAndReturnAverageTemperatureSameAsSensorTemperature</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">addSensor_AddThreeSensorsAllNoValid_NotStoreAnySensorAndReturnZeroAsAverageTemperature</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getTemps_NoAddedSensors_ReturnsEmptyContainer</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getTemps_ThreeSensorsAdded_ReturnsThreeSensors</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getAvgTemp_NoAddedSensors_ReturnsZero</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getAvgTemp_AddedOneSensor_ReturnsSameTemperatureAsSensor</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Przeglądając taki zestaw nazw, szybko zweryfikujemy, czy i jakie metody naszej klasy są przetestowane oraz w jakich warunkach. To miałem na myśli, pisząc o przypadkach użycia. Wystarczy nam lista nazw unit testów i mamy nie tylko zakres testowania, ale także funkcjonalne i zawsze aktualne sposoby użycia naszej klasy. Nawet osoba nietechniczna będzie w stanie ogarnąć, co jest testowane i w jakim zakresie. Nie musi analizować kodu testów.</p>
+
+<h3 id="wyjątki-od-aaa">Wyjątki od AAA</h3>
+
+<p>Od podziału na 3 bloki są pewne wyjątki. Możemy mieć sytuację, gdy chcemy, na przykład przetestować domyślne zachowanie konstruktora i w tym przypadku akurat nie mamy nic do zainicjalizowania. Wtedy po prostu bloku <strong>Arrange</strong> nie ma w teście i to jest ok.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">DoorsLockTests</span><span class="p">,</span> <span class="n">constructor_DefaultBehavior_ShouldReturnEmptyTemps</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">();</span>
+    <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Inny przykład, gdy jedynym oczekiwanym wynikiem naszej testowanej metody jest wartość przez nią zwrócona. Wtedy <strong>Act</strong> i <strong>Assert</strong> występują razem.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getAvgTemp_NoAddedSensors_ReturnsZero</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+
+    <span class="n">EXPECT_FLOAT_EQ</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Możemy również dodać zmienną wynikową, by zachować podział na 3 bloki. Takie rozwiązanie też jest dobre.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getAvgTemp_NoAddedSensors_ReturnsZero</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">result</span><span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">()</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_FLOAT_EQ</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Ostatnim przykładem może być test zawierający tylko jedną linijkę kodu.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">constructor_DefaultBehavior_ShouldNoThrowAnyException</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">EXPECT_NO_THROW</span><span class="p">(</span><span class="n">TemperatureSensorManager</span><span class="p">{});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Zauważ, że we wszystkich przykładach nazwa wciąż zawiera podział zgodny z AAA. Mimo, że samych bloków może brakować, to wciąż test jest czytelny i łatwy do zrozumienia.</p>
+
+<h3 id="gwt">GWT</h3>
+
+<p>W Internecie możesz spotkać się z nazwą GWT. To w zasadzie to samo.
+GWT czyli Give(Arrnage) When(Act) Then(Assert). Ja osobiście wolę triple A ;)</p>
+
+<h3 id="podsumowanie">Podsumowanie</h3>
+
+<p>I to już cały opis triple A. Mam nadzieję, że znajomość złotego standardu podniesie jakość także w Twoich testach. Jak dla mnie AAA naprawdę sporo wnosi i nie widzę żadnych przeciwwskazań do jego stosowania. Po prostu spróbuj!</p>
+
+<p><strong>Autor:</strong> Tadeusz Biela<br />
+Programista C++ | Entuzjasta TDD | Fan unit testów</p>
+
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tagi: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#clean-code" class="page__taxonomy-item p-category" rel="tag">clean code</a><span class="sep">, </span>
+    
+      <a href="/tags/#code-quality" class="page__taxonomy-item p-category" rel="tag">code quality</a><span class="sep">, </span>
+    
+      <a href="/tags/#developer-practices" class="page__taxonomy-item p-category" rel="tag">developer practices</a><span class="sep">, </span>
+    
+      <a href="/tags/#refactoring" class="page__taxonomy-item p-category" rel="tag">refactoring</a><span class="sep">, </span>
+    
+      <a href="/tags/#software-testing" class="page__taxonomy-item p-category" rel="tag">software testing</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Kategorie: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#unit-testing" class="page__taxonomy-item p-category" rel="tag">unit testing</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Ostatnia aktualizacja:</strong> <time class="dt-published" datetime="2025-09-15T00:00:00+02:00">September 15, 2025</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Udostępnij</h4>
+
+  <a href="https://x.com/intent/tweet?text=AAA+-+z%C5%82oty+standard+unit+test%C3%B3w.%20%2Funit%2520testing%2FAAA-golden-standard%2F" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij X">
+    <i class="fas fa-fw fa-share-alt" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Funit%2520testing%2FAAA-golden-standard%2F" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=/unit%20testing/AAA-golden-standard/" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/tdd/about-tdd/" class="pagination--pager" title="Czym jest TDD i czy warto je stosować?">Poprzednia</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Następna</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+      
+        <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Zostaw komentarz</h4>
+      <div class="giscus"></div>
+      <script src="https://giscus.app/client.js"
+              data-repo="TadekBiela/cpptested"
+              data-repo-id="R_kgDOPEW3uQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDOPEW3uc4CsbpH"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="light"
+              data-lang="pl"
+              crossorigin="anonymous"
+              async>
+      </script>
+    
+</div>
+
+      
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">Także może Ci się spodobać</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/tdd/about-tdd/" rel="permalink">Czym jest TDD i czy warto je stosować?
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-08-26T00:00:00+02:00">August 26, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Test Driven Development to metoda pracy, która bazuje głównie na unit testach. Tworzymy oprogramowanie w cyklach, przyrostowo, a każda zmiana poprzedzona jes...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/unit%20testing/first-reguly-ut/" rel="permalink">F.I.R.S.T. - jak pisać unit testy lepiej.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-07-28T00:00:00+02:00">July 28, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          4 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">F.I.R.S.T. to pewien standard, jaki unit testy powinny spełniać. To zbiór założeń, które wyznaczają kierunek, jaki powinniśmy obierać, pisząc testy.
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Wprowadź kryteria wyszukiwania...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Wprowadź kryteria wyszukiwania..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Obserwuj:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/tadeuszbiela/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/TadekBiela" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> RSS</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2025 <a href="">CppTested</a>. Powstało dzięki <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function () {
+    var commentContainer = document.querySelector('#giscus-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+
+    script.setAttribute('src', 'https://giscus.app/client.js');
+    script.setAttribute('data-repo', '');
+    script.setAttribute('data-repo-id', 'R_kgDOPEW3uQ');
+    script.setAttribute('data-category', '');
+    script.setAttribute('data-category-id', 'DIC_kwDOPEW3uc4CsbpH');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'top');
+    script.setAttribute('data-theme', 'light');
+    script.setAttribute('data-lang',  'pl');
+    
+    script.setAttribute('crossorigin', 'anonymous');
+
+    script.setAttribute('async', '');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+  </body>
+</html>

@@ -10,4 +10,10 @@ var store = [{
         "tags": ["clean code","code quality","developer practices","refactoring","test driven development"],
         "url": "/tdd/about-tdd/",
         "teaser": null
+      },{
+        "title": "AAA - złoty standard unit testów.",
+        "excerpt":"Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki. A czym jest to całe AAA? Zacznijmy od początku. AAA...","categories": ["unit testing"],
+        "tags": ["clean code","code quality","developer practices","refactoring","software testing"],
+        "url": "/unit%20testing/AAA-golden-standard/",
+        "teaser": null
       }]
