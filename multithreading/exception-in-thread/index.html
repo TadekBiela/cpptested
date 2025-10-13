@@ -1,0 +1,1058 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.0 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="pl" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie. - CppTested</title>
+<meta name="description" content="Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl">
+<meta property="og:site_name" content="CppTested">
+<meta property="og:title" content="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.">
+<meta property="og:url" content="/multithreading/exception-in-thread/">
+
+
+  <meta property="og:description" content="Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-10-13T00:00:00+02:00">
+
+
+
+
+
+
+<link rel="canonical" href="/multithreading/exception-in-thread/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CppTested Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HKF97SJC9Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HKF97SJC9Z');
+</script>
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Przejdź do nawigacji</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Przejdź do treści</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Przejdź do stopki</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+	<a href="/" class="site-logo">
+	  <span style="color: white; font-family: Courier, monospace;">Cpp</span>
+  	  <span style="color: #28a745; font-family: Courier, monospace;">Tested</span>
+	  <span class="blinking-cursor">|</span>
+	</a>	
+        <a class="site-title" href="/">
+          CppTested
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/posts/"
+                
+                
+              >Wpisy</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/categories/"
+                
+                
+              >Kategorie</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/tags/"
+                
+                
+              >Tagi</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/about/"
+                
+                
+              >O mnie</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Przełącz wyszukiwanie</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Przełącz menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.">
+    <meta itemprop="description" content="Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.">
+    <meta itemprop="datePublished" content="2025-10-13T00:00:00+02:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="/multithreading/exception-in-thread/" itemprop="url">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-10-13T00:00:00+02:00">October 13, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          10 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Spis treści</h4></header>
+              <ul class="toc__menu"><li><a href="#rodzaje-wyjątków">Rodzaje wyjątków</a></li><li><a href="#rzucanie-iłapanie-wyjątków">Rzucanie i łapanie wyjątków</a></li><li><a href="#przechwytywanie-wyjątku-wewnątrz-wątku">Przechwytywanie wyjątku wewnątrz wątku</a></li><li><a href="#przekierowanie-wyjątku-do-wątku-głównego">Przekierowanie wyjątku do wątku głównego</a></li><li><a href="#wielokrotne-przechwytywanie-wyjątków">Wielokrotne przechwytywanie wyjątków</a></li><li><a href="#podsumowanie">Podsumowanie</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.</p>
+
+<h3 id="rodzaje-wyjątków">Rodzaje wyjątków</h3>
+
+<p>Rodzajów wyjątków w STL mamy całkiem sporo i są one pogrupowane w podklasy dziedziczące po <strong>std::exception</strong>. I tak mamy na przykład <strong>std::runtime_error</strong>, który sam w sobie nie jest zgłaszany, jest jednak klasą bazową dla innych, między innymi <strong>std::range_error</strong>, <strong>std::overflow_error</strong>, <strong>std::underflow_error</strong>. Część wyjątków dodana została w późniejszych wersjach C++.</p>
+
+<p>Wyjątki dotyczą różnych problemów, na które nasz program może natrafić, brak elementu w kontenerze - <strong>std::out_of_range</strong>, rzutowanie referencji typów niepołączonych hierarchią - <strong>std::bad_cast</strong> (przy wskaźnikach dostaniemy <strong>nullptr</strong>, a wyjątek nie jest rzucany) czy problemy z alokowaniem pamięci - <strong>std::bad_alloc</strong>. To tylko kilka przykładów, po dokładne szczegóły odsyłam do dokumentacji: <a href="https://en.cppreference.com/w/cpp/error/exception.html" target="_blank" rel="noopener">“std::exception”</a>.</p>
+
+<p>Prócz standardowych wyjątków, możemy również zdefiniować własne, po prostu dziedzicząc po <strong>std::exception</strong> lub jej klasie pochodnej.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ReadFileException</span> <span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">ReadFileException</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">inputFileName</span><span class="p">)</span>
+	 <span class="o">:</span> <span class="n">fileName</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">)</span>
+	<span class="p">{}</span>
+
+	<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
+	<span class="p">}</span>
+
+<span class="nl">private:</span>
+	<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fileName</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="rzucanie-iłapanie-wyjątków">Rzucanie i łapanie wyjątków</h3>
+
+<p>Rzucanie wyjątków w C++ jest banalnie proste, wystarczy użyć słowa kluczowego <strong>throw</strong> na obiekcie klasy wyjątka. Najczęściej będzie to obiekt tymczasowy. Jeszcze nie spotkałem się, z potrzebą składowania obiektów wyjątków, niemniej jest to jak najbardziej możliwe.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">throw</span> <span class="nf">ReadFileException</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Jak widać, rzucanie wyjątków jest proste, łatwe i czytelne. Inaczej jest z ich łapaniem. Obsługa wyjątków C++ jest już bardziej złożona. Do przechwytywania wyjątków służy blok <strong>try/catch</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fileHandler</span><span class="p">.</span><span class="n">openFile</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="n">fileContent</span><span class="p">{</span> <span class="n">fileHandler</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="p">};</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">ReadFileException</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Cannot read file: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Block <strong>try</strong> jest prosty, to w nim umieszczamy kod, który może rzucić wyjątek. Block <strong>catch</strong> służy do przechwytywania wyjątków określonego typu oraz ich obsługi, na przykład zwolnienie zasobów takich jak pamięć czy mutex. Po opuszczeniu bloku <strong>catch</strong>, praca programu będzie kontynuowana. Bloków <strong>catch</strong> może być wiele, w zależności od tego jakie operacje muszą zostać wykonane w stosunku do typu rzuconego wyjątku.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fileHandler</span><span class="p">.</span><span class="n">openFile</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="n">fileContent</span><span class="p">{</span> <span class="n">fileHandler</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="p">};</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">ReadFileException</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Cannot read file: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" with code: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Dodatkowo wyjątki łapane są według hierarchii dziedziczenia, to znaczy, że jeśli nie zdefiniujemy w bloku <strong>catch</strong> określonego typu wyjątku, ale jego rodzica już tak, to ten wyjątek również zostanie obsłużony.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fileHandler</span><span class="p">.</span><span class="n">openFile</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="n">fileContent</span><span class="p">{</span> <span class="n">fileHandler</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="p">};</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" with code: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="c1">// ReadFileException zostanie tutaj przechwycony</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Cannot read file: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Należy zwrócić uwagę na hierarchię dziedziczenia, jeśli pierwszy blok <strong>catch</strong> będzie ustawiony na klasę bazową, a następny na klasę pochodną, to wyjątek nigdy nie zostanie złapany przez drugi blok <strong>catch</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fileHandler</span><span class="p">.</span><span class="n">openFile</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="n">fileContent</span><span class="p">{</span> <span class="n">fileHandler</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="p">};</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="c1">// Wyjątek typu std::system_error dziedziczy po std::exception i&amp;nbsp;zostanie tutaj przechwycony</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Cannot read file: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="c1">// Ten kod nigdy się nie wykona</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" with code: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Kompilator może nas poinformować ostrzeżeniem w stylu:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>main.cpp:71:1: warning: exception of <span class="nb">type</span> ‘std::system_error’ will be caught by earlier handler <span class="o">[</span><span class="nt">-Wexceptions</span><span class="o">]</span>
+   71 | catch<span class="o">(</span>const std::system_error&amp; ex<span class="o">)</span>
+      | ^~~~~
+main.cpp:66:1: note: <span class="k">for </span><span class="nb">type</span> ‘std::exception’
+   66 | catch<span class="o">(</span>const std::exception&amp; ex<span class="o">)</span>
+      | ^~~~~
+</code></pre></div></div>
+
+<p>Bywają jednak takie sytuacje, gdy chcemy, by każdy wyjątek obsłużyć tak samo i nie ma dla nas znaczenia jaki to typ. Jest na to sposób. C++ nieczęsto stosuje składnię z użyciem wielokropka (<strong>…</strong>). To właśnie jeden z tych przypadków.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fileHandler</span><span class="p">.</span><span class="n">openFile</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="n">fileContent</span><span class="p">{</span> <span class="n">fileHandler</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="p">};</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(...)</span> <span class="c1">// Łapiemy wszystkie wyjątki lecz kosztem braku informacji z&amp;nbsp;metody what()</span>
+<span class="p">{</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Wielokropek powinien być używany jako ostatni blok <strong>catch</strong>. Nie zalecałbym takiej obsługi wyjątków jako domyślny sposób. Niemniej, warto wiedzieć o jego istnieniu ;).</p>
+
+<p>Wszystkie te sposoby obsługi wyjątków się łączą. Możemy dowolnie definiować liczbę i rodzaje bloków <strong>catch</strong> (zgodnie z hierarchią dziedziczenia). Możemy także zagnieżdżać całe bloki <strong>try/catch</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">fileHandler</span><span class="p">.</span><span class="n">openFile</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">fileContent</span><span class="p">{</span> <span class="n">fileHandler</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="p">};</span>
+            <span class="c1">//...</span>
+        <span class="p">}</span>
+        <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">ReadFileException</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Cannot read file: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">fileHandler</span><span class="p">.</span><span class="n">closeFile</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" with code: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Something unexpected happened!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Trzeba jednak zachować umiar bo możemy skończyć z bardzo nieczytelnym kodem, w którym ciężko w szybki sposób zweryfikować, w który blok <strong>catch</strong> wyjątek zostanie złapany.</p>
+
+<p>C++11 udostępnia nam też słowo kluczowe <strong>noexcept</strong>, którym możemy oznaczyć funkcje i metody nierzucające wyjątków. Czyli takie, które używają operacji bezpiecznych pod względem wyjątków i/lub same je obsługują. Słowo kluczowe <strong>noexcept</strong> możemy także zastosować do konstruktorów i destruktora klasy.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">noexcept</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">&amp;</span><span class="n">nbsp</span><span class="p">;</span><span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">FileHandler</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">FileHandler</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
+    <span class="o">~</span><span class="n">FileHandler</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">openFile</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">read</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="n">closeFile</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
+
+<span class="nl">private:</span>
+    <span class="n">File</span> <span class="n">file</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Żeby móc oznaczyć funkcję lub metodę jako <strong>noexcept</strong>. Wszystkie operacje i wywoływane funkcje/metody także powinny być oznaczone jako <strong>noexcept</strong>, by zachować bezpieczeństwo w kontekście wyjątków. Niestety kompilator nas nie poinformuje, jeżeli ten warunek nie jest spełniony. 
+Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z jakiegoś powodu jednak rzuci wyjątek? Specyfikacja podpowiada, że zostanie wywołana funkcja <strong>std::terminate()</strong>, która zakończy działanie naszego programu niezależnie od tego czy dany kod był w bloku <strong>try/catch</strong> czy nie.</p>
+
+<p><strong>noexcept</strong> jest równoznaczne z <strong>noexcept(true)</strong>. Natomiast domyślnie wszystkie funkcje i metody oznaczone są jako <strong>noexcept(false)</strong>. Dlaczego dodano osobno <strong>noexcept</strong> oraz <strong>noexcept(true/false)</strong>? Głównie ze względu na szablony i metaprogramowanie, gdzie o tym czy funkcja lub metoda może lub nie może rzucać wyjątków kompilator dowiaduje się dopiero w trakcje kompilacji i konkretyzacji szablonów.</p>
+
+<p><strong>noexcept</strong> jest traktowane jako część typu funkcji. To znaczy, że jeśli mamy wskaźniki na funkcje, które różnią się tylko <strong>noexcept</strong>, to będą one traktowane jako osobne typy. Tak samo jeżeli chodzi o parametry szablonu.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">funcPtr1</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="p">);</span>
+<span class="k">using</span> <span class="n">funcPtr2</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="p">)</span> <span class="k">noexcept</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>noexcept</strong> nie można za to stosować do przeciążania funkcji, gdyż nie wchodzi w skład jej sygnatury.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">noexcept</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">);</span> <span class="c1">// Błąd kompilacji, redefinicja funkcji "add"</span>
+</code></pre></div></div>
+
+<p>Zaletą <strong>noexcept</strong> jest przede wszystkim optymalizacja. Kompilator nie musi generować dodatkowego kodu do zwijania stosu po wystąpieniu wyjątku. Może także dobrać bardziej optymalne algorytmy STL. Łatwiej jest kompilatorowi inline’ować funkcję/metodę. Binarka wynikowa, również ma mniejszy rozmiar.</p>
+
+<h3 id="przechwytywanie-wyjątku-wewnątrz-wątku">Przechwytywanie wyjątku wewnątrz wątku</h3>
+
+<p>Przejdźmy teraz do wielowątkowego przechwytywania wyjątków. Nie jest to rzecz taka prosta. Spójrz na ten kod, czy jest on bezpieczny pod względem wyjątków?</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">calucalteSumThread</span><span class="p">;</span>
+<span class="k">try</span>
+<span class="p">{</span>
+    <span class="n">calucalteSumThread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">([]()</span>
+    <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Something unexpected happened!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Wydawać by się mogło, że tak. Przecież mamy blok <strong>catch</strong> zarówno na wyrzucany wyjątek <strong>std::runtime_error</strong> jak i <strong>…</strong>. Jednak tak nie jest. Po uruchomieniu tego kodu w prostej funkcji <strong>main</strong> zostanie wywołany <strong>std::terminate()</strong>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terminate called after throwing an instance of <span class="s1">'std::runtime_error'</span>
+  what<span class="o">()</span>:  calculation error!
+</code></pre></div></div>
+
+<p>Dzieje się tak dlatego, że wątek traktowany jest jako osobny proces pomimo, iż należy do głównego wątku naszej aplikacji. Jednym z rozwiązań tego problemu jest obsługa wyjątków wewnątrz wątku i nie wyrzucanie ich na zewnątrz, tworząc wątek bezpieczny względem wyjątków.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">calucalteSumThread</span><span class="p">;</span>
+<span class="k">try</span>
+<span class="p">{</span>
+    <span class="n">calucalteSumThread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">([]()</span>
+    <span class="p">{</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Something unexpected happened!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Wynikiem będzie tylko komunikat przechwyconego wyjątku, a nasz program będzie kontynuował pracę:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>calculation error!
+</code></pre></div></div>
+
+<h3 id="przekierowanie-wyjątku-do-wątku-głównego">Przekierowanie wyjątku do wątku głównego</h3>
+
+<p>Tworzenie osobnego bloku <strong>try/catch</strong> w wątku i poza nim może doprowadzić do niepotrzebnej złożoności. Możemy też potrzebować obsłużyć wyjątek w głównym wątku naszej aplikacji, gdy wyjątek wystąpi wewnątrz wątku, aby poprawnie zareagować na taką sytuację. C++ od wersji 11 wraz z całą obsługą wyjątków daje nam kilka narzędzi, które rozwiązują ten problem: <strong>std::async</strong>, <strong>std::packaged_task</strong> i <strong>promise</strong>. Każde z nich umożliwia przekierowanie wyjątków z wątku pobocznego do wątku głównego.</p>
+
+<p>Zacznijmy od <strong>std::async</strong>. To szablon funkcji o zmiennej liczbie parametrów umożliwiający uruchomienie przekazanej funkcji lub metody w osobnym wątku. Zwraca obiekt <strong>std::future</strong>, który po wywołaniu metody <strong>get()</strong> zwróci wynik lub wyjątek jeśli wystąpił.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">exceptionFutureObj</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
+<span class="p">{</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="k">try</span>
+<span class="p">{</span>
+    <span class="n">exceptionFutureObj</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Widać tutaj prostotę tego rozwiązania. Wątek poboczny nie zawiera już bloku <strong>try/catch</strong>. Cała obsługa wyjątku dzieje się pod spodem <strong>std::async</strong>. Kod jest czysty i zrozumiały. By mieć pewność, że funkcja przekazana jako parametr uruchomi się w osobnym wątku, trzeba ustawić tryb uruchamiania na <strong>std::launch::async</strong>. W trybie <strong>std::launch::deffered</strong> funkcja zostanie uruchomiona w tym samym wątku dopiero w momencie wywołania metody <strong>get()</strong> lub <strong>wait()</strong> na zwróconym przez <strong>async</strong> obiekcie <strong>future</strong>. Domyślnie, to implementacja decyduje jaki tryb uruchamiania zostanie wykorzystany.</p>
+
+<p>Drugim narzędziem, którym możemy przekazać wyjątki z wątku pobocznego do głównego jest <strong>std::packaged_task</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">packaged_task</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">task</span><span class="p">([]()</span>
+<span class="p">{</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="k">auto</span> <span class="n">exceptionFutureObj</span> <span class="o">=</span> <span class="n">task</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">exceptionTaskThread</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">task</span><span class="p">));</span>
+
+<span class="k">try</span>
+<span class="p">{</span>
+    <span class="n">exceptionFutureObj</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">exceptionTaskThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Pod względem przechwytywania wyjątków <strong>async</strong> i <strong>std::packaged_task</strong> działają tak samo. Oba zwracają obiekt typu <strong>future</strong> i w momencie pobierania wartości zwracanej (<strong>get()</strong>), wyjątek może zostać przechwycony. Zasadnicza różnica pomiędzy nimi jest moment, w którym wątek zostaje uruchomiony. Przy <strong>async</strong>  (z ustawionym <strong>std::launch::async</strong>), w momencie wywoływania. Przy <strong>std::packaged_task</strong>, dopiero, gdy task zostanie przekazany do nowego wątku.</p>
+
+<p>Ostatni sposób na przekazanie wyjątków z wątku pobocznego do głównego, to <strong>std::promise</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">promise</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">exceptionPromise</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">exceptionFutureObj</span> <span class="o">=</span> <span class="n">exceptionPromise</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+
+<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="nf">exceptionTaskThread</span><span class="p">([</span><span class="o">&amp;</span><span class="n">exceptionPromise</span><span class="p">]()</span>
+<span class="p">{</span>
+    <span class="k">try</span>
+    <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(...)</span>
+    <span class="p">{</span>
+        <span class="n">exceptionPromise</span><span class="p">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">current_exception</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="k">try</span>
+<span class="p">{</span>
+    <span class="n">exceptionFutureObj</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">exceptionTaskThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Widać tutaj od razu, że blok <strong>try/catch</strong> powrócił do ciała naszego wątku pobocznego. Mimo to, jedynym dla nas potrzebnym blokiem <strong>catch</strong> jest ten z wielokropkiem, gdyż zależy nam na przekazywaniu wyjątków do wątku głównego. <strong>promise</strong> daje nam największą kontrolę nad tym, kiedy wątek zostanie uruchomiony, kiedy i jaki wyjątek zostanie przekazany wyżej. Możemy także przekazać jakąś wartość w <strong>std::promise</strong>, w polu <strong>value</strong>. Może w celu debuggowym albo jako wartość domyślną. Zależy od tego co będzie nam potrzebne.</p>
+
+<h3 id="wielokrotne-przechwytywanie-wyjątków">Wielokrotne przechwytywanie wyjątków</h3>
+
+<p>Na koniec jeszcze kwestia przechwytywania wyjątków z różnych wątków pobocznych w wątku głównym. Gdy przy użyciu <strong>std::async</strong>, uruchomimy dwa wątki i w obu zostaną wyrzucone wyjątki to musimy zadbać o to, by każdy został poprawnie obsłużony.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">exceptionFutureObj1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"First thread</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="k">auto</span> <span class="n">exceptionFutureObj2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Second thread</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_error_code</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">errc</span><span class="p">(</span><span class="n">EDEADLK</span><span class="p">)),</span> <span class="s">"system error!"</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="k">try</span>
+<span class="p">{</span>
+    <span class="n">exceptionFutureObj2</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="c1">// Rzucenie wyjątku std::system_error, przejście do bloku catch</span>
+    <span class="n">exceptionFutureObj1</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" with code: "</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A tutaj wynik działania powyższego fragmentu kodu:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>First thread
+Second thread
+system error!: Resource deadlock avoided with code: generic:35
+</code></pre></div></div>
+
+<p>W tym przypadku, pomimo, iż oba wątki zostały uruchomione, i oba z pewnością rzuciły wyjątki to tylko jeden zostanie przechwycony. Nie liczy się moment rzucenia wyjątku, a moment odebrania wyniku z obiektu <strong>future</strong>. Dopiero wtedy wyjątek rzucany jest w wątku głównym. Dlatego w powyższym przykładzie, wyjątek <strong>std::runtime_error</strong> nie został przechwycony. Drugi <strong>get()</strong> po prostu się nie wykonał.</p>
+
+<p>Aby uniknąć takich sytuacji należy każdą próbę odebrania wyniku z <strong>future</strong> opakować blokiem <strong>try/catch</strong> osobno. Możemy do tego utworzyć szablonowy handler.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Future</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">exceptionHandler</span><span class="p">(</span><span class="n">Future</span><span class="o">&amp;</span> <span class="n">future</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">try</span>
+    <span class="p">{</span>
+        <span class="n">future</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">numOfThreads</span><span class="p">{</span> <span class="mi">5</span> <span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;&gt;</span> <span class="n">futures</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">numOfThreads</span><span class="p">;</span> <span class="n">idx</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">futures</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[</span><span class="n">idx</span><span class="p">]()</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Thread nr: "</span> <span class="o">&lt;&lt;</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"error from thread: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span>
+        <span class="p">}));</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">exceptionHandler</span><span class="p">(</span><span class="n">future</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A oto wynik:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread nr: 0Thread nr: 1
+Thread nr: 2
+
+Thread nr: 4
+Thread nr: 3
+error from thread: 0
+error from thread: 1
+error from thread: 2
+error from thread: 3
+error from thread: 4
+</code></pre></div></div>
+
+<p>Jak widać wszystkie wyjątki zostały przechwycone. Widać też asynchroniczność w logowaniu do <strong>std::cout</strong>. W takim przypadku lepiej użyć jakiegoś własnego loggera bezpiecznego dla wątków.</p>
+
+<h3 id="podsumowanie">Podsumowanie</h3>
+
+<p>W tym wpisie, starałem się zebrać wszystkie najważniejsze informacje dotyczące wyjątków w C++. Od tego jakie wyjątki są dostępne w tym języku programowania, poprzez ich rzucanie i obsługę, kończąc na przekazywaniu ich pomiędzy wątkami. C++ wciąż się zmienia i ewoluuje. Może w przyszłości dojdą nowe mechanizmy związane z wyjątkami. Choć trzeba przyznać, że już teraz mamy spory wachlarz narzędzi do radzenia sobie z nimi :).</p>
+
+<p><strong>Autor:</strong> Tadeusz Biela<br />
+Programista C++ | Entuzjasta TDD | Fan unit testów</p>
+
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tagi: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#cpp" class="page__taxonomy-item p-category" rel="tag">cpp</a><span class="sep">, </span>
+    
+      <a href="/tags/#exceptions" class="page__taxonomy-item p-category" rel="tag">exceptions</a><span class="sep">, </span>
+    
+      <a href="/tags/#multithreading" class="page__taxonomy-item p-category" rel="tag">multithreading</a><span class="sep">, </span>
+    
+      <a href="/tags/#software" class="page__taxonomy-item p-category" rel="tag">software</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Kategorie: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#multithreading" class="page__taxonomy-item p-category" rel="tag">multithreading</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Ostatnia aktualizacja:</strong> <time class="dt-published" datetime="2025-10-13T00:00:00+02:00">October 13, 2025</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Udostępnij</h4>
+
+  <a href="https://x.com/intent/tweet?text=W%C4%85tki+i%26nbsp%3Bwyj%C4%85tki.+Jak+radzi%C4%87+sobie+z%26nbsp%3Bnieoczekiwanymi+zachowaniami+w%26nbsp%3Bwielow%C4%85tkowym+kodzie.%20%2Fmultithreading%2Fexception-in-thread%2F" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij X">
+    <i class="fas fa-fw fa-share-alt" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fmultithreading%2Fexception-in-thread%2F" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=/multithreading/exception-in-thread/" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/unit%20testing/AAA-golden-standard/" class="pagination--pager" title="AAA - złoty standard unit testów.">Poprzednia</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Następna</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+      
+        <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Zostaw komentarz</h4>
+      <div class="giscus"></div>
+      <script src="https://giscus.app/client.js"
+              data-repo="TadekBiela/cpptested"
+              data-repo-id="R_kgDOPEW3uQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDOPEW3uc4CsbpH"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="light"
+              data-lang="pl"
+              crossorigin="anonymous"
+              async>
+      </script>
+    
+</div>
+
+      
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">Także może Ci się spodobać</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/unit%20testing/AAA-golden-standard/" rel="permalink">AAA - złoty standard unit testów.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-09-15T00:00:00+02:00">September 15, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          4 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić dosk...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/tdd/about-tdd/" rel="permalink">Czym jest TDD i czy warto je stosować?
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-08-26T00:00:00+02:00">August 26, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          5 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Test Driven Development to metoda pracy, która bazuje głównie na unit testach. Tworzymy oprogramowanie w cyklach, przyrostowo, a każda zmiana poprzedzona jes...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/unit%20testing/first-reguly-ut/" rel="permalink">F.I.R.S.T. - jak pisać unit testy lepiej.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-07-28T00:00:00+02:00">July 28, 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          4 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">F.I.R.S.T. to pewien standard, jaki unit testy powinny spełniać. To zbiór założeń, które wyznaczają kierunek, jaki powinniśmy obierać, pisząc testy.
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Wprowadź kryteria wyszukiwania...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Wprowadź kryteria wyszukiwania..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Obserwuj:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/tadeuszbiela/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/TadekBiela" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> RSS</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2025 <a href="">CppTested</a>. Powstało dzięki <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function () {
+    var commentContainer = document.querySelector('#giscus-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+
+    script.setAttribute('src', 'https://giscus.app/client.js');
+    script.setAttribute('data-repo', '');
+    script.setAttribute('data-repo-id', 'R_kgDOPEW3uQ');
+    script.setAttribute('data-category', '');
+    script.setAttribute('data-category-id', 'DIC_kwDOPEW3uc4CsbpH');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'top');
+    script.setAttribute('data-theme', 'light');
+    script.setAttribute('data-lang',  'pl');
+    
+    script.setAttribute('crossorigin', 'anonymous');
+
+    script.setAttribute('async', '');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+  </body>
+</html>

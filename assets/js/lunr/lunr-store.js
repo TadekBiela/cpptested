@@ -16,4 +16,10 @@ var store = [{
         "tags": ["clean code","code quality","developer practices","refactoring","software testing"],
         "url": "/unit%20testing/AAA-golden-standard/",
         "teaser": null
+      },{
+        "title": "Wątki i&nbsp;wyjątki. Jak radzić sobie z&nbsp;nieoczekiwanymi zachowaniami w&nbsp;wielowątkowym kodzie.",
+        "excerpt":"Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie...","categories": ["multithreading"],
+        "tags": ["cpp","exceptions","multithreading","software"],
+        "url": "/multithreading/exception-in-thread/",
+        "teaser": null
       }]
