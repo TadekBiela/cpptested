@@ -15,6 +15,10 @@
     {% unless site.atom_feed.hide %}
       <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | relative_url }}{% endif %}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
     {% endunless %}
+
+    <li style="justify-content: space-between; align-items: center;">
+      <img src="{{ 'favicon.png' | relative_url }}" alt="Logo" style="height: 40px;">
+    </li>
   </ul>
 </div>
 
