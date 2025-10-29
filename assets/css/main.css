@@ -4325,3 +4325,13 @@ a:hover,
     padding-inline-end: 0px; } }
 .archive {
   margin-top: 0em; }
+
+.social-icons {
+  display: flex;
+  align-items: center; }
+
+.social-icons li:last-child {
+  margin-left: auto; }
+
+.social-icons li:last-child img {
+  height: 40px; }
