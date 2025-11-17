@@ -4327,7 +4327,6 @@ a:hover,
   margin-top: 0em; }
 
 .social-icons {
-  display: flex;
   align-items: center; }
 
 .social-icons li:last-child {
