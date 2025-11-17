@@ -22,4 +22,10 @@ var store = [{
         "tags": ["cpp","exceptions","multithreading","software"],
         "url": "/multithreading/exception-in-thread/",
         "teaser": null
+      },{
+        "title": "DRY, YAGNI, KISS i inne. Uniwersalne zasady dla każdego programisty.",
+        "excerpt":"Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny,...","categories": ["clean code"],
+        "tags": ["clean code","code quality","developer practices","software"],
+        "url": "/clean%20code/dry-and-other-principles/",
+        "teaser": null
       }]

@@ -1,4 +1,472 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2025-10-29T22:31:17+01:00</updated><id>/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.</title><link href="/multithreading/exception-in-thread/" rel="alternate" type="text/html" title="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie." /><published>2025-10-13T00:00:00+02:00</published><updated>2025-10-13T00:00:00+02:00</updated><id>/multithreading/exception-in-thread</id><content type="html" xml:base="/multithreading/exception-in-thread/"><![CDATA[<p>Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2025-11-17T20:05:59+01:00</updated><id>/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">DRY, YAGNI, KISS i inne. Uniwersalne zasady dla każdego programisty.</title><link href="/clean%20code/dry-and-other-principles/" rel="alternate" type="text/html" title="DRY, YAGNI, KISS i inne. Uniwersalne zasady dla każdego programisty." /><published>2025-11-17T00:00:00+01:00</published><updated>2025-11-17T00:00:00+01:00</updated><id>/clean%20code/dry-and-other-principles</id><content type="html" xml:base="/clean%20code/dry-and-other-principles/"><![CDATA[<p>Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny, odporny na błędy i łatwiejszy w utrzymaniu.</p>
+
+<h3 id="po-co-nam-zasady">Po co nam zasady?</h3>
+
+<p>Zasady w programowaniu wytyczają nam szlak - kierunek, w jakim powinniśmy podążać, aby uzyskać kod wysokiej jakości. Każda z poniższych reguł, o których wspominam w tym wpisie, dotyka nieco innych aspektów wytwarzanego przez nas oprogramowania. Tworzą one niejako pewien standard. Można oczywiście pisać kod i bez nich, tylko po co? DRY i inne zasady to ogrom doświadczenia naszych poprzedników, z którego powinniśmy korzystać, ucząc się na ich błędach i kto wie, może formułować nowe? Czemu by nie!</p>
+
+<p>Co daje nam trzymanie się dobrych zasad programowania?</p>
+<ol>
+  <li>Ułatwiają utrzymanie kodu.</li>
+  <li>Zmniejszają ryzyko wystąpienia błędów.</li>
+  <li>Umożliwiają dobrą współpracę między twórcami i odbiorcami kodu.</li>
+  <li>Tworzą bardziej uporządkowany projekt.</li>
+  <li>Pomagają podejmować odpowiedzialne decyzje.</li>
+</ol>
+
+<p>A teraz przejdźmy już do konkretów.</p>
+
+<h3 id="dry---jedno-źródło-informacji">DRY - jedno źródło informacji</h3>
+
+<p>DRY - Don’t Repeat Yourself - unikaj powielania wiedzy. Zasada ta jest prosta, jeśli widzisz w swoim kodzie ciągle powtarzające się linijki, to należy je odpowiednio nazwać i przenieść do funkcji lub metody, w zależności od kontekstu. Dzięki temu, gdy przyjdzie czas na zmianę (a z pewnością przyjdzie), będziemy musieli edytować tylko jedno miejsce, a nie wiele. Unikniemy sytuacji, gdy trzeba zmienić kod w kilku miejscach i o którymś zapomnimy. Daje nam to również możliwość zwiększenia czytelności naszego kodu. Nowa funkcja czy metoda musi mieć nazwę, warto, by była ona wyjaśniająca, tłumaczyła w krótki sposób, co robi wewnątrz.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Money</span> <span class="nf">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="mi">18</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="mi">18</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Widać tutaj powtórzenie, <strong>“18 &lt;= employee.getAge()”</strong>. Jest to pewien element wiedzy biznesowej. Jeśli pracownik jest niepełnoletni, to jego wynagrodzenie i liczba dni wolnych jest inna. Spróbujmy to lepiej wyrazić i zastosować DRY.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">isAdult</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">unsigned</span> <span class="n">adultAge</span> <span class="p">{</span> <span class="mi">18</span> <span class="p">};</span>
+    <span class="k">return</span> <span class="n">adultAge</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">Money</span> <span class="n">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">isAdult</span><span class="p">(</span><span class="n">employee</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">isAdult</span><span class="p">(</span><span class="n">employee</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">//...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To tylko prosty przykład, jak możemy stosować DRY. Należy jednak pamiętać, że ta zasada, jak i wszystkie następne, mają nam pomagać tworzyć kod wysokiej jakości. Jak ze wszystkim, tak z DRY, też da się przesadzić. Zauważyłem, że często w unit testach DRY nie do końca się sprawdza.</p>
+
+<p>Mamy klasę <strong>UserService</strong>, która odpowiada za logowanie (pomińmy na razie aspekty security ;) ).</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">"admin"</span> <span class="o">&amp;&amp;</span> <span class="n">password</span> <span class="o">==</span> <span class="s">"1234"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">checkLogin</span><span class="p">(</span><span class="n">UserService</span><span class="o">&amp;</span> <span class="n">service</span><span class="p">,</span>
+                <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">user</span><span class="p">,</span>
+                <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">pass</span><span class="p">,</span>
+                <span class="kt">bool</span> <span class="n">expected</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">pass</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">AllLogins</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>W tym przykładzie testujemy różne sposoby logowania. Wygląda prosto. Nie ma powtórzeń, ale jest tutaj jeden zasadniczy problem - czytelność, a raczej jej brak. Mamy tylko jeden test sprawdzający tę samą jednostkę, ale już w różnych scenariuszach. Nie spełnia on standardu <a href="https://cpptested.com/unit%20testing/AAA-golden-standard/" target="_blank" rel="noopener">AAA</a>. Gdy coś pójdzie nie tak, dużo trudniej będzie dowiedzieć się, który scenariusz nie działa poprawnie.</p>
+
+<p>Teraz porównaj to z poniższymi testami.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_ValidCredentials_ReturnTrue</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">);</span>
+
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_WrongPassword_ReturnFalse</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">);</span>
+
+    <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_UnknownUser_ReturnFalse</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+
+    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">);</span>
+
+    <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To klasyczny przykład, gdzie czytelność jest wyżej niż DRY. Don’t Repeat Yourself to świetna reguła. Pomaga uporządkować kod, ułatwia wprowadzanie zmian i zrozumienie logiki kodu. W testach również ma swoje zastosowanie, lecz nie powinna być regułą wiodącą w nich prym.</p>
+
+<p>DRY to jednak coś znacznie więcej, niż tylko ograniczanie powielania kodu, jak dla mnie najlepiej opisuję tę zasadę Robert C. Martin w swojej bardzo znanej książce - <a href="https://lubimyczytac.pl/ksiazka/83492/czysty-kod-podrecznik-dobrego-programisty" target="_blank" rel="noopener">Czysty Kod. Podręcznik dobrego programisty</a>, którą z czystym sumieniem polecam ;)</p>
+
+<h3 id="yagni---potrzebne-ponad-możliwe">YAGNI - potrzebne ponad możliwe</h3>
+
+<p>YAGNI - You Aren’t Gonna Need It, ta zasada mówi o tym, że jeśli w danym momencie rozwoju oprogramowania nie potrzebujesz jakiejś funkcjonalności, to jej nie dodawaj. Czasem chcemy wychodzić naprzeciw oczekiwaniom użytkowników naszego kodu, lub staramy się przewidzieć, co jeszcze będzie potrzebne. Zapominamy jednak o czymś bardzo istotnym. Założenia się zmieniają. To, co wydawało nam się być potrzebne, choć nie planowane, po chwili może wylądować w gitowej historii.</p>
+
+<p>W tej regule nie chodzi o to, by nie myśleć o przyszłości, o architekturze. Projekt jest ważny, umożliwia rozwój oprogramowania w jasno określonym kierunku i określony sposób. Bierze pod uwagę różne aspekty, takie jak elastyczność, łatwość utrzymania, koszty wytworzenia i wiele innych.</p>
+
+<p>YAGNI nie mówi o tym, byś nie planował, nie przewidywał. Mówi o tym, byś nie implementował czegoś, co może okazać się niepotrzebne.</p>
+
+<p>Wróćmy do <strong>UserService</strong>. Założenie jest proste, klasa odpowiada za logowanie. Można by przewidzieć, co będzie jeszcze potrzebne do logowania i nasza klasa rozrośnie się.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">"admin"</span> <span class="o">&amp;&amp;</span> <span class="n">password</span> <span class="o">==</span> <span class="s">"1234"</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">logout</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="kt">void</span> <span class="n">resetPassword</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="kt">void</span> <span class="n">twoFactorAuth</span><span class="p">()</span> <span class="p">{}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Tylko na tym etapie nie wiemy jeszcze, co tak naprawdę się przyda. Jak mamy zastosować TDD, gdy brak jest założeń? Co zrobić z kodem, którego nikt nie używa?</p>
+
+<p>Nie traćmy czasu i zasobów na tworzenie kodu, którego nikt w danym momencie nie potrzebuje. Ogranicza to również koszty, które taki nadmiarowy kod generuje. Trzeba do niego napisać testy (choć w przykładzie dodaliśmy tylko puste metody, więc testów nie napiszemy), utrzymywać, aktualizować, gdy interfejs się zmienia. To są koszty, koszty, które ponosisz Ty, Twój zespół i Twoja firma. Ogranicz zakres zmian do minimum. YAGNI to istota minimalizmu w programistycznym świecie.</p>
+
+<h3 id="kiss---prosto-ale-skutecznie">KISS - prosto ale skutecznie</h3>
+
+<p>KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w branży IT wydaje mi się na całkiem wysokim poziomie, i nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o tym, aby nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to taki kod, który nie tylko łatwo napisać, ale przede wszystkim zrozumieć i zmienić, gdy będzie to potrzebne. Prosty kod też łatwiej się testuje.</p>
+
+<p>Tutaj chcę zaznaczyć, że sama złożoność kodu nie jest zła, jeśli wynika ze złożoności problemu, który rozwiązuje. KISS trochę łączy się z YAGNI, bo możemy dodać więcej kodu, tworząc bardziej elastyczne rozwiązanie, potencjalnie łatwiejsze w rozszerzaniu. Może stosując jakiś wzorzec projektowy.</p>
+
+<p>Tylko decyzja o użyciu wzorca powinna być podejmowana na poziomie architektury. Nie mówię tu o tym, żeby najpierw mieć cały projekt, a potem kod. W Agile tak się nie dzieje. Całe oprogramowanie tworzymy przyrostowo. Mówię o tym, by nie komplikować kodu bez potrzeby i bez planu.</p>
+
+<p>Spójrz na poniższy przykład. Widać w nim pewien zamysł, może plany na przyszłość. Jednak kod jest zbyt zawiły w stosunku do tego, za co jest odpowiedzialny.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">IValidator</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">IValidator</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">EmailValidator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IValidator</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'@'</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">PasswordValidator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IValidator</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">8</span> <span class="o">&lt;=</span> <span class="n">value</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">UserService</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">UserService</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">emailValidator</span><span class="p">,</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">passwordValidator</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">emailValidator_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">emailValidator</span><span class="p">)),</span>
+          <span class="n">passwordValidator_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">passwordValidator</span><span class="p">))</span>
+    <span class="p">{}</span>
+
+    <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">emailValidator_</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">passwordValidator_</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">password</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">emailValidator_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">passwordValidator_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Widać tutaj zdecydowany overengineering. Tyle konstrukcji tylko po to, by sprawdzić dwa proste warunki. Z KISS kod wyglądałby mniej więcej tak.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'@'</span><span class="p">)</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">password</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Zdecydowanie, w takim przypadku prostota wygrywa. KISS pomaga nam trzymać w ryzach złożoność naszego kodu.</p>
+
+<p>KISS to świetna zasada w połączeniu z TDD. Każda zmiana w kodzie ma sprawić by nowy test przeszedł, nic więcej. TDD zakłada właśnie to, żeby tworzyć kod, który tylko sprawi, że nasz nowy test przejdzie i nie wprowadzi regresji do poprzednich.</p>
+
+<p>Zasada KISS łamana jest najczęściej w trzech przypadkach:</p>
+
+<ol>
+  <li>
+    <p>Przedwczesna optymalizacja - stosujemy sztuczki w kodzie, które potencjalnie mogą zwiększyć wydajność kodu. Sprawić, że będzie on działał szybciej. Jednak praktycznie nigdy się tego nie mierzy, a sama optymalizacja jest tak naprawdę znikoma lub pozorna. Kompilator nie raz jest w stanie czysty kod lepiej sam zoptymalizować niż z naszymi “sprytnymi” sztuczkami.</p>
+  </li>
+  <li>
+    <p>Nadużywanie wzorców projektowych - sam się na tym złapałem kilka lat temu, gdy poznałem wzorce. Chęć ich wykorzystania była tak duża, że przy jednym z zadań rekrutacyjnych od razu chciałem zastosować fabrykę, a wystarczyłby jeden prosty <strong>if</strong>.</p>
+  </li>
+  <li>
+    <p>Magia w kodzie - metaprogramowanie, refleksje, wiele poziomów abstrakcji. Te wszystkie rzeczy mają swoje zastosowanie, ale są to narzędzia do konkretnych celów. Nie należy ich stosować wszędzie, gdzie popadnie, bo akurat nam pasuje.</p>
+  </li>
+</ol>
+
+<p>Jak stosować KISS w codziennej pracy? Najpierw zrób tak, aby działało, potem uprość kod, a na samym końcu optymalizuj, jeśli jest to potrzebne.</p>
+
+<h3 id="pola---to-oczywiste">POLA - to oczywiste!</h3>
+
+<p>POLA - Principle Of Least Astonishment, to nic innego jak zasada najmniejszego zaskoczenia. Gdy widzimy nazwę funkcji lub metody klasy, która mówi <strong>A</strong>, to powinna robić <strong>A</strong>, a nie <strong>ABC</strong> plus jeszcze <strong>Z</strong>. Albo w ogóle nie robi <strong>A</strong>, tylko <strong>F</strong>. W tej zasadzie musimy pamiętać, że tworząc kod, należy dobrze opisywać, co on robi, poprzez nadawanie odpowiednich nazw zmiennym, stałym, metodom, funkcjom itp. Kluczem do zachowania POLA jest dobre nazewnictwo. Zwiększa ono czytelność i łatwość zrozumienia naszego kodu, a to bezpośrednio przekłada się na niższy koszt jego utrzymania. Pamiętajmy, że kod zazwyczaj piszemy raz, czytamy natomiast wielokrotnie.</p>
+
+<p>POLA mówi o tym, by nasz kod, był intuicyjny i spójny w zachowaniu. Jeśli metody naszej klasy robią coś innego niż to, na co wskazuje ich nazwa, łatwo popełnić błąd, trudniej korzystać z takiej klasy, jest to bardziej czasochłonne, bo musimy zapoznać się z jej implementacją. Naruszenie tej zasady bywa nieraz bardzo subtelne, dlatego tym bardziej powinniśmy o niej pamiętać.</p>
+
+<p>Mamy tutaj klasę <strong>FileWriter</strong> z jedną metodą <strong>write</strong>. Pozornie wszystko wygląda ok.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FileWriter</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">filesystem</span><span class="o">::</span><span class="n">create_directories</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">filesystem</span><span class="o">::</span><span class="n">path</span><span class="p">(</span><span class="n">path</span><span class="p">).</span><span class="n">parent_path</span><span class="p">());</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">retry</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+            <span class="n">retry</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">;</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">file</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Metoda <strong>write</strong> próbuje otworzyć podany w <strong>path</strong> plik. Jeśli się nie uda, utworzy go wraz z wszystkimi katalogami prowadzącymi do pliku. Tylko czy ta metoda powinna to robić? Co jeżeli, ktoś w <strong>path</strong> popełni tylko literówkę? Nazwa <strong>write</strong> nie mówi o tym, że metoda coś tworzy. Jak w takim razie powinna wyglądać?</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FileWriter</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"Cannot open file: "</span> <span class="o">+</span> <span class="n">path</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">file</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Myślę, że rzucenie wyjątku jak najbardziej jest dobrym rozwiązaniem, jeżeli tylko nasz projekt zakłada ich użycie. Jeśli chcesz poznać więcej szczegółów dotyczących sytuacji wyjątkowych, to odsyłam do mojego wpisu o <a href="https://cpptested.com/multithreading/exception-in-thread/" target="_blank" rel="noopener">wyjątkach</a>.</p>
+
+<p>W takiej formie, użytkownik klasy <strong>FileWriter</strong> nie powinien być zaskoczony wyrzuceniem wyjątku, gdy poda złą ścieżkę do pliku, zwłaszcza, iż metoda <strong>write</strong> nie jest oznaczona jako <strong>noexcept</strong>.</p>
+
+<h3 id="lod---im-mniej-wiesz-tym-lepiej">LoD - im mniej wiesz, tym lepiej</h3>
+
+<p>LoD - Law of Demeter, czyli inaczej Principle of Least Knowledge. Zasada najmniejszej wiedzy mówi o tym, by metoda wykorzystywała tylko to, co sama “wie”.</p>
+
+<p>Metoda w klasie powinna komunikować się tylko z obiektami, które zna bezpośrednio. Sprowadza się to do używania tylko własnych pól klasy, przekazanych argumentów, stworzonych przez tę metodę obiektów i ewentualnie elementów globalnych (tak, tak, te ostatnie to zazwyczaj oznaka problemów projektowych, choć nie zawsze. Może napiszę osobny post, jak radzić sobie z globalami w testach).</p>
+
+<p>Przyjrzyjmy się metodzie <strong>sendReport</strong> klasy <strong>ReportService</strong>. Metoda ta korzysta z wszystkich rodzajów dostępnej wiedzy, zachowując jednocześnie LoD.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Report</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">generate</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"Daily report data"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">EmailClient</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">send</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">recipient</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Sending email to "</span> <span class="o">&lt;&lt;</span> <span class="n">recipient</span> <span class="o">&lt;&lt;</span> <span class="s">" with content:</span><span class="se">\n</span><span class="s">"</span>
+                  <span class="o">&lt;&lt;</span> <span class="n">content</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Config</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getDefaultRecipient</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"admin@example.com"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ReportService</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">sendReport</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">customRecipient</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// użycie argumentu metody</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span> <span class="o">=</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
+            <span class="o">?</span> <span class="n">Config</span><span class="o">::</span><span class="n">getDefaultRecipient</span><span class="p">()</span>  <span class="c1">// globalne źródło wiedzy</span>
+            <span class="o">:</span> <span class="n">customRecipient</span><span class="p">;</span>
+
+        <span class="c1">// stworzenie i użycie obiektu lokalnego</span>
+        <span class="n">Report</span> <span class="n">report</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="o">=</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">();</span>
+
+        <span class="c1">// wysłanie raportu przez własne pole emailClient_</span>
+        <span class="n">emailClient_</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">reportTitle_</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">content</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">EmailClient</span> <span class="n">emailClient_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reportTitle_</span> <span class="p">{</span> <span class="s">"Daily Report"</span> <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>W Law od Demeter chodzi o ograniczanie łańcuchów wywołań.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">order</span><span class="p">.</span><span class="n">getCustomer</span><span class="p">().</span><span class="n">getAddress</span><span class="p">().</span><span class="n">getCity</span><span class="p">().</span><span class="n">getName</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Zamiast takiego łańcuszka powinniśmy dążyć do tego, aby klasa order udostępniła nazwę miasta klienta bezpośrednio.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">order</span><span class="p">.</span><span class="n">getCustomerCityName</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>Wewnątrz tej metody nie powinno być kolejnego, nieco krótszego łańcucha tylko coś w tym rodzaju.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Order</span><span class="o">::</span><span class="n">getCustomerCityName</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">customer</span><span class="p">.</span><span class="n">getCityName</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Zaletą stosowania LoD jest zmniejszenie sprzężenia między klasami. Poprawia się również czytelność kodu.</p>
+
+<h3 id="coi---niczym-klocki-lego">COI - niczym klocki Lego</h3>
+
+<p>COI - Composition Over Inheritance, dziedziczenie to potężny mechanizm niosący za sobą bardzo cenną mechanikę - polimorfizm. Jednak ma ono też drugie oblicze, łatwo można przesadzić. Hierarchia dziedziczenia powinna odzwierciedlać zależności typu “jest”, a nie “ma”. Jeśli klasa dziedziczy po innej tylko dlatego, że część jej funkcjonalności by się przydała, to należy dodać potrzebny obiekt jako nowe pole klasy zamiast po niej dziedziczyć.</p>
+
+<p>Ta zasada nie mówi o tym, by z dziedziczenia nie korzystać, lecz o tym, by korzystać z niego mądrze. Kompozycja daje nam większą elastyczność kodu. Elementy, jako że są to pola klasy, można łatwo dodawać, usuwać czy wymieniać. Wewnętrzna implementacja klasy rodzica, może się zmienić i dużo łatwiej ta zmiana może negatywnie odbić się na naszej klasie, gdy po niej dziedziczy, niż gdy jest tylko polem.</p>
+
+<p>Kompozycja ułatwia też testowanie naszej klasy. Tworząc testy, możemy łatwo zastąpić pola klasy mockami poprzez wstrzykiwanie zależności (Dependency Injection). W ten sposób będziemy mogli skupić się na przetestowaniu logiki tylko naszej klasy. W przypadku dziedziczenia, nie możemy już w tak łatwy sposób oddzielić logiki naszej klasy od logiki rodzica. Musimy nie jako przetestować całość, mimo iż klasa rodzica ma swoje testy.</p>
+
+<p>Dziedziczenie dużo mocniej wiąże ze sobą klasy, co utrudnia ich ponowne użycie. Jeśli nie tworzą spójnej całości, może się okazać, że zamiast ponownie skorzystać z już napisanego kodu, musimy nie jako napisać go od nowa. Boleśnie się o tym przekonałem, gdy zacząłem pisanie swojej drugiej gry. W pierwszej, mocno korzystałem z dziedziczenia, co sprawiło, że nie mogłem w prosty sposób przenieść fragmentu kodu. Musiałbym przenieść kilka klas na raz. To doprowadziło do tego, że zamiast użyć kod ponownie, stał się on tylko przykładem, do którego zaglądam, implementując nową grę.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Shape</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Shape</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Rectangle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Shape</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ColoredRectangle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Rectangle</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">ColoredRectangle</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">color</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">color_</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color_</span> <span class="o">&lt;&lt;</span> <span class="s">" rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">color_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Mamy tutaj interfejs <strong>Shape</strong>. Klasa <strong>Rectangle</strong> dziedziczy po interfejsie i to jest jak najbardziej ok. Problem zaczyna się w klasie <strong>ColoredRectangle</strong>, która dziedziczy po <strong>Rectangle</strong>. Co się stanie, jeżeli zaczniemy potrzebować klasy kwadratu z obramowaniem albo animacją? Idąc za dziedziczeniem, utworzymy <strong>BorderedRectangle</strong> i <strong>AnimatedRectangle</strong>. A jeśli będziemy potrzebować kolorowego kwadratu z obramowaniem? Kolejna klasa. A teraz dołóżmy trójkąt. Co wtedy? <strong>Triangle</strong>, <strong>ColoredTriangle</strong>, <strong>BorderedTriangle</strong>, <strong>AnimatedTriangle</strong>? Klasy mnożą się w zastraszającym tempie! Spróbujmy zastosować COI w tym przypadku.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ColoredShape</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Shape</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">ColoredShape</span><span class="p">(</span><span class="n">Shape</span><span class="o">&amp;</span> <span class="n">shape</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">color</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">shape_</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="n">color_</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color_</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
+        <span class="n">shape_</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="n">Shape</span><span class="o">&amp;</span> <span class="n">shape_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">color_</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Teraz mamy ogólną klasę <strong>ColoredShape</strong>, niezwiązaną bezpośrednio z <strong>Rectangle</strong>. Obie klasy mogą być przetestowane osobno. Dodanie nowego kształtu sprowadza się do utworzenia tylko jednej klasy. Dodanie nowego atrybutu również. Oczywiście i z tym można by powalczyć, tworząc jeszcze bardziej uniwersalne rozwiązanie, ale to tylko przykład.</p>
+
+<h3 id="podsumowanie">Podsumowanie</h3>
+
+<p>I to już wszystkie najważniejsze zasady programowania, które każdy programista powinien znać i stosować, aby jego kod był wysokiej jakości. Celowo nie poruszyłem tutaj zestawu zasad SOLID, gdyż one bardziej tyczą się projektowania. Przyjdzie i na to czas :). Tymczasem dziękuję Ci za dotrwanie do końca wpisu. Mam nadzieję, że przekazana tutaj wiedza pomoże Ci w codziennych bataliach z kodem. Jeśli masz pomysły na inne tematy, które mógłbym poruszyć na blogu - napisz w komentarzu.</p>
+
+<p>Mój blog oparty jest na GitHub’ie, stąd trzeba się zalogować do niego, ale spokojnie, to jest odizolowany fragment strony, do którego nie mam bezpośredniego dostępu ;). Podobał Ci się ten wpis? Zapraszam do podzielenia się swoją opinią w komentarzu!</p>
+
+<p><strong>Autor:</strong> Tadeusz Biela<br />
+Programista C++ | Entuzjasta TDD | Fan unit testów</p>
+
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>]]></content><author><name>Tadeusz Biela</name></author><category term="clean code" /><category term="clean code" /><category term="code quality" /><category term="developer practices" /><category term="software" /><summary type="html"><![CDATA[Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny, odporny na błędy i łatwiejszy w utrzymaniu.]]></summary></entry><entry><title type="html">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.</title><link href="/multithreading/exception-in-thread/" rel="alternate" type="text/html" title="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie." /><published>2025-10-13T00:00:00+02:00</published><updated>2025-10-13T00:00:00+02:00</updated><id>/multithreading/exception-in-thread</id><content type="html" xml:base="/multithreading/exception-in-thread/"><![CDATA[<p>Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.</p>
 
 <h3 id="rodzaje-wyjątków">Rodzaje wyjątków</h3>
 
