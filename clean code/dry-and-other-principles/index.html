@@ -430,20 +430,20 @@
 <span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="n">UserService</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">emailValidator</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">passwordValidator</span><span class="p">)</span>
-        <span class="o">:</span> <span class="n">emailValidator_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">emailValidator</span><span class="p">)),</span>
-          <span class="n">passwordValidator_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">passwordValidator</span><span class="p">))</span>
+    <span class="n">UserService</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">inputEmailValidator</span><span class="p">,</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">inputPasswordValidator</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">emailValidator</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">inputEmailValidator</span><span class="p">)),</span>
+          <span class="n">passwordValidator</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">inputPasswordValidator</span><span class="p">))</span>
     <span class="p">{}</span>
 
     <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">return</span> <span class="n">emailValidator_</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">passwordValidator_</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">password</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">emailValidator</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">passwordValidator</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">password</span><span class="p">);</span>
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">emailValidator_</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">passwordValidator_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">emailValidator</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IValidator</span><span class="o">&gt;</span> <span class="n">passwordValidator</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -582,13 +582,13 @@
         <span class="n">Report</span> <span class="n">report</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="o">=</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">();</span>
 
-        <span class="c1">// wysłanie raportu przez własne pole emailClient_</span>
-        <span class="n">emailClient_</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">reportTitle_</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">content</span><span class="p">);</span>
+        <span class="c1">// wysłanie raportu przez własne pole emailClient</span>
+        <span class="n">emailClient</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">reportTitle</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">content</span><span class="p">);</span>
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="n">EmailClient</span> <span class="n">emailClient_</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reportTitle_</span> <span class="p">{</span> <span class="s">"Daily Report"</span> <span class="p">};</span>
+    <span class="n">EmailClient</span> <span class="n">emailClient</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reportTitle</span> <span class="p">{</span> <span class="s">"Daily Report"</span> <span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -641,17 +641,17 @@
 <span class="k">class</span> <span class="nc">ColoredRectangle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Rectangle</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="n">ColoredRectangle</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">color</span><span class="p">)</span>
-        <span class="o">:</span> <span class="n">color_</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ColoredRectangle</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">inputColor</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">color</span><span class="p">(</span><span class="n">inputColor</span><span class="p">)</span>
     <span class="p">{}</span>
 
     <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
     <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color_</span> <span class="o">&lt;&lt;</span> <span class="s">" rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color</span> <span class="o">&lt;&lt;</span> <span class="s">" rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">color_</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">color</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -660,19 +660,19 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ColoredShape</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Shape</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="n">ColoredShape</span><span class="p">(</span><span class="n">Shape</span><span class="o">&amp;</span> <span class="n">shape</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">color</span><span class="p">)</span>
-        <span class="o">:</span> <span class="n">shape_</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="n">color_</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ColoredShape</span><span class="p">(</span><span class="n">Shape</span><span class="o">&amp;</span> <span class="n">inputShape</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">inputColor</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">shape</span><span class="p">(</span><span class="n">inputShape</span><span class="p">),</span> <span class="n">color</span><span class="p">(</span><span class="n">inputColor</span><span class="p">)</span>
     <span class="p">{}</span>
 
     <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
     <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color_</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
-        <span class="n">shape_</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
+        <span class="n">shape</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="n">Shape</span><span class="o">&amp;</span> <span class="n">shape_</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">color_</span><span class="p">;</span>
+    <span class="n">Shape</span><span class="o">&amp;</span> <span class="n">shape</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">color</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
