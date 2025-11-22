@@ -226,20 +226,20 @@ public:
 class UserService
 {
 public:
-    UserService(std::unique_ptr<IValidator> emailValidator,
-                std::unique_ptr<IValidator> passwordValidator)
-        : emailValidator_(std::move(emailValidator)),
-          passwordValidator_(std::move(passwordValidator))
+    UserService(std::unique_ptr<IValidator> inputEmailValidator,
+                std::unique_ptr<IValidator> inputPasswordValidator)
+        : emailValidator(std::move(inputEmailValidator)),
+          passwordValidator(std::move(inputPasswordValidator))
     {}
 
     bool registerUser(const std::string& email, const std::string& password)
     {
-        return emailValidator_->validate(email) && passwordValidator_->validate(password);
+        return emailValidator->validate(email) && passwordValidator->validate(password);
     }
 
 private:
-    std::unique_ptr<IValidator> emailValidator_;
-    std::unique_ptr<IValidator> passwordValidator_;
+    std::unique_ptr<IValidator> emailValidator;
+    std::unique_ptr<IValidator> passwordValidator;
 };
 ```
 
@@ -376,13 +376,13 @@ public:
         Report report;
         std::string content = report.generate();
 
-        // wysłanie raportu przez własne pole emailClient_
-        emailClient_.send(recipient, reportTitle_ + "\n" + content);
+        // wysłanie raportu przez własne pole emailClient
+        emailClient.send(recipient, reportTitle + "\n" + content);
     }
 
 private:
-    EmailClient emailClient_;
-    std::string reportTitle_ { "Daily Report" };
+    EmailClient emailClient;
+    std::string reportTitle { "Daily Report" };
 };
 ```
 
@@ -439,17 +439,17 @@ public:
 class ColoredRectangle : public Rectangle
 {
 public:
-    ColoredRectangle(const std::string& color)
-        : color_(color)
+    ColoredRectangle(const std::string& inputColor)
+        : color(inputColor)
     {}
 
     void draw() override
     {
-        std::cout << "Drawing " << color_ << " rectangle\n";
+        std::cout << "Drawing " << color << " rectangle\n";
     }
 
 private:
-    std::string color_;
+    std::string color;
 };
 ```
 
@@ -459,19 +459,19 @@ Mamy tutaj interfejs **Shape**. Klasa **Rectangle** dziedziczy po interfejsie i&
 class ColoredShape : public Shape
 {
 public:
-    ColoredShape(Shape& shape, const std::string& color)
-        : shape_(shape), color_(color)
+    ColoredShape(Shape& inputShape, const std::string& inputColor)
+        : shape(inputShape), color(inputColor)
     {}
 
     void draw() override
     {
-        std::cout << "Drawing " << color_ << " ";
-        shape_.draw();
+        std::cout << "Drawing " << color << " ";
+        shape.draw();
     }
 
 private:
-    Shape& shape_;
-    std::string color_;
+    Shape& shape;
+    std::string color;
 };
 ```
 
