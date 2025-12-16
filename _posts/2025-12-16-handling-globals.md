@@ -12,7 +12,7 @@ tags:
   - software testing
 ---
 
-Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również odcinać zewnętrzne zależności, tak, aby&nbsp;przeprowadzenie testu odbywało się w&nbsp;izolacji. Typów zależności globalnych jest kilka, jednak najbardziej problematycznym są te globalne. Zaszyte w&nbsp;naszym kodzie potrafią skutecznie uniemożliwić nam odizolowanie naszej testowanej jednostki. Czy&nbsp;można coś z&nbsp;tym zrobić? Oczywiście! Jest na to kilka naprawdę dobrych technik. A&nbsp;więc zacznijmy od podstaw.
+Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również odcinać zewnętrzne zależności, tak, aby&nbsp;przeprowadzenie testu odbywało się w&nbsp;izolacji. Typów zależności jest kilka, jednak najbardziej problematycznym są te globalne. Zaszyte w&nbsp;naszym kodzie potrafią skutecznie uniemożliwić nam odizolowanie naszej testowanej jednostki. Czy&nbsp;można coś z&nbsp;tym zrobić? Oczywiście! Jest na to kilka naprawdę dobrych technik. A&nbsp;więc zacznijmy od podstaw.
 
 ### Czym są zależności globalne
 
@@ -105,9 +105,13 @@ Struktura projektu mogłaby wyglądać tak:
 
 W systemie budowany dla testów jako plik źródłowy do nagłówka **I2cBus.hpp** podajemy implementację z&nbsp;folderu **stubs** i&nbsp;spoina gotowa.
 
-W ten sposób w&nbsp;naszych unit testach, nie&nbsp;będziemy korzystać z&nbsp;produkcyjnej implementacji tylko z&nbsp;stubowej/mockowej wersji. O&nbsp;różnicach między stubem, a&nbsp;mockiem pewnie jeszcze napiszę ;). Podsumowując zastosowanie spoiny linkowania odbywa się tak: jeśli trzeba przenosisz implementację zależności globalnej do pliku źródłowego. Tworzysz stuba lub mocka zależności globalnej i&nbsp;dostosowujesz system budowania.
+W ten sposób w&nbsp;naszych unit testach, nie&nbsp;będziemy korzystać z&nbsp;produkcyjnej implementacji tylko z&nbsp;stubowej/mockowej wersji. O&nbsp;różnicach między stubem, a&nbsp;mockiem pewnie jeszcze napiszę ;). 
 
-Spoina linkowania jest w&nbsp;mojej ocenie jednak rozwiązaniem ostatecznym. Rozwiązuje wprawdzie problem zależności globalnych lecz ma spore wady. Po&nbsp;pierwsze wymaga sporo czasu. Nie&nbsp;tylko musimy zaimplementować stuba/mocka, ale&nbsp;dodatkowo zmienić także pliki budowania. Drugą wadą jest bardzo słaba czytelność. Nawet dobrze skonfigurowane IDE nie raz ma problem, by&nbsp;otworzyć odpowiedni plik źródłowy zależności globalnej i&nbsp;pracując przy testach otwiera produkcyjną implementację, co&nbsp;może być bardzo mylące, zwłaszcza dla mniej doświadczonych programistów. Po&nbsp;trzecie, nie&nbsp;jest rozwiązaniem dla wszystkich typów zależności globalnych. Spoiną linkowania nie odetniemy zależności do zmiennych statycznych, funkcji **inline** i&nbsp;innych zależności definiowanych w&nbsp;nagłówkach, których z&nbsp;jakiś powodów nie możemy przenieść do plików źródłowych.
+Podsumowując zastosowanie spoiny linkowania odbywa się tak:
+1. Jeśli trzeba przenosisz implementację zależności globalnej do pliku źródłowego.
+2. Tworzysz stuba lub mocka zależności globalnej i&nbsp;dostosowujesz system budowania.
+
+Spoina linkowania jest w&nbsp;mojej ocenie jednak rozwiązaniem ostatecznym. Rozwiązuje wprawdzie problem zależności globalnych lecz ma spore wady. Po&nbsp;pierwsze wymaga dużo czasu. Nie&nbsp;tylko musimy zaimplementować stuba/mocka, ale&nbsp;dodatkowo zmienić także pliki budowania. Drugą wadą jest bardzo słaba czytelność. Nawet dobrze skonfigurowane IDE nie raz ma problem, by&nbsp;otworzyć odpowiedni plik źródłowy zależności globalnej i&nbsp;pracując przy testach otwiera produkcyjną implementację, co&nbsp;może być bardzo mylące, zwłaszcza dla mniej doświadczonych programistów. Po&nbsp;trzecie, nie&nbsp;jest rozwiązaniem dla wszystkich typów zależności globalnych. Spoiną linkowania nie odetniemy zależności do zmiennych statycznych, funkcji **inline** i&nbsp;innych zależności definiowanych w&nbsp;nagłówkach, których z&nbsp;jakiś powodów nie możemy przenieść do plików źródłowych.
 
 Przejdźmy zatem do spoin obiektowych.
 
@@ -249,7 +253,11 @@ private:
 
 Dzięki takiemu zabiegowi, będziemy mogli w&nbsp;testach przekazać mocka, który również dziedziczy po tym samym interfejsie co Singleton. Umożliwi nam to pełne i&nbsp;dowolne sterowanie jego zachowaniem w&nbsp;naszej testowanej klasie. W&nbsp;podobny sposób możemy poradzić sobie ze statycznymi obiektami.
 
-Ogólna zasada jest taka: dodajesz parametr do konstruktora, tworzysz pole i&nbsp;przekazujesz zależność globalną poprzez konstruktor. Jedyną wadę jaką mogę tutaj dostrzec jest czasochłonność takiego rozwiązania. Trzeba dodać nie raz sporo kodu, aby&nbsp;móc skorzystać w&nbsp;pełni z&nbsp;tej techniki. Choć&nbsp;i&nbsp;tak wydaje mi się, że&nbsp;nakładu pracy jest mniej niż w&nbsp;spoinie linkowania.
+Ogólna zasada jest taka:
+1. Dodajesz parametr do konstruktora
+2. Tworzysz pole i&nbsp;przekazujesz zależność globalną poprzez konstruktor.
+
+Jedyną wadę jaką mogę tutaj dostrzec jest czasochłonność takiego rozwiązania. Trzeba dodać nie raz sporo kodu, aby&nbsp;móc skorzystać w&nbsp;pełni z&nbsp;tej techniki. Choć&nbsp;i&nbsp;tak wydaje mi się, że&nbsp;nakładu pracy jest mniej niż w&nbsp;spoinie linkowania.
 
 ### Wrapper
 
@@ -313,7 +321,11 @@ private:
 };
 ```
 
-W ten sposób odcinamy zależność, minimalizując przy tym ingerencję w&nbsp;kod produkcyjny. Zastosowanie **wrappera** sprowadza się do kilku kroków. Tworzysz wirtualną metodę w&nbsp;sekcji **protected** testowanej klasy (**wrapper**). Przenosisz wywołanie zależności globalnej do tej metody. Zastępujesz użycie globala **wrapperem**. Tworzysz klasę pochodną od klasy testowanej z&nbsp;postfixem **Testable** i&nbsp;przysłaniasz w&nbsp;niej **wrapper**.
+W ten sposób odcinamy zależność, minimalizując przy tym ingerencję w&nbsp;kod produkcyjny. Zastosowanie **wrappera** sprowadza się do kilku kroków:
+1. Tworzysz wirtualną metodę w&nbsp;sekcji **protected** testowanej klasy (**wrapper**).
+2. Przenosisz wywołanie zależności globalnej do tej metody.
+3. Zastępujesz użycie globala **wrapperem**.
+4. Tworzysz klasę pochodną od klasy testowanej z&nbsp;postfixem **Testable** i&nbsp;przysłaniasz w&nbsp;niej **wrapper**.
 
 ### Podsumowanie
 
