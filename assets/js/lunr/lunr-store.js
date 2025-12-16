@@ -28,4 +28,10 @@ var store = [{
         "tags": ["clean code","code quality","developer practices","software"],
         "url": "/clean%20code/dry-and-other-principles/",
         "teaser": null
+      },{
+        "title": "Zależności globalne - jak poradzić sobie z&nbsp;nimi w unit testach",
+        "excerpt":"Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również odcinać zewnętrzne zależności, tak, aby przeprowadzenie testu odbywało się w izolacji. Typów zależności globalnych jest kilka, jednak najbardziej problematycznym są te globalne. Zaszyte w naszym kodzie potrafią skutecznie uniemożliwić nam odizolowanie naszej testowanej jednostki. Czy można coś z tym zrobić? Oczywiście! Jest na...","categories": ["unit testing"],
+        "tags": ["unit testing","code quality","developer practices","refactoring","software testing"],
+        "url": "/unit%20testing/handling-globals/",
+        "teaser": null
       }]
