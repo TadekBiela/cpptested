@@ -268,7 +268,7 @@ KISS to świetna zasada w&nbsp;połączeniu z&nbsp;TDD. Każda zmiana w&nbsp;kod
 
 Zasada KISS łamana jest najczęściej w&nbsp;trzech przypadkach:
 
-1. Przedwczesna optymalizacja - stosujemy sztuczki w&nbsp;kodzie, które potencjalnie mogą zwiększyć wydajność kodu. Sprawić, że&nbsp;będzie on działał szybciej. Jednak praktycznie nigdy się tego nie mierzy, a&nbsp;sama optymalizacja jest tak naprawdę znikoma lub pozorna. Kompilator nie raz jest w&nbsp;stanie czysty kod lepiej sam zoptymalizować niż z&nbsp;naszymi "sprytnymi" sztuczkami.
+1. Przedwczesna optymalizacja - stosujemy sztuczki w&nbsp;kodzie, które potencjalnie mogą zwiększyć wydajność kodu. Sprawić, że&nbsp;będzie on działał szybciej. Jednak praktycznie nigdy się tego nie mierzy, a&nbsp;sama optymalizacja jest tak naprawdę znikoma lub pozorna. Kompilator nieraz jest w&nbsp;stanie czysty kod lepiej sam zoptymalizować niż z&nbsp;naszymi "sprytnymi" sztuczkami.
 
 2. Nadużywanie wzorców projektowych - sam się na tym złapałem kilka lat temu, gdy&nbsp;poznałem wzorce. Chęć ich wykorzystania była tak duża, że&nbsp;przy jednym z&nbsp;zadań rekrutacyjnych od razu chciałem zastosować fabrykę, a&nbsp;wystarczyłby jeden prosty **if**.
 

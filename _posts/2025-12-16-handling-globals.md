@@ -111,7 +111,7 @@ Podsumowując zastosowanie spoiny linkowania odbywa się tak:
 1. Jeśli trzeba przenosisz implementację zależności globalnej do pliku źródłowego.
 2. Tworzysz stuba lub mocka zależności globalnej i&nbsp;dostosowujesz system budowania.
 
-Spoina linkowania jest w&nbsp;mojej ocenie jednak rozwiązaniem ostatecznym. Rozwiązuje wprawdzie problem zależności globalnych lecz ma spore wady. Po&nbsp;pierwsze wymaga dużo czasu. Nie&nbsp;tylko musimy zaimplementować stuba/mocka, ale&nbsp;dodatkowo zmienić także pliki budowania. Drugą wadą jest bardzo słaba czytelność. Nawet dobrze skonfigurowane IDE nie raz ma problem, by&nbsp;otworzyć odpowiedni plik źródłowy zależności globalnej i&nbsp;pracując przy testach otwiera produkcyjną implementację, co&nbsp;może być bardzo mylące, zwłaszcza dla mniej doświadczonych programistów. Po&nbsp;trzecie, nie&nbsp;jest rozwiązaniem dla wszystkich typów zależności globalnych. Spoiną linkowania nie odetniemy zależności do zmiennych statycznych, funkcji **inline** i&nbsp;innych zależności definiowanych w&nbsp;nagłówkach, których z&nbsp;jakiś powodów nie możemy przenieść do plików źródłowych.
+Spoina linkowania jest w&nbsp;mojej ocenie jednak rozwiązaniem ostatecznym. Rozwiązuje wprawdzie problem zależności globalnych lecz ma spore wady. Po&nbsp;pierwsze wymaga dużo czasu. Nie&nbsp;tylko musimy zaimplementować stuba/mocka, ale&nbsp;dodatkowo zmienić także pliki budowania. Drugą wadą jest bardzo słaba czytelność. Nawet dobrze skonfigurowane IDE nieraz ma problem, by&nbsp;otworzyć odpowiedni plik źródłowy zależności globalnej i&nbsp;pracując przy testach otwiera produkcyjną implementację, co&nbsp;może być bardzo mylące, zwłaszcza dla mniej doświadczonych programistów. Po&nbsp;trzecie, nie&nbsp;jest rozwiązaniem dla wszystkich typów zależności globalnych. Spoiną linkowania nie odetniemy zależności do zmiennych statycznych, funkcji **inline** i&nbsp;innych zależności definiowanych w&nbsp;nagłówkach, których z&nbsp;jakiś powodów nie możemy przenieść do plików źródłowych.
 
 Przejdźmy zatem do spoin obiektowych.
 
@@ -257,7 +257,7 @@ Ogólna zasada jest taka:
 1. Dodajesz parametr do konstruktora
 2. Tworzysz pole i&nbsp;przekazujesz zależność globalną poprzez konstruktor.
 
-Jedyną wadę jaką mogę tutaj dostrzec jest czasochłonność takiego rozwiązania. Trzeba dodać nie raz sporo kodu, aby&nbsp;móc skorzystać w&nbsp;pełni z&nbsp;tej techniki. Choć&nbsp;i&nbsp;tak wydaje mi się, że&nbsp;nakładu pracy jest mniej niż w&nbsp;spoinie linkowania.
+Jedyną wadę jaką mogę tutaj dostrzec jest czasochłonność takiego rozwiązania. Trzeba dodać nieraz sporo kodu, aby&nbsp;móc skorzystać w&nbsp;pełni z&nbsp;tej techniki. Choć&nbsp;i&nbsp;tak wydaje mi się, że&nbsp;nakładu pracy jest mniej niż w&nbsp;spoinie linkowania.
 
 ### Wrapper
 
