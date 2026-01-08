@@ -3,7 +3,7 @@ title: "F.I.R.S.T. - jak pisać unit testy lepiej."
 date: 2025-07-28
 author: "Tadeusz Biela"
 categories:
-  - unit testing
+  - unit-testing
 tags:
   - clean code
   - software testing

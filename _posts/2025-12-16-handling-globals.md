@@ -3,7 +3,7 @@ title: "Zależności globalne - jak poradzić sobie z&nbsp;nimi w unit testach"
 date: 2025-12-16
 author: "Tadeusz Biela"
 categories:
-  - unit testing
+  - unit-testing
 tags:
   - unit testing
   - code quality

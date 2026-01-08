@@ -3,7 +3,7 @@ title: "AAA - złoty standard unit testów."
 date: 2025-09-15
 author: "Tadeusz Biela"
 categories:
-  - unit testing
+  - unit-testing
 tags:
   - clean code
   - code quality

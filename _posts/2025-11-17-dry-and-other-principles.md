@@ -3,7 +3,7 @@ title: "DRY, YAGNI, KISS i inne. Uniwersalne zasady dla każdego programisty."
 date: 2025-11-17
 author: "Tadeusz Biela"
 categories:
-  - clean code
+  - clean-code
 tags:
   - clean code
   - code quality
