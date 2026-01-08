@@ -18,7 +18,7 @@ A czym jest to całe AAA? Zacznijmy od początku.
 
 ### AAA - złoty standard
 
-O zasadzie AAA (triple A) piszę w&nbsp;swojej świetnej książce: ["Testy jednostkowe. Świat niezawodnych aplikacji"](https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji){:target="_blank" rel="noopener"} (The Art of Unit Testing) - Roy Osherove. Nie&nbsp;jest on wprawdzie jej bezpośrednim autorem, lecz&nbsp;wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie&nbsp;jest&nbsp;zależna od użytej technologii. Świetnie sprawdza się również w&nbsp;świecie&nbsp;C++.
+O zasadzie AAA (triple A) piszę w&nbsp;swojej świetnej książce: [Testy jednostkowe. Świat niezawodnych aplikacji](https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji){:target="_blank" rel="noopener"} (The Art of Unit Testing) - Roy Osherove. Nie&nbsp;jest on wprawdzie jej bezpośrednim autorem, lecz&nbsp;wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie&nbsp;jest&nbsp;zależna od użytej technologii. Świetnie sprawdza się również w&nbsp;świecie&nbsp;C++.
 
 No dobrze, ale&nbsp;czym ta zasada jest i&nbsp;o&nbsp;czym mówi?
 

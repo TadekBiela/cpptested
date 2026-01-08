@@ -17,7 +17,7 @@ Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w&nbsp;której nasz kod zac
 
 Rodzajów wyjątków w&nbsp;STL mamy całkiem sporo i&nbsp;są one pogrupowane w&nbsp;podklasy dziedziczące po **std::exception**. I&nbsp;tak mamy na przykład **std::runtime_error**, który&nbsp;sam w&nbsp;sobie nie jest zgłaszany, jest&nbsp;jednak klasą bazową dla innych, między innymi **std::range_error**, **std::overflow_error**, **std::underflow_error**. Część wyjątków dodana została w&nbsp;późniejszych wersjach C++.
 
-Wyjątki dotyczą różnych problemów, na które nasz program może natrafić, brak elementu w&nbsp;kontenerze - **std::out_of_range**, rzutowanie referencji typów niepołączonych hierarchią - **std::bad_cast** (przy wskaźnikach dostaniemy **nullptr**, a&nbsp;wyjątek nie jest rzucany) czy problemy z&nbsp;alokowaniem pamięci - **std::bad_alloc**. To&nbsp;tylko kilka przykładów, po&nbsp;dokładne szczegóły odsyłam do dokumentacji: ["std::exception"](https://en.cppreference.com/w/cpp/error/exception.html){:target="_blank" rel="noopener"}.
+Wyjątki dotyczą różnych problemów, na które nasz program może natrafić, brak elementu w&nbsp;kontenerze - **std::out_of_range**, rzutowanie referencji typów niepołączonych hierarchią - **std::bad_cast** (przy wskaźnikach dostaniemy **nullptr**, a&nbsp;wyjątek nie jest rzucany) czy problemy z&nbsp;alokowaniem pamięci - **std::bad_alloc**. To&nbsp;tylko kilka przykładów, po&nbsp;dokładne szczegóły odsyłam do dokumentacji: [std::exception](https://en.cppreference.com/w/cpp/error/exception.html){:target="_blank" rel="noopener"}.
 
 Prócz standardowych wyjątków, możemy również zdefiniować własne, po&nbsp;prostu dziedzicząc po **std::exception** lub jej klasie pochodnej.
 

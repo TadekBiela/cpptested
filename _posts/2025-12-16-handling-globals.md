@@ -16,18 +16,18 @@ Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również od
 
 ### Czym są zależności globalne
 
-Celowo nie użyłem słowa "zmienne" bo to nie jedyny problem. Możemy natrafić na stałe lub makra, które są zależne od platformy, na której nasz kod jest uruchamiany. Innym rodzajem zależności globalnej będzie ["Singleton"](https://pl.wikipedia.org/wiki/Singleton_(wzorzec_projektowy)){:target="_blank" rel="noopener"}, z&nbsp;którego nasza testowana klasa korzysta. Kolejnym rodzajem zależności globalnej mogą być zmienne statyczne.
+Celowo nie użyłem słowa "zmienne" bo to nie jedyny problem. Możemy natrafić na stałe lub makra, które są zależne od platformy, na której nasz kod jest uruchamiany. Innym rodzajem zależności globalnej będzie [Singleton](https://pl.wikipedia.org/wiki/Singleton_(wzorzec_projektowy)){:target="_blank" rel="noopener"}, z&nbsp;którego nasza testowana klasa korzysta. Kolejnym rodzajem zależności globalnej mogą być zmienne statyczne.
 
 Ostatnią kategorią zależności globalnej jest wolna funkcja! Pewnie pomyślisz coś w&nbsp;stylu: "Ale jak to? To&nbsp;coś złego? Po&nbsp;prostu przetestuję logikę mojej klasy wraz z&nbsp;logiką funkcji!" Oczywiście, jak&nbsp;najbardziej możesz to zrobić i&nbsp;nawet nie będzie to takie złe. Tylko&nbsp;wolna funkcja powinna mieć swój zestaw testów. Po&nbsp;co więc powielać je jako część naszych nowych unit testów? Dobrze by było zasymulować co wolna funkcja ma zwrócić, tak, aby&nbsp;uzyskać pożądany przepływ sterowania w&nbsp;naszym kodzie, bez&nbsp;"wstrzeliwania się" w&nbsp;jej logikę.
 Do wolnych funkcji zaliczamy również funkcje i&nbsp;obiekty z&nbsp;biblioteki standardowej lub frameworków oraz statyczne metody klas.
 
-Jak widzisz zależności globalne mają różne formy. W&nbsp;świetnej książce ["Praca z&nbsp;zastanym kodem. Najlepsze techniki"](https://lubimyczytac.pl/ksiazka/238260/praca-z-zastanym-kodem-najlepsze-techniki){:target="_blank" rel="noopener"} autora Michael'a Feathers'a, polskie tłumaczenie wykonane przez Ireneusza Jakóbika, określa tego rodzaju rozwiązania jako **"spoiny"**. Jak&nbsp;dla mnie bardzo trafne i&nbsp;ciekawe tłumaczenie, które również w&nbsp;moim wpisie się pojawi. Przejdźmy zatem do metod radzenia sobie z&nbsp;nimi.  
+Jak widzisz zależności globalne mają różne formy. W&nbsp;świetnej książce [Praca z&nbsp;zastanym kodem. Najlepsze techniki](https://lubimyczytac.pl/ksiazka/238260/praca-z-zastanym-kodem-najlepsze-techniki){:target="_blank" rel="noopener"} autora Michael'a Feathers'a, polskie tłumaczenie wykonane przez Ireneusza Jakóbika, określa tego rodzaju rozwiązania jako **"spoiny"**. Jak&nbsp;dla mnie bardzo trafne i&nbsp;ciekawe tłumaczenie, które również w&nbsp;moim wpisie się pojawi. Przejdźmy zatem do metod radzenia sobie z&nbsp;nimi.  
 
 ### Linkowanie
 
 Jednym z&nbsp;rozwiązań, którym możemy się posłużyć, by&nbsp;odciąć zależności globalne jest proces linkowania. Jeżeli implementacja wolnej funkcji czy Singleton'u jest w&nbsp;pliku **.cpp**. Możemy stworzyć ich odpowiedniki tylko dla testów, które będą zwracać cały czas te same wartości lub mieć implementację z&nbsp;możliwością sterowania co i&nbsp;jak ma być zwracane w&nbsp;testach, tak&nbsp;aby każdy test był niezależny.
 
-Mamy klasę **TemperatureSensor**, która do komunikacji z&nbsp;czujnikiem temperatury wykorzystuje protokół ["I²C"](https://pl.wikipedia.org/wiki/I%C2%B2C){:target="_blank" rel="noopener"}, który jest zaimplementowany jako wolne funkcje w&nbsp;pliku **I2cBus.hpp** i&nbsp;**I2cBus.cpp**.
+Mamy klasę **TemperatureSensor**, która do komunikacji z&nbsp;czujnikiem temperatury wykorzystuje protokół [I²C](https://pl.wikipedia.org/wiki/I%C2%B2C){:target="_blank" rel="noopener"}, który jest zaimplementowany jako wolne funkcje w&nbsp;pliku **I2cBus.hpp** i&nbsp;**I2cBus.cpp**.
 
 Tutaj fragment z&nbsp;implementacji klasy **TemperatureSensor** z&nbsp;użyciem zależności globalnej.
 
@@ -138,7 +138,7 @@ void Weapon::fire(const Position& position, const Rotation& position)
 }
 ```
 
-W takiej wersji zmienna globalna będzie trzymała stan między testami co prowadzi do zależności i&nbsp;złamania zasady **I** z&nbsp;["F.I.R.S.T."](https://cpptested.com/unit%20testing/first-reguly-ut/){:target="_blank" rel="noopener"}.
+W takiej wersji zmienna globalna będzie trzymała stan między testami co prowadzi do zależności i&nbsp;złamania zasady **I** z&nbsp;[F.I.R.S.T.](https://cpptested.com/unit%20testing/first-reguly-ut/){:target="_blank" rel="noopener"}.
 
 Teraz spróbujmy przekazywać wartość zmiennej globalnej jako parametr konstruktora testowanej klasy. Plik nagłówkowy będzie wyglądał następująco.
 
