@@ -1,8 +1,8 @@
 var store = [{
         "title": "F.I.R.S.T. - jak pisać unit testy lepiej.",
-        "excerpt":"F.I.R.S.T. to pewien standard, jaki unit testy powinny spełniać. To zbiór założeń, które wyznaczają kierunek, jaki powinniśmy obierać, pisząc testy. F jak Fast Czas oczekiwania na wynik naszych unit testów powinien być jak najkrótszy. Znani i cenieni specjaliści, jak Robert C. Martin czy Kent Beck, w swoich książkach przytaczają związek między czasem wykonywania testów,...","categories": ["unit testing"],
+        "excerpt":"F.I.R.S.T. to pewien standard, jaki unit testy powinny spełniać. To zbiór założeń, które wyznaczają kierunek, jaki powinniśmy obierać, pisząc testy. F jak Fast Czas oczekiwania na wynik naszych unit testów powinien być jak najkrótszy. Znani i cenieni specjaliści, jak Robert C. Martin czy Kent Beck, w swoich książkach przytaczają związek między czasem wykonywania testów,...","categories": ["unit-testing"],
         "tags": ["clean code","software testing","code quality","refactoring","developer practices"],
-        "url": "/unit%20testing/first-reguly-ut/",
+        "url": "/unit-testing/first-reguly-ut/",
         "teaser": null
       },{
         "title": "Czym jest TDD i czy warto je stosować?",
@@ -12,9 +12,9 @@ var store = [{
         "teaser": null
       },{
         "title": "AAA - złoty standard unit testów.",
-        "excerpt":"Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki. A czym jest to całe AAA? Zacznijmy od początku. AAA...","categories": ["unit testing"],
+        "excerpt":"Arrange Act Assert – to game changer dla jakości unit testów. Dzięki tym prostym zasadom testy stają się nie tylko bardziej czytelne, lecz mogą stanowić doskonałą dokumentację przypadków użycia naszego kodu. Dzielimy nazwę, jak i kod naszego unit testu, na trzy jasno określone bloki. A czym jest to całe AAA? Zacznijmy od początku. AAA...","categories": ["unit-testing"],
         "tags": ["clean code","code quality","developer practices","refactoring","software testing"],
-        "url": "/unit%20testing/AAA-golden-standard/",
+        "url": "/unit-testing/AAA-golden-standard/",
         "teaser": null
       },{
         "title": "Wątki i&nbsp;wyjątki. Jak radzić sobie z&nbsp;nieoczekiwanymi zachowaniami w&nbsp;wielowątkowym kodzie.",
@@ -24,14 +24,14 @@ var store = [{
         "teaser": null
       },{
         "title": "DRY, YAGNI, KISS i inne. Uniwersalne zasady dla każdego programisty.",
-        "excerpt":"Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny,...","categories": ["clean code"],
+        "excerpt":"Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny,...","categories": ["clean-code"],
         "tags": ["clean code","code quality","developer practices","software"],
-        "url": "/clean%20code/dry-and-other-principles/",
+        "url": "/clean-code/dry-and-other-principles/",
         "teaser": null
       },{
         "title": "Zależności globalne - jak poradzić sobie z&nbsp;nimi w unit testach",
-        "excerpt":"Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również odcinać zewnętrzne zależności, tak, aby przeprowadzenie testu odbywało się w izolacji. Typów zależności jest kilka, jednak najbardziej problematycznym są te globalne. Zaszyte w naszym kodzie potrafią skutecznie uniemożliwić nam odizolowanie naszej testowanej jednostki. Czy można coś z tym zrobić? Oczywiście! Jest na to...","categories": ["unit testing"],
+        "excerpt":"Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również odcinać zewnętrzne zależności, tak, aby przeprowadzenie testu odbywało się w izolacji. Typów zależności jest kilka, jednak najbardziej problematycznym są te globalne. Zaszyte w naszym kodzie potrafią skutecznie uniemożliwić nam odizolowanie naszej testowanej jednostki. Czy można coś z tym zrobić? Oczywiście! Jest na to...","categories": ["unit-testing"],
         "tags": ["unit testing","code quality","developer practices","refactoring","software testing"],
-        "url": "/unit%20testing/handling-globals/",
+        "url": "/unit-testing/handling-globals/",
         "teaser": null
       }]
