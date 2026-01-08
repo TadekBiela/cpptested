@@ -78,6 +78,7 @@ defaults:
       related: true
       share: true
       toc: true
+      sitemap: true
   # _pages
   - scope:
       path: _pages
@@ -85,6 +86,7 @@ defaults:
     values:
       layout: single
       author_profile: true
+      sitemap: false
 
 category_archive:
   type: liquid
