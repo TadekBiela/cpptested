@@ -18,6 +18,7 @@ paginate_path: /page:num/
 timezone: Europe/Warsaw
 
 include:
+  - robots.txt
   - _pages
 
 # Exclude from processing.
