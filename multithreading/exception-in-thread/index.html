@@ -245,7 +245,7 @@
 
 <p>Rodzajów wyjątków w STL mamy całkiem sporo i są one pogrupowane w podklasy dziedziczące po <strong>std::exception</strong>. I tak mamy na przykład <strong>std::runtime_error</strong>, który sam w sobie nie jest zgłaszany, jest jednak klasą bazową dla innych, między innymi <strong>std::range_error</strong>, <strong>std::overflow_error</strong>, <strong>std::underflow_error</strong>. Część wyjątków dodana została w późniejszych wersjach C++.</p>
 
-<p>Wyjątki dotyczą różnych problemów, na które nasz program może natrafić, brak elementu w kontenerze - <strong>std::out_of_range</strong>, rzutowanie referencji typów niepołączonych hierarchią - <strong>std::bad_cast</strong> (przy wskaźnikach dostaniemy <strong>nullptr</strong>, a wyjątek nie jest rzucany) czy problemy z alokowaniem pamięci - <strong>std::bad_alloc</strong>. To tylko kilka przykładów, po dokładne szczegóły odsyłam do dokumentacji: <a href="https://en.cppreference.com/w/cpp/error/exception.html" target="_blank" rel="noopener">“std::exception”</a>.</p>
+<p>Wyjątki dotyczą różnych problemów, na które nasz program może natrafić, brak elementu w kontenerze - <strong>std::out_of_range</strong>, rzutowanie referencji typów niepołączonych hierarchią - <strong>std::bad_cast</strong> (przy wskaźnikach dostaniemy <strong>nullptr</strong>, a wyjątek nie jest rzucany) czy problemy z alokowaniem pamięci - <strong>std::bad_alloc</strong>. To tylko kilka przykładów, po dokładne szczegóły odsyłam do dokumentacji: <a href="https://en.cppreference.com/w/cpp/error/exception.html" target="_blank" rel="noopener">std::exception</a>.</p>
 
 <p>Prócz standardowych wyjątków, możemy również zdefiniować własne, po prostu dziedzicząc po <strong>std::exception</strong> lub jej klasie pochodnej.</p>
 
