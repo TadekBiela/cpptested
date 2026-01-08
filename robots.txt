@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: https://cpptested.com/sitemap.xml
