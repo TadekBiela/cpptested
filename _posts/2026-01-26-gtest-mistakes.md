@@ -81,7 +81,7 @@ TEST_F(WidgetFactoryTests, create_ButtonWidgetType_ReturnButtonWidget)
 {
     const Rect expectedRect { 300, 400, 120, 30 };
     const std::string expectedText { "Test Button" };
-    WidgetFactory factory;
+    WidgetFactory factory {};
 
     const auto resultWidget { factory.create(WidgetType::BUTTON, expectedRect, expectedText)};
 
@@ -210,8 +210,8 @@ class RenderSceneBuilder
 public:
     virtual ~RenderSceneBuilder() = default;
 
-    virtual void build(const SceneUpdate& sceneUpdate) = 0;
-    virtual RenderItems popRenderItems() = 0;
+    virtual auto build(const SceneUpdate& sceneUpdate) -> void = 0;
+    virtual auto popRenderItems() -> RenderItems = 0;
 };
 ```
 
@@ -228,7 +228,7 @@ public:
     );
 
     //...
-    virtual void update(const SceneUpdate& sceneUpdate) override;
+    virtual auto update(const SceneUpdate& sceneUpdate) override -> void;
 
 private:
     //...
@@ -259,11 +259,11 @@ public:
     explicit GameSession(std::unique_ptr<SceneItemFactory> inputFactory = nullptr);
     virtual ~GameSession() = default;
 
-    virtual PlayerID addPlayer();
-    virtual void removePlayer(const PlayerID& playerId);
-    virtual void queuePlayerStatus(const PlayerID& playerId, const PlayerStatus& playerStatus);
-    virtual void updateGameWorld();
-    virtual GameplayUpdate getUpdateForPlayer(const PlayerID& playerId) const;
+    virtual auto addPlayer() -> PlayerID;
+    virtual auto removePlayer(const PlayerID& playerId) -> void;
+    virtual auto queuePlayerStatus(const PlayerID& playerId, const PlayerStatus& playerStatus) -> void;
+    virtual auto updateGameWorld() -> void;
+    virtual auto getUpdateForPlayer(const PlayerID& playerId) const -> GameplayUpdate;
 
 private:
     //...
@@ -276,7 +276,7 @@ I mockujemy.
 class MockGameSession : public GameSession
 {
 public:
-    MockGameSession() = deafult;
+    MockGameSession() = default;
 
     MOCK_METHOD(PlayerID, addPlayer, (), (override));
     MOCK_METHOD(void, removePlayer, (const PlayerID&), (override));
@@ -293,7 +293,7 @@ Jeśli pozostawimy część publicznych metod jako niewirtualne i&nbsp;nie przys
 class MockGameSession : public GameSession
 {
 public:
-    MockGameSession() = deafult;
+    MockGameSession() = default;
 
     MOCK_METHOD(PlayerID, addPlayer, (), (override));
     MOCK_METHOD(void, removePlayer, (const PlayerID&), (override));
@@ -320,11 +320,11 @@ Dla przykładu, mamy mocka klasy **MockGameSession** z&nbsp;poprzedniego punktu.
 class MockGameSession : public GameSession
 {
 public:
-    MockGameSession() = deafult;
+    MockGameSession() = default;
 
     MOCK_METHOD(PlayerID, addPlayer, ());
     MOCK_METHOD(void, removePlayer, (const PlayerID&));
-    MOCK_METHOD(void, queuePlayerStatus, (const PlayerID&, const PlayerStatus));
+    MOCK_METHOD(void, queuePlayerStatus, (const PlayerID&, const PlayerStatus&));
     MOCK_METHOD(void, updateGameWorld, ());
     MOCK_METHOD(GameplayUpdate, getUpdateForPlayer, (const PlayerID&), (const));
     MOCK_METHOD(Texture, getTexture, (const std::string), (const)); // metoda protected w GameSession
@@ -339,7 +339,7 @@ TEST_F(GameSessionTests, addPlayer_OneNewPlayer_ReturnNewPlayerId)
     auto factory { std::make_unique<MockSceneItemFactory>() };
     EXPECT_CALL(*factory, create(_, _, _));
     MockGameSession gameSession { std::move(factory) };
-    EXPECT_CALL(gameSession, getTexture()).WillOnce(Return(Texture())); // Mockowanie zależności odczytu z pliku
+    EXPECT_CALL(gameSession, getTexture(_)).WillOnce(Return(Texture())); // Mockowanie zależności odczytu z pliku
     EXPECT_CALL(gameSession, addPlayer()).WillOnce(Invoke([&](){ // Mockowana metoda wykonuje tą prawdziwą
         return gameSession.GameSession::addPlayer();
     }));
@@ -366,11 +366,11 @@ Słowo kluczowe (a&nbsp;dokładnie specyfikator) **override** możemy stosować 
 class MockGameSession : public GameSession
 {
 public:
-    MockGameSession() = deafult;
+    MockGameSession() = default;
 
     MOCK_METHOD(PlayerID, addPlayer, ());
     MOCK_METHOD(void, removePlayer, (const PlayerID&));
-    MOCK_METHOD(void, queuePlayerStatus, (const PlayerID&, const PlayerStatus));
+    MOCK_METHOD(void, queuePlayerStatus, (const PlayerID&, const PlayerStatus&));
     MOCK_METHOD(void, updateGameWorld, ());
     MOCK_METHOD(GameplayUpdate, getUpdateForPlayer, (const PlayerID&), (const));
 };
@@ -386,7 +386,7 @@ Tutaj już poprawiony mock.
 class MockGameSession : public GameSession
 {
 public:
-    MockGameSession() = deafult;
+    MockGameSession() = default;
 
     MOCK_METHOD(PlayerID, addPlayer, (), (override));
     MOCK_METHOD(void, removePlayer, (const PlayerID&), (override));
