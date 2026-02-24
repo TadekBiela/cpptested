@@ -1,4 +1,185 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-02-24T09:13:54+01:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">6 najczęstszych błędów z Google Test.</title><link href="https://cpptested.com/clean%20code/gtest-mistakes/" rel="alternate" type="text/html" title="6 najczęstszych błędów z Google Test." /><published>2026-01-26T00:00:00+01:00</published><updated>2026-01-26T00:00:00+01:00</updated><id>https://cpptested.com/clean%20code/gtest-mistakes</id><content type="html" xml:base="https://cpptested.com/clean%20code/gtest-mistakes/"><![CDATA[<p>Google Test to chyba najbardziej znany i używany framework testowy w projektach C++. Zawiera w sobie masę przydatnych narzędzi do tworzenia różnych rodzajów testów. Ja osobiście stosuję go w swoich projektach pisząc unit testy, ale nic nie stoi na przeszkodzie by tworzyć testy modułowe czy komponentowe (typu black box). Ceniony za swą uniwersalność oraz rozbudowany system asercji jest narzędziem bardzo potężnym. Mimo to nie jest również bez wad. Im bardziej złożone jest narzędzie tym trudniej się go nauczyć i korzystać z niego poprawnie.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-02-24T09:20:13+01:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Fundamenty myślenia wielowątkowego</title><link href="https://cpptested.com/multithreading/multithreading-fundamentals/" rel="alternate" type="text/html" title="Fundamenty myślenia wielowątkowego" /><published>2026-02-24T00:00:00+01:00</published><updated>2026-02-24T00:00:00+01:00</updated><id>https://cpptested.com/multithreading/multithreading-fundamentals</id><content type="html" xml:base="https://cpptested.com/multithreading/multithreading-fundamentals/"><![CDATA[<p>Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.</p>
+
+<h3 id="współbieżność-iwielowątkowość">Współbieżność i wielowątkowość</h3>
+
+<p>Rozpoczniemy od rozróżnienia, czym jest współbieżność, a czym wielowątkowość. Zrozumienie obu zagadnień umożliwi Ci zbudowanie solidnych podstaw myślenia, jak wygląda przetwarzanie zadań przez komputer.</p>
+
+<p>Współbieżność to wykonywanie zadań w tym samym czasie przez jedną jednostkę CPU. To znaczy, że nasz procesor otrzymuje kilka zadań i sekwencyjnie wykonuje po trochu każde z nich, przełączając konteksty między nimi. Zadania sumarycznie są wykonywane w tym samym czasie, ale tak naprawdę, to CPU jest w stanie pracować tylko nad jednym zadaniem na raz. Dlatego, by  każde zadanie posuwało się do przodu, CPU przełącza się miedzy nimi, aż do ich zakończenia. Proces ten nazywamy przełączaniem kontekstów. To daje nam wrażenie, że wszystko co się dzieje na ekranie komputera, wykonuje się niejako jednocześnie. To sprytna sztuczka, oszukiwanie ludzkiego oka i percepcji.</p>
+
+<p>Wielowątkowość to również przetwarzanie wielu zadań na raz, ale już bez przełączania kontekstu, ponieważ każdy wątek dostaje swoje zasoby może wykonywać przydzielone zadanie równocześnie z innymi wątkami. W tym przypadku możemy mówić o przynajmniej dwóch CPU (to uproszczenie), które nie przełączają się między zadaniami, tylko dostają po jednym i wykonują je bez przerwy, aż do zakończenia.</p>
+
+<p>By jeszcze lepiej to zrozumieć, posłużmy się prostą analogią. Współbieżność jest jak gotowanie w kuchni, przez chwilę mieszasz gotujący się makaron, potem wrzucasz kotlet na patelnię, by  za chwilę kroić warzywa na sałatkę. Nie kroisz jedną ręką warzyw, a drugą nie mieszasz makaronu, obracając stopą kotleta :) (no może niektórzy tak potrafią). Przeskakujesz między czynnościami, aby  wszystkie zakończyć w podobnym czasie i móc podać gotowy obiad. Wielowątkowość to po prostu większa liczba kucharzy w kuchni, którzy nie wchodzą sobie w drogę. Obiad powstaje szybciej, ale wymaga więcej ludzi.</p>
+
+<p>Oba podejścia można oczywiście łączyć, otrzymując wielozadaniowe wątki i jednostki przetwarzania. Obecnie architektury sprzętowe mogą być bardzo różne i rozbudowane, od procesora jednordzeniowego, poprzez wielordzeniowe CPU, a kończąc na wielu procesorach wielordzeniowych.</p>
+
+<p>Z przetwarzaniem współbieżnym i wielowątkowym wiążą się również spore wyzwania i ograniczenia. Nie jest to remedium na wszystko, ale potrafią (gdy są odpowiednio użyte) mocno przyśpieszyć działanie naszego programu.</p>
+
+<h3 id="operacje-wlinijce-kodu">Operacje w linijce kodu</h3>
+
+<p>Kiedy znamy już różnicę między współbieżnością, a wielowątkowością, przejdźmy do najbardziej podstawowego pojmowanie kodu właśnie w tym kontekście.</p>
+
+<p>Gdy widzisz taką linijkę kodu, to co myślisz?</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">+=</span> <span class="mi">42</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Niby jedna operacja, nic bardziej mylnego! Tak naprawdę dzieją się tam trzy rzeczy:</p>
+
+<ol>
+  <li>Odczytanie zmiennej <strong>x</strong>.</li>
+  <li>Modyfikacja tej zmiennej</li>
+  <li>Zapis zmiennej <strong>x</strong> w pamięci.</li>
+</ol>
+
+<p>Każda ta operacja przedstawia inny stan zmiennej <strong>x</strong>. Pomiędzy lub nawet w trakcie tych operacji, inny wątek może też chcieć skorzystać z naszej zmiennej. Pytanie w jakim stanie powinna się ona znajdować? By odpowiedzieć na to pytanie musimy najpierw zrozumieć czym są <strong>niezmienniki</strong>.</p>
+
+<h3 id="niezmienniki">Niezmienniki</h3>
+
+<p><strong>Niezmiennik</strong> to stan zmiennej/obiektu/modułu/systemu, który musi być prawdą w każdym momencie jego obserwacji.</p>
+
+<p>Kluczowymi słowami w tej definicji są <strong>stan</strong>, <strong>prawda</strong> i <strong>obserwacja</strong>. Rozłóżmy to na czynniki pierwsze. Jeśli chcesz nauczyć się dobrze programować wielowątkowo to wpierw naucz się myśleć, nie w kategoriach zmiennych czy obiektów, ale ich stanu w jakim się obecnie znajdują, w jakim będą się znajdować za chwilę itd.</p>
+
+<p>Mamy metodę klasy <strong>Account</strong>, która ma taką implementację metody <strong>transfer</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Niezmiennikami mogą być, w takim przypadku, poniższe założenia:</p>
+
+<ol>
+  <li>Saldo każdego konta jest zawsze ≥ 0.</li>
+  <li>Suma środków <strong>account.balance</strong> i <strong>this-&gt;balance</strong> jest taka sama w każdym obserwowanym momencie.</li>
+  <li>Metoda transfer jest niepodzielną zmianą systemu.</li>
+  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>this-&gt;balance</strong>.</li>
+</ol>
+
+<p>Powyższe 4 punkty to są założenia, które metoda <strong>transfer</strong> powinna spełniać. Czy tak jest? No niestety nie. W wyniku wykonywania tej metody, nie ma żadnych ograniczeń w tym, by  inny wątek odwołał się do tych obiektów.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="c1">// W&amp;nbsp;tym momencie obserwacji, część niezmienników nie jest prawdziwa</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Aby temu zaradzić należałoby dodać <strong>mutex</strong>. Czym są mutexy? O tym trochę później. Skupmy się na fundamentach. By dobrze określić niezmienniki należy zadać sobie odpowiednie pytania. Weźmy przykład prostej klasy <strong>Counter</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Counter</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+    <span class="p">{</span>
+        <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">auto</span> <span class="n">getValue</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<ol>
+  <li>Co jest stanem naszego obiektu klasy <strong>Counter</strong>?</li>
+</ol>
+
+<p>Stanem jest zmienna <strong>value</strong>, a raczej to jaką wartość posiada w każdym momencie obserwacji.</p>
+
+<ol>
+  <li>Kto może obserwować stan obiektu klasy <strong>Colunter</strong>?</li>
+</ol>
+
+<p>Każdy inny wątek w dowolnym momencie. Nie tylko przed i po wywołaniu metod.</p>
+
+<ol>
+  <li>Jaki stan jest niedozwolony? Sprawia, że obiekt klasy <strong>Counter</strong> jest niespójny?</li>
+</ol>
+
+<p><strong>value</strong> jest ujemne.</p>
+
+<p>Naszym niezmiennikiem będzie więc: “Stan zmiennej <strong>value</strong> jest nieujemny w każdym momencie obserwacji.”</p>
+
+<p>Zastanówmy się, czy jest w ogóle możliwość, aby  ten niezmiennik był złamany? Dla przykładu metoda <strong>increment</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Czy istnieje moment, w którym <strong>value</strong> może być ujemny? Weź pod uwagę dowolny przeplot wątków. Zakładamy brak synchronizacji i wiele wątków korzystających z tego samego obiektu klasy <strong>Counter</strong>. Wartość <strong>value</strong> jest inicjalizowana jako 0.</p>
+
+<p>Odpowiedź brzmi: tak.</p>
+
+<p>Intuicyjnie jest to przecież niemożliwe, prawda? Przecież zaczynamy od 0 i tylko inkrementujemy. Tak, to prawda, jednak przy przetwarzaniu wielowątkowym, w przypadku naszej klasy <strong>Counter</strong>, mamy do czynienia z <strong>data race</strong>. Wątki konkurują ze sobą o dostęp do <strong>value</strong>. Gdy jeden z wątków właśnie pracuje nad zwiększeniem <strong>value</strong>, inny, w dowolnym momencie może zaobserwować <strong>value</strong> i odczytać jej stan jako dowolny ciąg bitów. <strong>value</strong> może być jeszcze w rejestrze CPU, może zawierać starą wartość, może zawierać tylko fragment nowej wartości (w reprezentacji bitowej). Standard C++ określa <strong>data race</strong> jako Undefined Behavior. Po dokładne szczegóły <a href="https://cppreference.net/cpp/language/multithread.html" target="_blank" rel="noopener">odsyłam do oficjalnej dokumentacji</a>.</p>
+
+<p>Wyznaczanie niezmienników nie jest rzeczą trywialną i wymaga ćwiczeń, niemniej znając ich definicje i założenia będzie to znacznie prostsze.</p>
+
+<h3 id="sekcja-krytyczna">Sekcja krytyczna</h3>
+
+<p>Wiedząc już czym są niezmienniki, czas przejść do ich spełniania w naszym kodzie. Wspominałem wcześniej o <strong>mutexie</strong>. To narzędzie do synchronizacji pomiędzy wątkami. Jest ich jeszcze kilka, ale ważniejsze jest teraz to, co ze sobą niosą. Sekcja krytyczna to taki fragment kodu/systemu, który nie może być obserwowalny przez inne wątki, aby  zachować niezmienniki.</p>
+
+<p>Wiedząc już jaki stan jest niedopuszczalny w naszym kodzie, musimy nauczyć się wydzielać te miejsca, które do takiego stanu doprowadzają i zablokować możliwość ich obserwacji przez inne wątki. Do tego, między innymi, służy <strong>mutex</strong>. Gdy jest zablokowany, nie dopuszcza innych wątków do momentu jego zwolnienia, a ich dostęp jest kolejkowany.</p>
+
+<p>Wróćmy do przykładu z funkcją <strong>transfer</strong> i dodajmy do niej <strong>mutex</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">transferLock</span> <span class="p">{</span> <span class="n">transferMutex</span> <span class="p">};</span>
+    <span class="n">account</span><span class="o">-&gt;</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>std::lock_guard</strong> to narzędzie typu <a href="https://pl.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization" target="_blank" rel="noopener">RAII</a>, samo blokuje <strong>mutex</strong> w chwili tworzenia i odblokowuje w momencie destrukcji. Teraz funkcja <strong>transfer</strong> zachowuje niezmiennik:</p>
+
+<ol>
+  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>this-&gt;balance</strong>.</li>
+</ol>
+
+<p>Obserwowalny moment jest tylko przed zablokowaniem <strong>mutexa</strong> i po jego odblokowaniu, czyli całe ciało funkcji <strong>transfer</strong> nie jest dostępne dla innych wątków. Nie zawsze sekcja krytyczna to występujące po sobie linijki kodu. Najważniejsze są <strong>niezmienniki</strong>. Należy zawsze, przy analizie kodu wielowątkowego, zadawać sobie pytanie o poprawny stan naszej zmiennej czy obiektu.</p>
+
+<p>Dla klasy <strong>Counter</strong> sekcją krytyczną będą wszystkie operacje na zmiennej <strong>value</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Counter</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span><span class="n">valueMutex</span><span class="p">};</span>
+        <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">auto</span> <span class="n">getValue</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span><span class="n">valueMutex</span><span class="p">};</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">valueMutex</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>To że blokujemy <strong>mutex</strong> osobno w metodzie <strong>increment</strong> i osobno w <strong>getValue</strong> to dalej jest to jedna i ta sama sekcja krytyczna, bo tyczy się stanu tej samej zmiennej czyli tych samych niezmienników.</p>
+
+<h3 id="podsumowanie">Podsumowanie</h3>
+
+<p>Znasz już najważniejsze koncepty myślenia wielowątkowego. Dzięki nim poznawanie świata programowania wielowątkowego będzie znacznie łatwiejsze. W następnym wpisie z tego cyklu poruszę najważniejsze zagrożenia płynące z wielowątkowości. Jeżeli chcesz poznać więcej szczegółów przetwarzania wielowątkowego, polecam zapoznać się z tytułem <a href="https://lubimyczytac.pl/ksiazka/4946367/jezyk-c-i-przetwarzanie-wspolbiezne-w-akcji-wydanie-ii" target="_blank" rel="noopener">“Język C++ i przetwarzanie współbieżne w akcji.”</a> - Anthony Williams. Jest to świetna pozycja, by  dobrze zrozumieć wielowątkowość i zastosować ją w swoich projektach. Książka tak zawiera również bardzo zaawansowaną wiedzę na temat szeregowania dostępu do pamięci oraz tworzenia struktur bez blokad (mutexów), co może być po prostu zbyt trudne do przyswojenia, jeżeli dopiero zaczynasz naukę tej dziedziny. Warto wtedy ostanie kilka rozdziałów zostawić sobie na później :)</p>
+
+<p><strong>Autor:</strong> Tadeusz Biela<br />
+Programista C++ | Entuzjasta TDD | Fan unit testów</p>
+
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>]]></content><author><name>Tadeusz Biela</name></author><category term="multithreading" /><category term="multithreading" /><category term="developer practices" /><category term="software" /><summary type="html"><![CDATA[Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.]]></summary></entry><entry><title type="html">6 najczęstszych błędów z Google Test.</title><link href="https://cpptested.com/clean%20code/gtest-mistakes/" rel="alternate" type="text/html" title="6 najczęstszych błędów z Google Test." /><published>2026-01-26T00:00:00+01:00</published><updated>2026-01-26T00:00:00+01:00</updated><id>https://cpptested.com/clean%20code/gtest-mistakes</id><content type="html" xml:base="https://cpptested.com/clean%20code/gtest-mistakes/"><![CDATA[<p>Google Test to chyba najbardziej znany i używany framework testowy w projektach C++. Zawiera w sobie masę przydatnych narzędzi do tworzenia różnych rodzajów testów. Ja osobiście stosuję go w swoich projektach pisząc unit testy, ale nic nie stoi na przeszkodzie by tworzyć testy modułowe czy komponentowe (typu black box). Ceniony za swą uniwersalność oraz rozbudowany system asercji jest narzędziem bardzo potężnym. Mimo to nie jest również bez wad. Im bardziej złożone jest narzędzie tym trudniej się go nauczyć i korzystać z niego poprawnie.</p>
 
 <p>Popełniamy błędy. To normalne, ważne jest co z tym zrobimy. Warto wyciągnąć z nich lekcje na przyszłość. Poniższa lista to nic innego jak moje własne obserwacje, jak programiści C++(w tym ja) wykorzystują <strong>GTest</strong> i gdzie najczęściej popełniają błędy.</p>
 

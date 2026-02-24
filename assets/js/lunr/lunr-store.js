@@ -40,4 +40,10 @@ var store = [{
         "tags": ["clean code","code quality","developer practices","software"],
         "url": "/clean%20code/gtest-mistakes/",
         "teaser": null
+      },{
+        "title": "Fundamenty myślenia wielowątkowego",
+        "excerpt":"Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia...","categories": ["multithreading"],
+        "tags": ["multithreading","developer practices","software"],
+        "url": "/multithreading/multithreading-fundamentals/",
+        "teaser": null
       }]

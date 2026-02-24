@@ -1,0 +1,843 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.0 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="pl" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Fundamenty myślenia wielowątkowego - CppTested</title>
+<meta name="description" content="Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl">
+<meta property="og:site_name" content="CppTested">
+<meta property="og:title" content="Fundamenty myślenia wielowątkowego">
+<meta property="og:url" content="https://cpptested.com/multithreading/multithreading-fundamentals/">
+
+
+  <meta property="og:description" content="Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-02-24T00:00:00+01:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://cpptested.com/multithreading/multithreading-fundamentals/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="CppTested Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<script type="text/javascript" charset="UTF-8" src="//cdn.cookie-script.com/s/e646ffbf6c153feb4a722a4017c1873b.js"></script>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Fundamenty myślenia wielowątkowego | CppTested</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Fundamenty myślenia wielowątkowego" />
+<meta name="author" content="Tadeusz Biela" />
+<meta property="og:locale" content="pl" />
+<meta name="description" content="Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy." />
+<meta property="og:description" content="Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy." />
+<link rel="canonical" href="https://cpptested.com/multithreading/multithreading-fundamentals/" />
+<meta property="og:url" content="https://cpptested.com/multithreading/multithreading-fundamentals/" />
+<meta property="og:site_name" content="CppTested" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-02-24T00:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Fundamenty myślenia wielowątkowego" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Tadeusz Biela"},"dateModified":"2026-02-24T00:00:00+01:00","datePublished":"2026-02-24T00:00:00+01:00","description":"Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.","headline":"Fundamenty myślenia wielowątkowego","mainEntityOfPage":{"@type":"WebPage","@id":"https://cpptested.com/multithreading/multithreading-fundamentals/"},"url":"https://cpptested.com/multithreading/multithreading-fundamentals/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HKF97SJC9Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HKF97SJC9Z');
+</script>
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="icon" type="image/png" href="/favicon.png">
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Przejdź do nawigacji</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Przejdź do treści</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Przejdź do stopki</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+	<a href="/" class="site-logo">
+	  <span style="color: white; font-family: Courier, monospace;">Cpp</span>
+  	  <span style="color: #28a745; font-family: Courier, monospace;">Tested</span>
+	  <span class="blinking-cursor">|</span>
+	</a>	
+        <a class="site-title" href="/">
+          CppTested
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/posts/"
+                
+                
+              >Wpisy</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/categories/"
+                
+                
+              >Kategorie</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/tags/"
+                
+                
+              >Tagi</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/about/"
+                
+                
+              >O mnie</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Przełącz wyszukiwanie</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Przełącz menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Fundamenty myślenia wielowątkowego">
+    <meta itemprop="description" content="Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.">
+    <meta itemprop="datePublished" content="2026-02-24T00:00:00+01:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://cpptested.com/multithreading/multithreading-fundamentals/" itemprop="url">Fundamenty myślenia wielowątkowego
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-02-24T00:00:00+01:00">24 lutego 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> Spis treści</h4></header>
+              <ul class="toc__menu"><li><a href="#współbieżność-iwielowątkowość">Współbieżność i wielowątkowość</a></li><li><a href="#operacje-wlinijce-kodu">Operacje w linijce kodu</a></li><li><a href="#niezmienniki">Niezmienniki</a></li><li><a href="#sekcja-krytyczna">Sekcja krytyczna</a></li><li><a href="#podsumowanie">Podsumowanie</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.</p>
+
+<h3 id="współbieżność-iwielowątkowość">Współbieżność i wielowątkowość</h3>
+
+<p>Rozpoczniemy od rozróżnienia, czym jest współbieżność, a czym wielowątkowość. Zrozumienie obu zagadnień umożliwi Ci zbudowanie solidnych podstaw myślenia, jak wygląda przetwarzanie zadań przez komputer.</p>
+
+<p>Współbieżność to wykonywanie zadań w tym samym czasie przez jedną jednostkę CPU. To znaczy, że nasz procesor otrzymuje kilka zadań i sekwencyjnie wykonuje po trochu każde z nich, przełączając konteksty między nimi. Zadania sumarycznie są wykonywane w tym samym czasie, ale tak naprawdę, to CPU jest w stanie pracować tylko nad jednym zadaniem na raz. Dlatego, by  każde zadanie posuwało się do przodu, CPU przełącza się miedzy nimi, aż do ich zakończenia. Proces ten nazywamy przełączaniem kontekstów. To daje nam wrażenie, że wszystko co się dzieje na ekranie komputera, wykonuje się niejako jednocześnie. To sprytna sztuczka, oszukiwanie ludzkiego oka i percepcji.</p>
+
+<p>Wielowątkowość to również przetwarzanie wielu zadań na raz, ale już bez przełączania kontekstu, ponieważ każdy wątek dostaje swoje zasoby może wykonywać przydzielone zadanie równocześnie z innymi wątkami. W tym przypadku możemy mówić o przynajmniej dwóch CPU (to uproszczenie), które nie przełączają się między zadaniami, tylko dostają po jednym i wykonują je bez przerwy, aż do zakończenia.</p>
+
+<p>By jeszcze lepiej to zrozumieć, posłużmy się prostą analogią. Współbieżność jest jak gotowanie w kuchni, przez chwilę mieszasz gotujący się makaron, potem wrzucasz kotlet na patelnię, by  za chwilę kroić warzywa na sałatkę. Nie kroisz jedną ręką warzyw, a drugą nie mieszasz makaronu, obracając stopą kotleta :) (no może niektórzy tak potrafią). Przeskakujesz między czynnościami, aby  wszystkie zakończyć w podobnym czasie i móc podać gotowy obiad. Wielowątkowość to po prostu większa liczba kucharzy w kuchni, którzy nie wchodzą sobie w drogę. Obiad powstaje szybciej, ale wymaga więcej ludzi.</p>
+
+<p>Oba podejścia można oczywiście łączyć, otrzymując wielozadaniowe wątki i jednostki przetwarzania. Obecnie architektury sprzętowe mogą być bardzo różne i rozbudowane, od procesora jednordzeniowego, poprzez wielordzeniowe CPU, a kończąc na wielu procesorach wielordzeniowych.</p>
+
+<p>Z przetwarzaniem współbieżnym i wielowątkowym wiążą się również spore wyzwania i ograniczenia. Nie jest to remedium na wszystko, ale potrafią (gdy są odpowiednio użyte) mocno przyśpieszyć działanie naszego programu.</p>
+
+<h3 id="operacje-wlinijce-kodu">Operacje w linijce kodu</h3>
+
+<p>Kiedy znamy już różnicę między współbieżnością, a wielowątkowością, przejdźmy do najbardziej podstawowego pojmowanie kodu właśnie w tym kontekście.</p>
+
+<p>Gdy widzisz taką linijkę kodu, to co myślisz?</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">+=</span> <span class="mi">42</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Niby jedna operacja, nic bardziej mylnego! Tak naprawdę dzieją się tam trzy rzeczy:</p>
+
+<ol>
+  <li>Odczytanie zmiennej <strong>x</strong>.</li>
+  <li>Modyfikacja tej zmiennej</li>
+  <li>Zapis zmiennej <strong>x</strong> w pamięci.</li>
+</ol>
+
+<p>Każda ta operacja przedstawia inny stan zmiennej <strong>x</strong>. Pomiędzy lub nawet w trakcie tych operacji, inny wątek może też chcieć skorzystać z naszej zmiennej. Pytanie w jakim stanie powinna się ona znajdować? By odpowiedzieć na to pytanie musimy najpierw zrozumieć czym są <strong>niezmienniki</strong>.</p>
+
+<h3 id="niezmienniki">Niezmienniki</h3>
+
+<p><strong>Niezmiennik</strong> to stan zmiennej/obiektu/modułu/systemu, który musi być prawdą w każdym momencie jego obserwacji.</p>
+
+<p>Kluczowymi słowami w tej definicji są <strong>stan</strong>, <strong>prawda</strong> i <strong>obserwacja</strong>. Rozłóżmy to na czynniki pierwsze. Jeśli chcesz nauczyć się dobrze programować wielowątkowo to wpierw naucz się myśleć, nie w kategoriach zmiennych czy obiektów, ale ich stanu w jakim się obecnie znajdują, w jakim będą się znajdować za chwilę itd.</p>
+
+<p>Mamy metodę klasy <strong>Account</strong>, która ma taką implementację metody <strong>transfer</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Niezmiennikami mogą być, w takim przypadku, poniższe założenia:</p>
+
+<ol>
+  <li>Saldo każdego konta jest zawsze ≥ 0.</li>
+  <li>Suma środków <strong>account.balance</strong> i <strong>this-&gt;balance</strong> jest taka sama w każdym obserwowanym momencie.</li>
+  <li>Metoda transfer jest niepodzielną zmianą systemu.</li>
+  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>this-&gt;balance</strong>.</li>
+</ol>
+
+<p>Powyższe 4 punkty to są założenia, które metoda <strong>transfer</strong> powinna spełniać. Czy tak jest? No niestety nie. W wyniku wykonywania tej metody, nie ma żadnych ograniczeń w tym, by  inny wątek odwołał się do tych obiektów.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="c1">// W&amp;nbsp;tym momencie obserwacji, część niezmienników nie jest prawdziwa</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Aby temu zaradzić należałoby dodać <strong>mutex</strong>. Czym są mutexy? O tym trochę później. Skupmy się na fundamentach. By dobrze określić niezmienniki należy zadać sobie odpowiednie pytania. Weźmy przykład prostej klasy <strong>Counter</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Counter</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+    <span class="p">{</span>
+        <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">auto</span> <span class="n">getValue</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<ol>
+  <li>Co jest stanem naszego obiektu klasy <strong>Counter</strong>?</li>
+</ol>
+
+<p>Stanem jest zmienna <strong>value</strong>, a raczej to jaką wartość posiada w każdym momencie obserwacji.</p>
+
+<ol>
+  <li>Kto może obserwować stan obiektu klasy <strong>Colunter</strong>?</li>
+</ol>
+
+<p>Każdy inny wątek w dowolnym momencie. Nie tylko przed i po wywołaniu metod.</p>
+
+<ol>
+  <li>Jaki stan jest niedozwolony? Sprawia, że obiekt klasy <strong>Counter</strong> jest niespójny?</li>
+</ol>
+
+<p><strong>value</strong> jest ujemne.</p>
+
+<p>Naszym niezmiennikiem będzie więc: “Stan zmiennej <strong>value</strong> jest nieujemny w każdym momencie obserwacji.”</p>
+
+<p>Zastanówmy się, czy jest w ogóle możliwość, aby  ten niezmiennik był złamany? Dla przykładu metoda <strong>increment</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Czy istnieje moment, w którym <strong>value</strong> może być ujemny? Weź pod uwagę dowolny przeplot wątków. Zakładamy brak synchronizacji i wiele wątków korzystających z tego samego obiektu klasy <strong>Counter</strong>. Wartość <strong>value</strong> jest inicjalizowana jako 0.</p>
+
+<p>Odpowiedź brzmi: tak.</p>
+
+<p>Intuicyjnie jest to przecież niemożliwe, prawda? Przecież zaczynamy od 0 i tylko inkrementujemy. Tak, to prawda, jednak przy przetwarzaniu wielowątkowym, w przypadku naszej klasy <strong>Counter</strong>, mamy do czynienia z <strong>data race</strong>. Wątki konkurują ze sobą o dostęp do <strong>value</strong>. Gdy jeden z wątków właśnie pracuje nad zwiększeniem <strong>value</strong>, inny, w dowolnym momencie może zaobserwować <strong>value</strong> i odczytać jej stan jako dowolny ciąg bitów. <strong>value</strong> może być jeszcze w rejestrze CPU, może zawierać starą wartość, może zawierać tylko fragment nowej wartości (w reprezentacji bitowej). Standard C++ określa <strong>data race</strong> jako Undefined Behavior. Po dokładne szczegóły <a href="https://cppreference.net/cpp/language/multithread.html" target="_blank" rel="noopener">odsyłam do oficjalnej dokumentacji</a>.</p>
+
+<p>Wyznaczanie niezmienników nie jest rzeczą trywialną i wymaga ćwiczeń, niemniej znając ich definicje i założenia będzie to znacznie prostsze.</p>
+
+<h3 id="sekcja-krytyczna">Sekcja krytyczna</h3>
+
+<p>Wiedząc już czym są niezmienniki, czas przejść do ich spełniania w naszym kodzie. Wspominałem wcześniej o <strong>mutexie</strong>. To narzędzie do synchronizacji pomiędzy wątkami. Jest ich jeszcze kilka, ale ważniejsze jest teraz to, co ze sobą niosą. Sekcja krytyczna to taki fragment kodu/systemu, który nie może być obserwowalny przez inne wątki, aby  zachować niezmienniki.</p>
+
+<p>Wiedząc już jaki stan jest niedopuszczalny w naszym kodzie, musimy nauczyć się wydzielać te miejsca, które do takiego stanu doprowadzają i zablokować możliwość ich obserwacji przez inne wątki. Do tego, między innymi, służy <strong>mutex</strong>. Gdy jest zablokowany, nie dopuszcza innych wątków do momentu jego zwolnienia, a ich dostęp jest kolejkowany.</p>
+
+<p>Wróćmy do przykładu z funkcją <strong>transfer</strong> i dodajmy do niej <strong>mutex</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">transferLock</span> <span class="p">{</span> <span class="n">transferMutex</span> <span class="p">};</span>
+    <span class="n">account</span><span class="o">-&gt;</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>std::lock_guard</strong> to narzędzie typu <a href="https://pl.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization" target="_blank" rel="noopener">RAII</a>, samo blokuje <strong>mutex</strong> w chwili tworzenia i odblokowuje w momencie destrukcji. Teraz funkcja <strong>transfer</strong> zachowuje niezmiennik:</p>
+
+<ol>
+  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>this-&gt;balance</strong>.</li>
+</ol>
+
+<p>Obserwowalny moment jest tylko przed zablokowaniem <strong>mutexa</strong> i po jego odblokowaniu, czyli całe ciało funkcji <strong>transfer</strong> nie jest dostępne dla innych wątków. Nie zawsze sekcja krytyczna to występujące po sobie linijki kodu. Najważniejsze są <strong>niezmienniki</strong>. Należy zawsze, przy analizie kodu wielowątkowego, zadawać sobie pytanie o poprawny stan naszej zmiennej czy obiektu.</p>
+
+<p>Dla klasy <strong>Counter</strong> sekcją krytyczną będą wszystkie operacje na zmiennej <strong>value</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Counter</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span><span class="n">valueMutex</span><span class="p">};</span>
+        <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">auto</span> <span class="n">getValue</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">int</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span><span class="n">valueMutex</span><span class="p">};</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="nl">private:</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">valueMutex</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>To że blokujemy <strong>mutex</strong> osobno w metodzie <strong>increment</strong> i osobno w <strong>getValue</strong> to dalej jest to jedna i ta sama sekcja krytyczna, bo tyczy się stanu tej samej zmiennej czyli tych samych niezmienników.</p>
+
+<h3 id="podsumowanie">Podsumowanie</h3>
+
+<p>Znasz już najważniejsze koncepty myślenia wielowątkowego. Dzięki nim poznawanie świata programowania wielowątkowego będzie znacznie łatwiejsze. W następnym wpisie z tego cyklu poruszę najważniejsze zagrożenia płynące z wielowątkowości. Jeżeli chcesz poznać więcej szczegółów przetwarzania wielowątkowego, polecam zapoznać się z tytułem <a href="https://lubimyczytac.pl/ksiazka/4946367/jezyk-c-i-przetwarzanie-wspolbiezne-w-akcji-wydanie-ii" target="_blank" rel="noopener">“Język C++ i przetwarzanie współbieżne w akcji.”</a> - Anthony Williams. Jest to świetna pozycja, by  dobrze zrozumieć wielowątkowość i zastosować ją w swoich projektach. Książka tak zawiera również bardzo zaawansowaną wiedzę na temat szeregowania dostępu do pamięci oraz tworzenia struktur bez blokad (mutexów), co może być po prostu zbyt trudne do przyswojenia, jeżeli dopiero zaczynasz naukę tej dziedziny. Warto wtedy ostanie kilka rozdziałów zostawić sobie na później :)</p>
+
+<p><strong>Autor:</strong> Tadeusz Biela<br />
+Programista C++ | Entuzjasta TDD | Fan unit testów</p>
+
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tagi: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#developer-practices" class="page__taxonomy-item p-category" rel="tag">developer practices</a><span class="sep">, </span>
+    
+      <a href="/tags/#multithreading" class="page__taxonomy-item p-category" rel="tag">multithreading</a><span class="sep">, </span>
+    
+      <a href="/tags/#software" class="page__taxonomy-item p-category" rel="tag">software</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Kategorie: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#multithreading" class="page__taxonomy-item p-category" rel="tag">multithreading</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Ostatnia aktualizacja:</strong> <time class="dt-published" datetime="2026-02-24T00:00:00+01:00">24 lutego 2026</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  <h4 class="page__share-title">Udostępnij</h4>
+
+  <a href="https://x.com/intent/tweet?text=Fundamenty+my%C5%9Blenia+wielow%C4%85tkowego%20https%3A%2F%2Fcpptested.com%2Fmultithreading%2Fmultithreading-fundamentals%2F" class="btn btn--x" aria-label="Share on X" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij X">
+    <i class="fas fa-fw fa-share-alt" aria-hidden="true"></i><span> X</span>
+  </a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcpptested.com%2Fmultithreading%2Fmultithreading-fundamentals%2F" class="btn btn--facebook" aria-label="Share on Facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij Facebook">
+    <i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span>
+  </a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://cpptested.com/multithreading/multithreading-fundamentals/" class="btn btn--linkedin" aria-label="Share on LinkedIn" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Udostępnij LinkedIn">
+    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span>
+  </a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/clean%20code/gtest-mistakes/" class="pagination--pager" title="6 najczęstszych błędów z Google Test.">Poprzednia</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Następna</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+      
+        <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Zostaw komentarz</h4>
+      <div class="giscus"></div>
+      <script src="https://giscus.app/client.js"
+              data-repo="TadekBiela/cpptested"
+              data-repo-id="R_kgDOPEW3uQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDOPEW3uc4CsbpH"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="light"
+              data-lang="pl"
+              crossorigin="anonymous"
+              async>
+      </script>
+    
+</div>
+
+      
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">Także może Ci się spodobać</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/clean%20code/gtest-mistakes/" rel="permalink">6 najczęstszych błędów z Google Test.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-01-26T00:00:00+01:00">26 stycznia 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          11 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Google Test to chyba najbardziej znany i używany framework testowy w projektach C++. Zawiera w sobie masę przydatnych narzędzi do tworzenia różnych rodzajów ...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/unit-testing/handling-globals/" rel="permalink">Zależności globalne - jak poradzić sobie z nimi w unit testach
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-12-16T00:00:00+01:00">16 grudnia 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          7 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Każdy dobry unit test powinien nie tylko weryfikować nasz kod ale również odcinać zewnętrzne zależności, tak, aby przeprowadzenie testu odbywało się w izolac...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/clean-code/dry-and-other-principles/" rel="permalink">DRY, YAGNI, KISS i inne. Uniwersalne zasady dla każdego programisty.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-11-17T00:00:00+01:00">17 listopada 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          12 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady,...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/multithreading/exception-in-thread/" rel="permalink">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2025-10-13T00:00:00+02:00">13 października 2025</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-fw fa-clock" aria-hidden="true"></i>
+        
+          10 minut(y)
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z...</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Wprowadź kryteria wyszukiwania...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Wprowadź kryteria wyszukiwania..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    <li style="justify-content: space-between; align-items: center;">
+      <img src="/favicon.png" alt="Logo" style="">
+    </li>
+
+    
+      <li><strong>Obserwuj:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/tadeuszbiela/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/TadekBiela" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> RSS</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2026 <a href="https://cpptested.com">CppTested</a>. Powstało dzięki <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function () {
+    var commentContainer = document.querySelector('#giscus-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+
+    script.setAttribute('src', 'https://giscus.app/client.js');
+    script.setAttribute('data-repo', '');
+    script.setAttribute('data-repo-id', 'R_kgDOPEW3uQ');
+    script.setAttribute('data-category', '');
+    script.setAttribute('data-category-id', 'DIC_kwDOPEW3uc4CsbpH');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'top');
+    script.setAttribute('data-theme', 'light');
+    script.setAttribute('data-lang',  'pl');
+    
+    script.setAttribute('crossorigin', 'anonymous');
+
+    script.setAttribute('async', '');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+  </body>
+</html>
