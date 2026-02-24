@@ -40,10 +40,4 @@ var store = [{
         "tags": ["clean code","code quality","developer practices","software"],
         "url": "/clean%20code/gtest-mistakes/",
         "teaser": null
-      },{
-        "title": "Największy wróg unit testów - logika.",
-        "excerpt":"Logika, przepływ sterowania, instrukcje warunkowe - to dzięki nim nasze programy mogą spełniać szeregi wymagań i oczekiwań. Dzięki nim możemy rozbudowywać nasz program, rozwijać obecne funkcjonalności oraz dodawać nowe. Każdy programista wie, że bez nich tworzenie oprogramowania nie mogłoby mieć miejsca. Czy zatem nasze unit testy, również powinny zawierać logikę? Zdecydowanie nie, i w tym wpisie...","categories": ["unit-testing"],
-        "tags": ["clean code","software testing","code quality","developer practices"],
-        "url": "/unit-testing/logic-in-uts/",
-        "teaser": null
       }]
