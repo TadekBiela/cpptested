@@ -1,5 +1,5 @@
 ---
-title: "Wątki i&nbsp;wyjątki. Jak radzić sobie z&nbsp;nieoczekiwanymi zachowaniami w&nbsp;wielowątkowym kodzie."
+title: "Wątki i wyjątki. Jak radzić sobie z&nbsp;nieoczekiwanymi zachowaniami w&nbsp;wielowątkowym kodzie."
 date: 2025-10-13
 author: "Tadeusz Biela"
 categories:
@@ -25,17 +25,17 @@ Prócz standardowych wyjątków, możemy również zdefiniować własne, po&nbsp
 class ReadFileException : public std::exception
 {
 public:
-	ReadFileException(const std::string inputFileName)
-	 : fileName(inputFileName)
+	explicit ReadFileException(const std::string& fileName)
+	 : fileName_(fileName)
 	{}
 
-	const char* what() const noexcept override
+	auto what() const noexcept override -> const char*
 	{
-		return fileName.c_str();
+		return fileName_.c_str();
 	}
 
 private:
-	const std::string fileName;
+	const std::string fileName_;
 };
 ```
 
@@ -44,7 +44,7 @@ private:
 Rzucanie wyjątków w&nbsp;C++ jest banalnie proste, wystarczy użyć słowa kluczowego **throw** na obiekcie klasy wyjątka. Najczęściej będzie to obiekt tymczasowy. Jeszcze nie spotkałem się, z&nbsp;potrzebą składowania obiektów wyjątków, niemniej jest to jak najbardziej możliwe.
 
 ```cpp
-throw ReadFileException("file.txt");
+throw ReadFileException{ "file.txt" };
 ```
 
 Jak widać, rzucanie wyjątków jest proste, łatwe i&nbsp;czytelne. Inaczej jest z&nbsp;ich łapaniem. Obsługa wyjątków C++ jest już bardziej złożona. Do&nbsp;przechwytywania wyjątków służy blok **try/catch**.
@@ -205,9 +205,9 @@ Trzeba jednak zachować umiar bo możemy skończyć z&nbsp;bardzo nieczytelnym k
 C++11 udostępnia nam też słowo kluczowe **noexcept**, którym możemy oznaczyć funkcje i&nbsp;metody nierzucające wyjątków. Czyli takie, które używają operacji bezpiecznych pod względem wyjątków i/lub same je obsługują. Słowo kluczowe **noexcept** możemy także zastosować do konstruktorów i&nbsp;destruktora klasy.
 
 ```cpp
-int add(int a, int b) noexcept
+auto add(int a, int b) noexcept -> int
 {
-    return a&nbsp;+ b;
+    return a + b;
 }
 
 class FileHandler
@@ -216,16 +216,16 @@ public:
     FileHandler() noexcept;
     ~FileHandler() noexcept;
 
-    bool openFile(const std::string& fileName);
-    std::string read() const;
-    void closeFile() noexcept;
+    auto openFile(const std::string& fileName) -> bool;
+    auto read() const -> std::string;
+    auto closeFile() noexcept -> void;
 
 private:
-    File file;
+    File file_;
 };
 ```
 
-Żeby móc oznaczyć funkcję lub metodę jako **noexcept**. Wszystkie operacje i&nbsp;wywoływane funkcje/metody także powinny być oznaczone jako **noexcept**, by&nbsp;zachować bezpieczeństwo w&nbsp;kontekście wyjątków. Niestety kompilator nas nie poinformuje, jeżeli ten warunek nie jest spełniony. 
+Żeby móc oznaczyć funkcję lub metodę jako **noexcept**, wszystkie operacje i&nbsp;wywoływane funkcje/metody także powinny być oznaczone jako **noexcept**, by&nbsp;zachować bezpieczeństwo w&nbsp;kontekście wyjątków. Niestety kompilator nas nie poinformuje, jeżeli ten warunek nie jest spełniony.
 Co jeśli oznaczymy naszą funkcję/metodę jako **noexcept**, a&nbsp;z jakiegoś powodu jednak rzuci wyjątek? Specyfikacja podpowiada, że&nbsp;zostanie wywołana funkcja **std::terminate()**, która&nbsp;zakończy działanie naszego programu niezależnie od tego czy dany kod był w&nbsp;bloku **try/catch** czy nie.
 
 **noexcept** jest równoznaczne z&nbsp;**noexcept(true)**. Natomiast domyślnie wszystkie funkcje i&nbsp;metody oznaczone są jako **noexcept(false)**. Dlaczego dodano osobno **noexcept** oraz **noexcept(true/false)**? Głównie ze względu na szablony i&nbsp;metaprogramowanie, gdzie&nbsp;o&nbsp;tym czy funkcja lub metoda może lub nie może rzucać wyjątków kompilator dowiaduje się dopiero w&nbsp;trakcje kompilacji i&nbsp;konkretyzacji szablonów.
@@ -233,15 +233,15 @@ Co jeśli oznaczymy naszą funkcję/metodę jako **noexcept**, a&nbsp;z jakiego�
 **noexcept** jest traktowane jako część typu funkcji. To&nbsp;znaczy, że&nbsp;jeśli mamy wskaźniki na funkcje, które różnią się tylko **noexcept**, to&nbsp;będą one traktowane jako osobne typy. Tak&nbsp;samo jeżeli chodzi o&nbsp;parametry szablonu.
 
 ```cpp
-using funcPtr1 = bool(const int);
-using funcPtr2 = bool(const int) noexcept;
+using funcPtr1 = auto(const int) -> bool;
+using funcPtr2 = auto(const int) noexcept -> bool;
 ```
 
 **noexcept** nie można za to stosować do przeciążania funkcji, gdyż&nbsp;nie wchodzi w&nbsp;skład jej sygnatury.
 
 ```cpp
-int add(int a, int b) noexcept;
-int add(int a, int b); // Błąd kompilacji, redefinicja funkcji "add"
+auto add(int a, int b) noexcept -> int;
+auto add(int a, int b) -> int; // Błąd kompilacji, redefinicja funkcji "add"
 ```
 
 Zaletą **noexcept** jest przede wszystkim optymalizacja. Kompilator nie musi generować dodatkowego kodu do zwijania stosu po wystąpieniu wyjątku. Może także dobrać bardziej optymalne algorytmy STL. Łatwiej jest kompilatorowi inline’ować funkcję/metodę. Binarka wynikowa, również ma mniejszy rozmiar.
@@ -251,13 +251,14 @@ Zaletą **noexcept** jest przede wszystkim optymalizacja. Kompilator nie musi ge
 Przejdźmy teraz do wielowątkowego przechwytywania wyjątków. Nie&nbsp;jest to rzecz taka prosta. Spójrz na ten kod, czy&nbsp;jest on bezpieczny pod względem wyjątków?
 
 ```cpp
-std::thread calucalteSumThread;
+std::thread calculateSumThread;
 try
 {
-    calucalteSumThread = std::thread([]()
-    {
-        throw std::runtime_error("calculation error!");
-    });
+    calculateSumThread = std::thread([]()
+        {
+            throw std::runtime_error("calculation error!");
+        }
+    );
 }
 catch(const std::runtime_error& ex)
 {
@@ -268,9 +269,9 @@ catch(...)
     std::cerr << "Something unexpected happened!\n";
 }
 
-if (calucalteSumThread.joinable())
+if (calculateSumThread.joinable())
 {
-    calucalteSumThread.join();
+    calculateSumThread.join();
 }
 ```
 
@@ -284,29 +285,30 @@ terminate called after throwing an instance of 'std::runtime_error'
 Dzieje się tak dlatego, że&nbsp;wątek traktowany jest jako osobny proces pomimo, iż&nbsp;należy do głównego wątku naszej aplikacji. Jednym z&nbsp;rozwiązań tego problemu jest obsługa wyjątków wewnątrz wątku i&nbsp;nie wyrzucanie ich na zewnątrz, tworząc wątek bezpieczny względem wyjątków.
 
 ```cpp
-std::thread calucalteSumThread;
+std::thread calculateSumThread;
 try
 {
-    calucalteSumThread = std::thread([]()
-    {
-        try
+    calculateSumThread = std::thread{ []()
         {
-            throw std::runtime_error("calculation error!");
+            try
+            {
+                throw std::runtime_error("calculation error!");
+            }
+            catch(const std::runtime_error& ex)
+            {
+                std::cerr << ex.what() << "\n";
+            }
         }
-        catch(const std::runtime_error& ex)
-        {
-            std::cerr << ex.what() << "\n";
-        }
-    });
+    };
 }
 catch(...)
 {
     std::cerr << "Something unexpected happened!\n";
 }
 
-if (calucalteSumThread.joinable())
+if (calculateSumThread.joinable())
 {
-    calucalteSumThread.join();
+    calculateSumThread.join();
 }
 ```
 
@@ -316,6 +318,8 @@ Wynikiem będzie tylko komunikat przechwyconego wyjątku, a&nbsp;nasz program b�
 calculation error!
 ```
 
+Tutaj jeszcze warto dodać, że&nbsp;od C++20 mamy dostępny nowy sposób tworzenia wątków w&nbsp;postaci **std::jthread**. Dzięki któremu nie musimy ręcznie wywoływać **join()**. Niemniej wiem, że&nbsp;nie każdy może sobie pozwolić na korzystanie z&nbsp;nowszych standardów C++ w swoiej pracy. Dla&nbsp;dociekliwych odsyłam do [oficialnej dokumentacji](https://en.cppreference.com/w/cpp/thread/jthread.html){:target="_blank" rel="noopener"}.
+
 ### Przekierowanie wyjątku do wątku głównego
 
 Tworzenie osobnego bloku **try/catch** w&nbsp;wątku i&nbsp;poza nim może doprowadzić do niepotrzebnej złożoności. Możemy też potrzebować obsłużyć wyjątek w&nbsp;głównym wątku naszej aplikacji, gdy&nbsp;wyjątek wystąpi wewnątrz wątku, aby&nbsp;poprawnie zareagować na taką sytuację. C++&nbsp;od wersji 11 wraz z&nbsp;całą obsługą wyjątków daje nam kilka narzędzi, które rozwiązują ten problem: **std::async**, **std::packaged_task** i&nbsp;**promise**. Każde z&nbsp;nich umożliwia przekierowanie wyjątków z&nbsp;wątku pobocznego do wątku głównego.
@@ -323,10 +327,11 @@ Tworzenie osobnego bloku **try/catch** w&nbsp;wątku i&nbsp;poza nim może dopro
 Zacznijmy od **std::async**. To&nbsp;szablon funkcji o&nbsp;zmiennej liczbie parametrów umożliwiający uruchomienie przekazanej funkcji lub metody w&nbsp;osobnym wątku. Zwraca obiekt **std::future**, który po wywołaniu metody **get()** zwróci wynik lub wyjątek jeśli wystąpił.
 
 ```cpp
-auto exceptionFutureObj = std::async(std::launch::async, []()
-{
-    throw std::runtime_error("calculation error!");
-});
+auto exceptionFutureObj{ std::async(std::launch::async, []()
+    {
+        throw std::runtime_error("calculation error!");
+    })
+};
 
 try
 {
@@ -338,17 +343,18 @@ catch(const std::runtime_error& ex)
 }
 ```
 
-Widać tutaj prostotę tego rozwiązania. Wątek poboczny nie zawiera już bloku **try/catch**. Cała&nbsp;obsługa wyjątku dzieje się pod spodem **std::async**. Kod&nbsp;jest czysty i&nbsp;zrozumiały. By&nbsp;mieć pewność, że funkcja przekazana jako parametr uruchomi się w&nbsp;osobnym wątku, trzeba ustawić tryb uruchamiania na **std::launch::async**. W&nbsp;trybie **std::launch::deffered** funkcja zostanie uruchomiona w&nbsp;tym samym wątku dopiero w&nbsp;momencie wywołania metody **get()** lub **wait()** na zwróconym przez **async** obiekcie **future**. Domyślnie, to&nbsp;implementacja decyduje jaki tryb uruchamiania zostanie wykorzystany.
+Widać tutaj prostotę tego rozwiązania. Wątek poboczny nie zawiera już bloku **try/catch**. Cała&nbsp;obsługa wyjątku dzieje się pod spodem **std::async**. Kod&nbsp;jest czysty i&nbsp;zrozumiały. By&nbsp;mieć pewność, że funkcja przekazana jako parametr uruchomi się w&nbsp;osobnym wątku, trzeba ustawić tryb uruchamiania na **std::launch::async**. W&nbsp;trybie **std::launch::deferred** funkcja zostanie uruchomiona w&nbsp;tym samym wątku dopiero w&nbsp;momencie wywołania metody **get()** lub **wait()** na zwróconym przez **async** obiekcie **future**. Domyślnie, to&nbsp;implementacja decyduje jaki tryb uruchamiania zostanie wykorzystany.
 
 Drugim narzędziem, którym możemy przekazać wyjątki z&nbsp;wątku pobocznego do głównego jest **std::packaged_task**.
 
 ```cpp
-std::packaged_task<void()> task([]()
-{
-    throw std::runtime_error("calculation error!");
-});
-auto exceptionFutureObj = task.get_future();
-std::thread exceptionTaskThread(std::move(task));
+std::packaged_task<void()> task{ []()
+    {
+        throw std::runtime_error("calculation error!");
+    }
+};
+auto exceptionFutureObj{ task.get_future() };
+std::thread exceptionTaskThread{ std::move(task) };
 
 try
 {
@@ -368,19 +374,20 @@ Ostatni sposób na przekazanie wyjątków z&nbsp;wątku pobocznego do głównego
 
 ```cpp
 std::promise<void> exceptionPromise;
-auto exceptionFutureObj = exceptionPromise.get_future();
+auto exceptionFutureObj{ exceptionPromise.get_future() };
 
-std::thread exceptionTaskThread([&exceptionPromise]()
-{
-    try
+std::thread exceptionTaskThread{ [&exceptionPromise]()
     {
-        throw std::runtime_error("calculation error!");
+        try
+        {
+            throw std::runtime_error("calculation error!");
+        }
+        catch (...)
+        {
+            exceptionPromise.set_exception(std::current_exception());
+        }
     }
-    catch (...)
-    {
-        exceptionPromise.set_exception(std::current_exception());
-    }
-});
+};
 
 try
 {
@@ -401,17 +408,19 @@ Widać tutaj od razu, że&nbsp;blok **try/catch** powrócił do ciała naszego w
 Na koniec jeszcze kwestia przechwytywania wyjątków z&nbsp;różnych wątków pobocznych w&nbsp;wątku głównym. Gdy&nbsp;przy użyciu **std::async**, uruchomimy dwa wątki i&nbsp;w obu zostaną wyrzucone wyjątki to musimy zadbać o&nbsp;to, by&nbsp;każdy został poprawnie obsłużony.
 
 ```cpp
-auto exceptionFutureObj1 = std::async(std::launch::async, []()
-{
-    std::cout << "First thread\n";
-    throw std::runtime_error("calculation error!");
-});
+auto exceptionFutureObj1{ std::async(std::launch::async, []()
+    {
+        std::cout << "First thread\n";
+        throw std::runtime_error("calculation error!");
+    })
+};
 
-auto exceptionFutureObj2 = std::async(std::launch::async, []()
-{
-    std::cout << "Second thread\n";
-    throw std::system_error(std::make_error_code(std::errc(EDEADLK)), "system error!");
-});
+auto exceptionFutureObj2{ std::async(std::launch::async, []()
+    {
+        std::cout << "Second thread\n";
+        throw std::system_error(std::make_error_code(std::errc(EDEADLK)), "system error!");
+    })
+};
 
 try
 {
@@ -442,7 +451,7 @@ Aby uniknąć takich sytuacji należy każdą próbę odebrania wyniku z&nbsp;**
 
 ```cpp
 template <typename Future>
-void exceptionHandler(Future& future)
+auto exceptionHandler(Future& future) -> void
 {
     try
     {
@@ -454,7 +463,7 @@ void exceptionHandler(Future& future)
     }
 }
 
-int main()
+auto main() -> int
 {
     constexpr int numOfThreads{ 5 };
     std::vector<std::future<void>> futures;
@@ -462,10 +471,11 @@ int main()
     for(int idx = 0; idx < numOfThreads; idx++)
     {
         futures.push_back(std::async(std::launch::async, [idx]()
-        {
-            std::cout << "Thread nr: " << idx << "\n";
-            throw std::runtime_error("error from thread: " + std::to_string(idx));
-        }));
+            {
+                std::cout << "Thread nr: " << idx << "\n";
+                throw std::runtime_error("error from thread: " + std::to_string(idx));
+            })
+        );
     }
 
     for(auto& future : futures)
