@@ -32,7 +32,7 @@ Mamy klasę **TemperatureSensor**, która do komunikacji z&nbsp;czujnikiem tempe
 Tutaj fragment z&nbsp;implementacji klasy **TemperatureSensor** z&nbsp;użyciem zależności globalnej.
 
 ```cpp
-float TemperatureSensor::getAvgTemperature()
+auto TemperatureSensor::getAvgTemperature() -> float
 {
     if(sensorDrivers.empty())
       return 0.0f;
@@ -53,7 +53,7 @@ Spoinę linkowania możemy zastosować, gdy&nbsp;w&nbsp;pliku nagłówkowym mamy
 namespace i2c
 {
 
-float getSensorTemp(const int sensorAddress);
+auto getSensorTemp(const int sensorAddress) -> float;
 
 }
 ```
@@ -64,7 +64,7 @@ Natomiast definicja znajduje się w&nbsp;pliku źródłowym (.cpp).
 namespace i2c
 {
 
-float getSensorTemp(const int sensorAddress)
+auto getSensorTemp(const int sensorAddress) -> float
 {
     //Tutaj produkcyjna implementacja
 }
@@ -78,7 +78,7 @@ W takiej sytuacji możemy stworzyć osobną definicję dla testów w&nbsp;pliku 
 namespace i2c
 {
 
-float getSensorTemp(const int sensorAddress)
+auto getSensorTemp(const int sensorAddress) -> float
 {
     return 32.1f;
 }
@@ -130,7 +130,7 @@ int g_gameObjectsCounter { 0 };
 Tutaj przykład jej użycia
 
 ```cpp
-void Weapon::fire(const Position& position, const Rotation& position)
+auto Weapon::fire(const Position& position, const Rotation& position) -> void
 {
     auto bullet { std::make_unique<Bullet>(g_gameObjectsCounter++, bulletTexture, position, position) };
 
@@ -161,7 +161,7 @@ Weapon::Weapon(int& inputBulletId)
   : bulletId(inputBulletId)
 {}
 
-void Weapon::fire(const Position& position, const Rotation& position)
+auto Weapon::fire(const Position& position, const Rotation& position) -> void
 {
     auto bullet { std::make_unique<Bullet>(bulletId++, bulletTexture, position, position) };
 
@@ -182,8 +182,8 @@ public:
     TextureStorage(TextureStorage&&) = delete;
     TextureStorage& operator=(TextureStorage&&) = delete;
 
-    static const TextureStorage& instance();
-    const Texture& getTexture(const TextureId id);
+    static const auto instance() -> TextureStorage&;
+    auto getTexture(const TextureId& id) -> const Texture&;
 
 private:
     std::map<TextureId, Texture> textures;
@@ -206,7 +206,7 @@ Player::Player(const Position& inputPosition, const Rotation& inputRotation)
     //Reszta implementacji konstruktora...
 }
 
-void Player::changeLook(const TextureId& newTexture)
+auto Player::changeLook(const TextureId& newTexture) -> void
 {
     const auto& graphicsStorage { TextureStorage::instance() };
     texture = getTexture(newTexture);
@@ -219,8 +219,8 @@ Najpierw będziemy potrzebowali wydzielić potrzebny interfejs dla Singleton'u.
 class ITextureStorage
 {
 public:
-    virtual const Texture& getTexture(const TextureId id) = 0;
-    virtual ~TextureStorage() = 0;
+    virtual ~ITextureStorage() = default;
+    virtual auto getTexture(const TextureId& id) const -> const Texture& = 0;
 };
 ```
 
@@ -266,12 +266,12 @@ Ostatnim i&nbsp;w&nbsp;mojej ocenie najlepszym rozwiązaniem do szybkiego, popra
 Mamy klasę **LoanScheduleGenerator**, która wykorzystuje zmienną globalną **g_interestRate** w&nbsp;metodzie **generate**.
 
 ```cpp
-double g_interestRate = 0.035;
+double g_interestRate { 0.035 };
 
-PaymentSchedule LoanScheduleGenerator::generate(const Loan& loan)
+auto LoanScheduleGenerator::generate(const Loan& loan) -> PaymentSchedule
 {
     const unsigned numOfMonths { 12 };
-    double monthlyRate = g_interestRate / numOfMonths;
+    double monthlyRate { g_interestRate / numOfMonths };
     // dalsza część implementacji generowania harmonogramu spłaty kredytu
 }
 ```
@@ -284,7 +284,7 @@ class LoanScheduleGenerator
 public:
     //...
 protected:
-    virtual double getInterestRate() const;
+    virtual auto getInterestRate() const -> double;
     //...
 };
 ```
@@ -292,15 +292,15 @@ protected:
 Następnie umieszczamy w&nbsp;niej globalną zależność. I&nbsp;zastępujemy bezpośrednie użycie globala **wrapperem**.
 
 ```cpp
-double LoanScheduleGenerator::getInterestRate() const
+auto LoanScheduleGenerator::getInterestRate() const -> double
 {
     return g_interestRate;
 }
 
-PaymentSchedule LoanScheduleGenerator::generate(const Loan& loan)
+auto LoanScheduleGenerator::generate(const Loan& loan) -> PaymentSchedule
 {
     const unsigned numOfMonths { 12 };
-    double monthlyRate = getInterestRate() / numOfMonths;
+    double monthlyRate { getInterestRate() / numOfMonths };
     // dalsza część implementacji generowania harmonogramu spłaty kredytu
 }
 ```
@@ -314,7 +314,7 @@ public:
     //...
 
 private:
-    double getInterestRate() const
+    auto getInterestRate() const override -> double
     {
         return 1.0;
     }
