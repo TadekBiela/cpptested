@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-02-25T17:41:11+01:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Fundamenty myślenia wielowątkowego</title><link href="https://cpptested.com/multithreading/multithreading-fundamentals/" rel="alternate" type="text/html" title="Fundamenty myślenia wielowątkowego" /><published>2026-02-24T00:00:00+01:00</published><updated>2026-02-24T00:00:00+01:00</updated><id>https://cpptested.com/multithreading/multithreading-fundamentals</id><content type="html" xml:base="https://cpptested.com/multithreading/multithreading-fundamentals/"><![CDATA[<p>Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-02-25T23:43:16+01:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Fundamenty myślenia wielowątkowego</title><link href="https://cpptested.com/multithreading/multithreading-fundamentals/" rel="alternate" type="text/html" title="Fundamenty myślenia wielowątkowego" /><published>2026-02-24T00:00:00+01:00</published><updated>2026-02-24T00:00:00+01:00</updated><id>https://cpptested.com/multithreading/multithreading-fundamentals</id><content type="html" xml:base="https://cpptested.com/multithreading/multithreading-fundamentals/"><![CDATA[<p>Podstawy są ważne, bez nich nie możemy ruszyć dalej z nauką, szczególnie, gdy chcemy opanować rzeczy o dużo większej złożoności, jak na przykład wielowątkowość i przetwarzanie współbieżne. Zacznijmy więc od fundamentów, pojęć bez, których opanowanie sztuki tworzenia wielowątkowego kodu się nie powiedzie. Żeby pisać kod uruchamiany w więcej niż jednym wątku, wpierw trzeba nauczyć się samego myślenia w sposób wielowątkowy i właśnie od tego zaczniemy.</p>
 
 <h3 id="współbieżność-iwielowątkowość">Współbieżność i wielowątkowość</h3>
 
@@ -891,7 +891,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
 <p>DRY - Don’t Repeat Yourself - unikaj powielania wiedzy. Zasada ta jest prosta, jeśli widzisz w swoim kodzie ciągle powtarzające się linijki, to należy je odpowiednio nazwać i przenieść do funkcji lub metody, w zależności od kontekstu. Dzięki temu, gdy przyjdzie czas na zmianę (a z pewnością przyjdzie), będziemy musieli edytować tylko jedno miejsce, a nie wiele. Unikniemy sytuacji, gdy trzeba zmienić kod w kilku miejscach i o którymś zapomnimy. Daje nam to również możliwość zwiększenia czytelności naszego kodu. Nowa funkcja czy metoda musi mieć nazwę, warto, by była ona wyjaśniająca, tłumaczyła w krótki sposób, co robi wewnątrz.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Money</span> <span class="nf">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Money</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="mi">18</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">())</span>
     <span class="p">{</span>
@@ -903,7 +903,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="k">auto</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="mi">18</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">())</span>
     <span class="p">{</span>
@@ -918,13 +918,13 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
 <p>Widać tutaj powtórzenie, <strong>“18 &lt;= employee.getAge()”</strong>. Jest to pewien element wiedzy biznesowej. Jeśli pracownik jest niepełnoletni, to jego wynagrodzenie i liczba dni wolnych jest inna. Spróbujmy to lepiej wyrazić i zastosować DRY.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">isAdult</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">isAdult</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
 <span class="p">{</span>
     <span class="k">const</span> <span class="kt">unsigned</span> <span class="n">adultAge</span> <span class="p">{</span> <span class="mi">18</span> <span class="p">};</span>
     <span class="k">return</span> <span class="n">adultAge</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="n">Money</span> <span class="n">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="k">auto</span> <span class="n">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Money</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">isAdult</span><span class="p">(</span><span class="n">employee</span><span class="p">))</span>
     <span class="p">{</span>
@@ -936,7 +936,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="k">auto</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">isAdult</span><span class="p">(</span><span class="n">employee</span><span class="p">))</span>
     <span class="p">{</span>
@@ -956,23 +956,24 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">"admin"</span> <span class="o">&amp;&amp;</span> <span class="n">password</span> <span class="o">==</span> <span class="s">"1234"</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="kt">void</span> <span class="n">checkLogin</span><span class="p">(</span><span class="n">UserService</span><span class="o">&amp;</span> <span class="n">service</span><span class="p">,</span>
+<span class="k">auto</span> <span class="n">checkLogin</span><span class="p">(</span><span class="n">UserService</span><span class="o">&amp;</span> <span class="n">service</span><span class="p">,</span>
                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">user</span><span class="p">,</span>
                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">pass</span><span class="p">,</span>
-                <span class="kt">bool</span> <span class="n">expected</span><span class="p">)</span>
+                <span class="kt">bool</span> <span class="n">expected</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
     <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">pass</span><span class="p">));</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">AllLogins</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
+
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
@@ -985,27 +986,27 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_ValidCredentials_ReturnTrue</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
 
-    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_WrongPassword_ReturnFalse</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
 
-    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_UnknownUser_ReturnFalse</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
 
-    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
@@ -1028,14 +1029,14 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span><span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">"admin"</span> <span class="o">&amp;&amp;</span> <span class="n">password</span> <span class="o">==</span> <span class="s">"1234"</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="kt">void</span> <span class="n">logout</span><span class="p">()</span> <span class="p">{}</span>
-    <span class="kt">void</span> <span class="n">resetPassword</span><span class="p">()</span> <span class="p">{}</span>
-    <span class="kt">void</span> <span class="n">twoFactorAuth</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">auto</span> <span class="n">logout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{}</span>
+    <span class="k">auto</span> <span class="n">resetPassword</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{}</span>
+    <span class="k">auto</span> <span class="n">twoFactorAuth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{}</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -1045,7 +1046,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
 <h3 id="kiss---prosto-ale-skutecznie">KISS - prosto ale skutecznie</h3>
 
-<p>KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w branży IT wydaje mi się na całkiem wysokim poziomie, i nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o tym, aby nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to taki kod, który nie tylko łatwo napisać, ale przede wszystkim zrozumieć i zmienić, gdy będzie to potrzebne. Prosty kod też łatwiej się testuje.</p>
+<p>KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w branży IT wydaje mi się na całkiem wysokim poziomie i nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o tym, aby nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to taki kod, który nie tylko łatwo napisać, ale przede wszystkim zrozumieć i zmienić, gdy będzie to potrzebne. Prosty kod też łatwiej się testuje.</p>
 
 <p>Tutaj chcę zaznaczyć, że sama złożoność kodu nie jest zła, jeśli wynika ze złożoności problemu, który rozwiązuje. KISS trochę łączy się z YAGNI, bo możemy dodać więcej kodu, tworząc bardziej elastyczne rozwiązanie, potencjalnie łatwiejsze w rozszerzaniu. Może stosując jakiś wzorzec projektowy.</p>
 
@@ -1057,22 +1058,22 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">IValidator</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">auto</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">EmailValidator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IValidator</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
-        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'@'</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="sc">'@'</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">PasswordValidator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IValidator</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="mi">8</span> <span class="o">&lt;=</span> <span class="n">value</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
     <span class="p">}</span>
@@ -1087,7 +1088,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
           <span class="n">passwordValidator</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">inputPasswordValidator</span><span class="p">))</span>
     <span class="p">{}</span>
 
-    <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">emailValidator</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">passwordValidator</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">password</span><span class="p">);</span>
     <span class="p">}</span>
@@ -1103,7 +1104,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'@'</span><span class="p">)</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
@@ -1147,7 +1148,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FileWriter</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
@@ -1167,7 +1168,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FileWriter</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
@@ -1194,7 +1195,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Report</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">generate</span><span class="p">()</span> <span class="k">const</span>
+    <span class="k">auto</span> <span class="n">generate</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="s">"Daily report data"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -1203,7 +1204,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <span class="k">class</span> <span class="nc">EmailClient</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">send</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">recipient</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">content</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">send</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">recipient</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Sending email to "</span> <span class="o">&lt;&lt;</span> <span class="n">recipient</span> <span class="o">&lt;&lt;</span> <span class="s">" with content:</span><span class="se">\n</span><span class="s">"</span>
                   <span class="o">&lt;&lt;</span> <span class="n">content</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
@@ -1213,7 +1214,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <span class="k">class</span> <span class="nc">Config</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getDefaultRecipient</span><span class="p">()</span>
+    <span class="k">static</span> <span class="k">auto</span> <span class="n">getDefaultRecipient</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="s">"admin@example.com"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -1222,16 +1223,16 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <span class="k">class</span> <span class="nc">ReportService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">sendReport</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">customRecipient</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">sendReport</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">customRecipient</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="c1">// użycie argumentu metody</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span> <span class="o">=</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span> <span class="p">{</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
             <span class="o">?</span> <span class="n">Config</span><span class="o">::</span><span class="n">getDefaultRecipient</span><span class="p">()</span>  <span class="c1">// globalne źródło wiedzy</span>
-            <span class="o">:</span> <span class="n">customRecipient</span><span class="p">;</span>
+            <span class="o">:</span> <span class="n">customRecipient</span> <span class="p">};</span>
 
         <span class="c1">// stworzenie i użycie obiektu lokalnego</span>
         <span class="n">Report</span> <span class="n">report</span><span class="p">;</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="o">=</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">();</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="p">{</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">()</span> <span class="p">};</span>
 
         <span class="c1">// wysłanie raportu przez własne pole emailClient</span>
         <span class="n">emailClient</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">reportTitle</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">content</span><span class="p">);</span>
@@ -1255,7 +1256,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
 <p>Wewnątrz tej metody nie powinno być kolejnego, nieco krótszego łańcucha tylko coś w tym rodzaju.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Order</span><span class="o">::</span><span class="n">getCustomerCityName</span><span class="p">()</span> <span class="k">const</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">Order</span><span class="o">::</span><span class="n">getCustomerCityName</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">customer</span><span class="p">.</span><span class="n">getCityName</span><span class="p">();</span>
 <span class="p">}</span>
@@ -1277,13 +1278,14 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Shape</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">Rectangle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Shape</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Rectangle</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -1296,7 +1298,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
         <span class="o">:</span> <span class="n">color</span><span class="p">(</span><span class="n">inputColor</span><span class="p">)</span>
     <span class="p">{}</span>
 
-    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color</span> <span class="o">&lt;&lt;</span> <span class="s">" rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -1315,7 +1317,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
         <span class="o">:</span> <span class="n">shape</span><span class="p">(</span><span class="n">inputShape</span><span class="p">),</span> <span class="n">color</span><span class="p">(</span><span class="n">inputColor</span><span class="p">)</span>
     <span class="p">{}</span>
 
-    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
         <span class="n">shape</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
@@ -1338,7 +1340,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <p><strong>Autor:</strong> Tadeusz Biela<br />
 Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
-<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>]]></content><author><name>Tadeusz Biela</name></author><category term="clean-code" /><category term="clean code" /><category term="code quality" /><category term="developer practices" /><category term="software" /><summary type="html"><![CDATA[Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny, odporny na błędy i łatwiejszy w utrzymaniu.]]></summary></entry><entry><title type="html">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.</title><link href="https://cpptested.com/multithreading/exception-in-thread/" rel="alternate" type="text/html" title="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie." /><published>2025-10-13T00:00:00+02:00</published><updated>2025-10-13T00:00:00+02:00</updated><id>https://cpptested.com/multithreading/exception-in-thread</id><content type="html" xml:base="https://cpptested.com/multithreading/exception-in-thread/"><![CDATA[<p>Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.</p>
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>]]></content><author><name>Tadeusz Biela</name></author><category term="clean-code" /><category term="clean code" /><category term="code quality" /><category term="developer practices" /><category term="software" /><summary type="html"><![CDATA[Te tajemnicze akronimy skrywają w sobie dekady doświadczeń naszych programistycznych poprzedników. Choć brzmi to nieco patetycznie, tak właśnie jest. Zasady, opisane w tym wpisie, to dziedzictwo wielu błędów, obserwacji i celnych spostrzeżeń, zbieranych latami przez bardzo doświadczonych ludzi dla ich następców. Te zasady działają jak sita. Przesiany przez nie kod staje się znacznie lepszy, bardziej czytelny, odporny na błędy i łatwiejszy w utrzymaniu.]]></summary></entry><entry><title type="html">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.</title><link href="https://cpptested.com/multithreading/exception-in-thread/" rel="alternate" type="text/html" title="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie." /><published>2025-10-13T00:00:00+02:00</published><updated>2025-10-13T00:00:00+02:00</updated><id>https://cpptested.com/multithreading/exception-in-thread</id><content type="html" xml:base="https://cpptested.com/multithreading/exception-in-thread/"><![CDATA[<p>Nieoczekiwane zachowanie czyli wyjątek to sytuacja, w której nasz kod zachował się w sposób, który normalnie nie występuje. Może być to wywołane problemami z zasobami jak brak pamięci podręcznej lub brak dostępu do pliku. Powodów może być wiele, najczęściej nie zależą od nas. Jednak możemy się na takie sytuacje przygotować i pomimo wystąpienia wyjątków, nasz program nie przerwie działania.</p>
 
 <h3 id="rodzaje-wyjątków">Rodzaje wyjątków</h3>
 
@@ -1351,17 +1353,17 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ReadFileException</span> <span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-	<span class="n">ReadFileException</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">inputFileName</span><span class="p">)</span>
-	 <span class="o">:</span> <span class="n">fileName</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">)</span>
+	<span class="k">explicit</span> <span class="n">ReadFileException</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">)</span>
+	 <span class="o">:</span> <span class="n">fileName_</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
 	<span class="p">{}</span>
 
-	<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="k">override</span>
+	<span class="k">auto</span> <span class="n">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>
 	<span class="p">{</span>
-		<span class="k">return</span> <span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
+		<span class="k">return</span> <span class="n">fileName_</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
 	<span class="p">}</span>
 
 <span class="nl">private:</span>
-	<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fileName</span><span class="p">;</span>
+	<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fileName_</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -1369,7 +1371,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
 
 <p>Rzucanie wyjątków w C++ jest banalnie proste, wystarczy użyć słowa kluczowego <strong>throw</strong> na obiekcie klasy wyjątka. Najczęściej będzie to obiekt tymczasowy. Jeszcze nie spotkałem się, z potrzebą składowania obiektów wyjątków, niemniej jest to jak najbardziej możliwe.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">throw</span> <span class="nf">ReadFileException</span><span class="p">(</span><span class="s">"file.txt"</span><span class="p">);</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">throw</span> <span class="n">ReadFileException</span><span class="p">{</span> <span class="s">"file.txt"</span> <span class="p">};</span>
 </code></pre></div></div>
 
 <p>Jak widać, rzucanie wyjątków jest proste, łatwe i czytelne. Inaczej jest z ich łapaniem. Obsługa wyjątków C++ jest już bardziej złożona. Do przechwytywania wyjątków służy blok <strong>try/catch</strong>.</p>
@@ -1522,9 +1524,9 @@ main.cpp:66:1: note: <span class="k">for </span><span class="nb">type</span> ‘
 
 <p>C++11 udostępnia nam też słowo kluczowe <strong>noexcept</strong>, którym możemy oznaczyć funkcje i metody nierzucające wyjątków. Czyli takie, które używają operacji bezpiecznych pod względem wyjątków i/lub same je obsługują. Słowo kluczowe <strong>noexcept</strong> możemy także zastosować do konstruktorów i destruktora klasy.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">noexcept</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="n">a</span><span class="o">&amp;</span><span class="n">nbsp</span><span class="p">;</span><span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">FileHandler</span>
@@ -1533,30 +1535,30 @@ main.cpp:66:1: note: <span class="k">for </span><span class="nb">type</span> ‘
     <span class="n">FileHandler</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
     <span class="o">~</span><span class="n">FileHandler</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
 
-    <span class="kt">bool</span> <span class="n">openFile</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">read</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="n">closeFile</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">openFile</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">read</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">closeFile</span><span class="p">()</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">void</span><span class="p">;</span>
 
 <span class="nl">private:</span>
-    <span class="n">File</span> <span class="n">file</span><span class="p">;</span>
+    <span class="n">File</span> <span class="n">file_</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
-<p>Żeby móc oznaczyć funkcję lub metodę jako <strong>noexcept</strong>. Wszystkie operacje i wywoływane funkcje/metody także powinny być oznaczone jako <strong>noexcept</strong>, by zachować bezpieczeństwo w kontekście wyjątków. Niestety kompilator nas nie poinformuje, jeżeli ten warunek nie jest spełniony. 
+<p>Żeby móc oznaczyć funkcję lub metodę jako <strong>noexcept</strong>, wszystkie operacje i wywoływane funkcje/metody także powinny być oznaczone jako <strong>noexcept</strong>, by zachować bezpieczeństwo w kontekście wyjątków. Niestety kompilator nas nie poinformuje, jeżeli ten warunek nie jest spełniony.
 Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z jakiegoś powodu jednak rzuci wyjątek? Specyfikacja podpowiada, że zostanie wywołana funkcja <strong>std::terminate()</strong>, która zakończy działanie naszego programu niezależnie od tego czy dany kod był w bloku <strong>try/catch</strong> czy nie.</p>
 
 <p><strong>noexcept</strong> jest równoznaczne z <strong>noexcept(true)</strong>. Natomiast domyślnie wszystkie funkcje i metody oznaczone są jako <strong>noexcept(false)</strong>. Dlaczego dodano osobno <strong>noexcept</strong> oraz <strong>noexcept(true/false)</strong>? Głównie ze względu na szablony i metaprogramowanie, gdzie o tym czy funkcja lub metoda może lub nie może rzucać wyjątków kompilator dowiaduje się dopiero w trakcje kompilacji i konkretyzacji szablonów.</p>
 
 <p><strong>noexcept</strong> jest traktowane jako część typu funkcji. To znaczy, że jeśli mamy wskaźniki na funkcje, które różnią się tylko <strong>noexcept</strong>, to będą one traktowane jako osobne typy. Tak samo jeżeli chodzi o parametry szablonu.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">funcPtr1</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="p">);</span>
-<span class="k">using</span> <span class="n">funcPtr2</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="p">)</span> <span class="k">noexcept</span><span class="p">;</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">funcPtr1</span> <span class="o">=</span> <span class="k">auto</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">funcPtr2</span> <span class="o">=</span> <span class="k">auto</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="p">;</span>
 </code></pre></div></div>
 
 <p><strong>noexcept</strong> nie można za to stosować do przeciążania funkcji, gdyż nie wchodzi w skład jej sygnatury.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">noexcept</span><span class="p">;</span>
-<span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">);</span> <span class="c1">// Błąd kompilacji, redefinicja funkcji "add"</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">int</span><span class="p">;</span> <span class="c1">// Błąd kompilacji, redefinicja funkcji "add"</span>
 </code></pre></div></div>
 
 <p>Zaletą <strong>noexcept</strong> jest przede wszystkim optymalizacja. Kompilator nie musi generować dodatkowego kodu do zwijania stosu po wystąpieniu wyjątku. Może także dobrać bardziej optymalne algorytmy STL. Łatwiej jest kompilatorowi inline’ować funkcję/metodę. Binarka wynikowa, również ma mniejszy rozmiar.</p>
@@ -1565,13 +1567,14 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
 
 <p>Przejdźmy teraz do wielowątkowego przechwytywania wyjątków. Nie jest to rzecz taka prosta. Spójrz na ten kod, czy jest on bezpieczny pod względem wyjątków?</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">calucalteSumThread</span><span class="p">;</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">calculateSumThread</span><span class="p">;</span>
 <span class="k">try</span>
 <span class="p">{</span>
-    <span class="n">calucalteSumThread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">([]()</span>
-    <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
-    <span class="p">});</span>
+    <span class="n">calculateSumThread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">([]()</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">);</span>
 <span class="p">}</span>
 <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
 <span class="p">{</span>
@@ -1582,9 +1585,9 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
     <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Something unexpected happened!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">if</span> <span class="p">(</span><span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">calculateSumThread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
 <span class="p">{</span>
-    <span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+    <span class="n">calculateSumThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -1596,29 +1599,30 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
 
 <p>Dzieje się tak dlatego, że wątek traktowany jest jako osobny proces pomimo, iż należy do głównego wątku naszej aplikacji. Jednym z rozwiązań tego problemu jest obsługa wyjątków wewnątrz wątku i nie wyrzucanie ich na zewnątrz, tworząc wątek bezpieczny względem wyjątków.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">calucalteSumThread</span><span class="p">;</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">calculateSumThread</span><span class="p">;</span>
 <span class="k">try</span>
 <span class="p">{</span>
-    <span class="n">calucalteSumThread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">([]()</span>
-    <span class="p">{</span>
-        <span class="k">try</span>
+    <span class="n">calculateSumThread</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">{</span> <span class="p">[]()</span>
         <span class="p">{</span>
-            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+            <span class="k">try</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
+    <span class="p">};</span>
 <span class="p">}</span>
 <span class="k">catch</span><span class="p">(...)</span>
 <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Something unexpected happened!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">if</span> <span class="p">(</span><span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">calculateSumThread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
 <span class="p">{</span>
-    <span class="n">calucalteSumThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+    <span class="n">calculateSumThread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -1627,16 +1631,19 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>calculation error!
 </code></pre></div></div>
 
+<p>Tutaj jeszcze warto dodać, że od C++20 mamy dostępny nowy sposób tworzenia wątków w postaci <strong>std::jthread</strong>. Dzięki któremu nie musimy ręcznie wywoływać <strong>join()</strong>. Niemniej wiem, że nie każdy może sobie pozwolić na korzystanie z nowszych standardów C++ w swoiej pracy. Dla dociekliwych odsyłam do <a href="https://en.cppreference.com/w/cpp/thread/jthread.html" target="_blank" rel="noopener">oficialnej dokumentacji</a>.</p>
+
 <h3 id="przekierowanie-wyjątku-do-wątku-głównego">Przekierowanie wyjątku do wątku głównego</h3>
 
 <p>Tworzenie osobnego bloku <strong>try/catch</strong> w wątku i poza nim może doprowadzić do niepotrzebnej złożoności. Możemy też potrzebować obsłużyć wyjątek w głównym wątku naszej aplikacji, gdy wyjątek wystąpi wewnątrz wątku, aby poprawnie zareagować na taką sytuację. C++ od wersji 11 wraz z całą obsługą wyjątków daje nam kilka narzędzi, które rozwiązują ten problem: <strong>std::async</strong>, <strong>std::packaged_task</strong> i <strong>promise</strong>. Każde z nich umożliwia przekierowanie wyjątków z wątku pobocznego do wątku głównego.</p>
 
 <p>Zacznijmy od <strong>std::async</strong>. To szablon funkcji o zmiennej liczbie parametrów umożliwiający uruchomienie przekazanej funkcji lub metody w osobnym wątku. Zwraca obiekt <strong>std::future</strong>, który po wywołaniu metody <strong>get()</strong> zwróci wynik lub wyjątek jeśli wystąpił.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">exceptionFutureObj</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
-<span class="p">{</span>
-    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
-<span class="p">});</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">exceptionFutureObj</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
+    <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+    <span class="p">})</span>
+<span class="p">};</span>
 
 <span class="k">try</span>
 <span class="p">{</span>
@@ -1648,16 +1655,17 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Widać tutaj prostotę tego rozwiązania. Wątek poboczny nie zawiera już bloku <strong>try/catch</strong>. Cała obsługa wyjątku dzieje się pod spodem <strong>std::async</strong>. Kod jest czysty i zrozumiały. By mieć pewność, że funkcja przekazana jako parametr uruchomi się w osobnym wątku, trzeba ustawić tryb uruchamiania na <strong>std::launch::async</strong>. W trybie <strong>std::launch::deffered</strong> funkcja zostanie uruchomiona w tym samym wątku dopiero w momencie wywołania metody <strong>get()</strong> lub <strong>wait()</strong> na zwróconym przez <strong>async</strong> obiekcie <strong>future</strong>. Domyślnie, to implementacja decyduje jaki tryb uruchamiania zostanie wykorzystany.</p>
+<p>Widać tutaj prostotę tego rozwiązania. Wątek poboczny nie zawiera już bloku <strong>try/catch</strong>. Cała obsługa wyjątku dzieje się pod spodem <strong>std::async</strong>. Kod jest czysty i zrozumiały. By mieć pewność, że funkcja przekazana jako parametr uruchomi się w osobnym wątku, trzeba ustawić tryb uruchamiania na <strong>std::launch::async</strong>. W trybie <strong>std::launch::deferred</strong> funkcja zostanie uruchomiona w tym samym wątku dopiero w momencie wywołania metody <strong>get()</strong> lub <strong>wait()</strong> na zwróconym przez <strong>async</strong> obiekcie <strong>future</strong>. Domyślnie, to implementacja decyduje jaki tryb uruchamiania zostanie wykorzystany.</p>
 
 <p>Drugim narzędziem, którym możemy przekazać wyjątki z wątku pobocznego do głównego jest <strong>std::packaged_task</strong>.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">packaged_task</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">task</span><span class="p">([]()</span>
-<span class="p">{</span>
-    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
-<span class="p">});</span>
-<span class="k">auto</span> <span class="n">exceptionFutureObj</span> <span class="o">=</span> <span class="n">task</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
-<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">exceptionTaskThread</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">task</span><span class="p">));</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">packaged_task</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">task</span><span class="p">{</span> <span class="p">[]()</span>
+    <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">auto</span> <span class="n">exceptionFutureObj</span><span class="p">{</span> <span class="n">task</span><span class="p">.</span><span class="n">get_future</span><span class="p">()</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">exceptionTaskThread</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">task</span><span class="p">)</span> <span class="p">};</span>
 
 <span class="k">try</span>
 <span class="p">{</span>
@@ -1676,19 +1684,20 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
 <p>Ostatni sposób na przekazanie wyjątków z wątku pobocznego do głównego, to <strong>std::promise</strong>.</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">promise</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">exceptionPromise</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">exceptionFutureObj</span> <span class="o">=</span> <span class="n">exceptionPromise</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+<span class="k">auto</span> <span class="n">exceptionFutureObj</span><span class="p">{</span> <span class="n">exceptionPromise</span><span class="p">.</span><span class="n">get_future</span><span class="p">()</span> <span class="p">};</span>
 
-<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="nf">exceptionTaskThread</span><span class="p">([</span><span class="o">&amp;</span><span class="n">exceptionPromise</span><span class="p">]()</span>
-<span class="p">{</span>
-    <span class="k">try</span>
+<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">exceptionTaskThread</span><span class="p">{</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">exceptionPromise</span><span class="p">]()</span>
     <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(...)</span>
+        <span class="p">{</span>
+            <span class="n">exceptionPromise</span><span class="p">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">current_exception</span><span class="p">());</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">catch</span> <span class="p">(...)</span>
-    <span class="p">{</span>
-        <span class="n">exceptionPromise</span><span class="p">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">current_exception</span><span class="p">());</span>
-    <span class="p">}</span>
-<span class="p">});</span>
+<span class="p">};</span>
 
 <span class="k">try</span>
 <span class="p">{</span>
@@ -1708,17 +1717,19 @@ Co jeśli oznaczymy naszą funkcję/metodę jako <strong>noexcept</strong>, a z
 
 <p>Na koniec jeszcze kwestia przechwytywania wyjątków z różnych wątków pobocznych w wątku głównym. Gdy przy użyciu <strong>std::async</strong>, uruchomimy dwa wątki i w obu zostaną wyrzucone wyjątki to musimy zadbać o to, by każdy został poprawnie obsłużony.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">exceptionFutureObj1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
-<span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"First thread</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
-<span class="p">});</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">exceptionFutureObj1</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"First thread</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"calculation error!"</span><span class="p">);</span>
+    <span class="p">})</span>
+<span class="p">};</span>
 
-<span class="k">auto</span> <span class="n">exceptionFutureObj2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
-<span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Second thread</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_error_code</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">errc</span><span class="p">(</span><span class="n">EDEADLK</span><span class="p">)),</span> <span class="s">"system error!"</span><span class="p">);</span>
-<span class="p">});</span>
+<span class="k">auto</span> <span class="n">exceptionFutureObj2</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[]()</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Second thread</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">system_error</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_error_code</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">errc</span><span class="p">(</span><span class="n">EDEADLK</span><span class="p">)),</span> <span class="s">"system error!"</span><span class="p">);</span>
+    <span class="p">})</span>
+<span class="p">};</span>
 
 <span class="k">try</span>
 <span class="p">{</span>
@@ -1747,7 +1758,7 @@ system error!: Resource deadlock avoided with code: generic:35
 <p>Aby uniknąć takich sytuacji należy każdą próbę odebrania wyniku z <strong>future</strong> opakować blokiem <strong>try/catch</strong> osobno. Możemy do tego utworzyć szablonowy handler.</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Future</span><span class="p">&gt;</span>
-<span class="kt">void</span> <span class="nf">exceptionHandler</span><span class="p">(</span><span class="n">Future</span><span class="o">&amp;</span> <span class="n">future</span><span class="p">)</span>
+<span class="k">auto</span> <span class="nf">exceptionHandler</span><span class="p">(</span><span class="n">Future</span><span class="o">&amp;</span> <span class="n">future</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
     <span class="k">try</span>
     <span class="p">{</span>
@@ -1759,7 +1770,7 @@ system error!: Resource deadlock avoided with code: generic:35
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="k">auto</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="p">{</span>
     <span class="k">constexpr</span> <span class="kt">int</span> <span class="n">numOfThreads</span><span class="p">{</span> <span class="mi">5</span> <span class="p">};</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;&gt;</span> <span class="n">futures</span><span class="p">;</span>
@@ -1767,10 +1778,11 @@ system error!: Resource deadlock avoided with code: generic:35
     <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">numOfThreads</span><span class="p">;</span> <span class="n">idx</span><span class="o">++</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">futures</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="p">[</span><span class="n">idx</span><span class="p">]()</span>
-        <span class="p">{</span>
-            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Thread nr: "</span> <span class="o">&lt;&lt;</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"error from thread: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span>
-        <span class="p">}));</span>
+            <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Thread nr: "</span> <span class="o">&lt;&lt;</span> <span class="n">idx</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+                <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"error from thread: "</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span>
+            <span class="p">})</span>
+        <span class="p">);</span>
     <span class="p">}</span>
 
     <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">future</span> <span class="o">:</span> <span class="n">futures</span><span class="p">)</span>

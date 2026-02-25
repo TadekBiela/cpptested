@@ -262,7 +262,7 @@
 
 <p>DRY - Don’t Repeat Yourself - unikaj powielania wiedzy. Zasada ta jest prosta, jeśli widzisz w swoim kodzie ciągle powtarzające się linijki, to należy je odpowiednio nazwać i przenieść do funkcji lub metody, w zależności od kontekstu. Dzięki temu, gdy przyjdzie czas na zmianę (a z pewnością przyjdzie), będziemy musieli edytować tylko jedno miejsce, a nie wiele. Unikniemy sytuacji, gdy trzeba zmienić kod w kilku miejscach i o którymś zapomnimy. Daje nam to również możliwość zwiększenia czytelności naszego kodu. Nowa funkcja czy metoda musi mieć nazwę, warto, by była ona wyjaśniająca, tłumaczyła w krótki sposób, co robi wewnątrz.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Money</span> <span class="nf">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Money</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="mi">18</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">())</span>
     <span class="p">{</span>
@@ -274,7 +274,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="k">auto</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="mi">18</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">())</span>
     <span class="p">{</span>
@@ -289,13 +289,13 @@
 
 <p>Widać tutaj powtórzenie, <strong>“18 &lt;= employee.getAge()”</strong>. Jest to pewien element wiedzy biznesowej. Jeśli pracownik jest niepełnoletni, to jego wynagrodzenie i liczba dni wolnych jest inna. Spróbujmy to lepiej wyrazić i zastosować DRY.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">isAdult</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">isAdult</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
 <span class="p">{</span>
     <span class="k">const</span> <span class="kt">unsigned</span> <span class="n">adultAge</span> <span class="p">{</span> <span class="mi">18</span> <span class="p">};</span>
     <span class="k">return</span> <span class="n">adultAge</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="n">Money</span> <span class="n">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="k">auto</span> <span class="n">calculateSalary</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Money</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">isAdult</span><span class="p">(</span><span class="n">employee</span><span class="p">))</span>
     <span class="p">{</span>
@@ -307,7 +307,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span>
+<span class="k">auto</span> <span class="n">freeDays</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">int</span>
 <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">isAdult</span><span class="p">(</span><span class="n">employee</span><span class="p">))</span>
     <span class="p">{</span>
@@ -327,23 +327,24 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">"admin"</span> <span class="o">&amp;&amp;</span> <span class="n">password</span> <span class="o">==</span> <span class="s">"1234"</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="kt">void</span> <span class="n">checkLogin</span><span class="p">(</span><span class="n">UserService</span><span class="o">&amp;</span> <span class="n">service</span><span class="p">,</span>
+<span class="k">auto</span> <span class="n">checkLogin</span><span class="p">(</span><span class="n">UserService</span><span class="o">&amp;</span> <span class="n">service</span><span class="p">,</span>
                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">user</span><span class="p">,</span>
                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">pass</span><span class="p">,</span>
-                <span class="kt">bool</span> <span class="n">expected</span><span class="p">)</span>
+                <span class="kt">bool</span> <span class="n">expected</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
     <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">pass</span><span class="p">));</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">AllLogins</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
+
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
@@ -356,27 +357,27 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_ValidCredentials_ReturnTrue</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
 
-    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_WrongPassword_ReturnFalse</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
 
-    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_UnknownUser_ReturnFalse</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
 
-    <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
@@ -399,14 +400,14 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">login</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">username</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span><span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">username</span> <span class="o">==</span> <span class="s">"admin"</span> <span class="o">&amp;&amp;</span> <span class="n">password</span> <span class="o">==</span> <span class="s">"1234"</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="kt">void</span> <span class="n">logout</span><span class="p">()</span> <span class="p">{}</span>
-    <span class="kt">void</span> <span class="n">resetPassword</span><span class="p">()</span> <span class="p">{}</span>
-    <span class="kt">void</span> <span class="n">twoFactorAuth</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">auto</span> <span class="n">logout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{}</span>
+    <span class="k">auto</span> <span class="n">resetPassword</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{}</span>
+    <span class="k">auto</span> <span class="n">twoFactorAuth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="p">{}</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -416,7 +417,7 @@
 
 <h3 id="kiss---prosto-ale-skutecznie">KISS - prosto ale skutecznie</h3>
 
-<p>KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w branży IT wydaje mi się na całkiem wysokim poziomie, i nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o tym, aby nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to taki kod, który nie tylko łatwo napisać, ale przede wszystkim zrozumieć i zmienić, gdy będzie to potrzebne. Prosty kod też łatwiej się testuje.</p>
+<p>KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w branży IT wydaje mi się na całkiem wysokim poziomie i nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o tym, aby nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to taki kod, który nie tylko łatwo napisać, ale przede wszystkim zrozumieć i zmienić, gdy będzie to potrzebne. Prosty kod też łatwiej się testuje.</p>
 
 <p>Tutaj chcę zaznaczyć, że sama złożoność kodu nie jest zła, jeśli wynika ze złożoności problemu, który rozwiązuje. KISS trochę łączy się z YAGNI, bo możemy dodać więcej kodu, tworząc bardziej elastyczne rozwiązanie, potencjalnie łatwiejsze w rozszerzaniu. Może stosując jakiś wzorzec projektowy.</p>
 
@@ -428,22 +429,22 @@
 <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">IValidator</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">auto</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">EmailValidator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IValidator</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
-        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'@'</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="sc">'@'</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">PasswordValidator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IValidator</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">validate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="mi">8</span> <span class="o">&lt;=</span> <span class="n">value</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
     <span class="p">}</span>
@@ -458,7 +459,7 @@
           <span class="n">passwordValidator</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">inputPasswordValidator</span><span class="p">))</span>
     <span class="p">{}</span>
 
-    <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">emailValidator</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">passwordValidator</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">(</span><span class="n">password</span><span class="p">);</span>
     <span class="p">}</span>
@@ -474,7 +475,7 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">bool</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">registerUser</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">email</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">password</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'@'</span><span class="p">)</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
@@ -518,7 +519,7 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FileWriter</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
@@ -538,7 +539,7 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FileWriter</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">write</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
@@ -565,7 +566,7 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Report</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">generate</span><span class="p">()</span> <span class="k">const</span>
+    <span class="k">auto</span> <span class="n">generate</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="s">"Daily report data"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -574,7 +575,7 @@
 <span class="k">class</span> <span class="nc">EmailClient</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">send</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">recipient</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">content</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">send</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">recipient</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Sending email to "</span> <span class="o">&lt;&lt;</span> <span class="n">recipient</span> <span class="o">&lt;&lt;</span> <span class="s">" with content:</span><span class="se">\n</span><span class="s">"</span>
                   <span class="o">&lt;&lt;</span> <span class="n">content</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
@@ -584,7 +585,7 @@
 <span class="k">class</span> <span class="nc">Config</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getDefaultRecipient</span><span class="p">()</span>
+    <span class="k">static</span> <span class="k">auto</span> <span class="n">getDefaultRecipient</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="s">"admin@example.com"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -593,16 +594,16 @@
 <span class="k">class</span> <span class="nc">ReportService</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">sendReport</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">customRecipient</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">sendReport</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">customRecipient</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="c1">// użycie argumentu metody</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span> <span class="o">=</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span> <span class="p">{</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
             <span class="o">?</span> <span class="n">Config</span><span class="o">::</span><span class="n">getDefaultRecipient</span><span class="p">()</span>  <span class="c1">// globalne źródło wiedzy</span>
-            <span class="o">:</span> <span class="n">customRecipient</span><span class="p">;</span>
+            <span class="o">:</span> <span class="n">customRecipient</span> <span class="p">};</span>
 
         <span class="c1">// stworzenie i użycie obiektu lokalnego</span>
         <span class="n">Report</span> <span class="n">report</span><span class="p">;</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="o">=</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">();</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="p">{</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">()</span> <span class="p">};</span>
 
         <span class="c1">// wysłanie raportu przez własne pole emailClient</span>
         <span class="n">emailClient</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">reportTitle</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">content</span><span class="p">);</span>
@@ -626,7 +627,7 @@
 
 <p>Wewnątrz tej metody nie powinno być kolejnego, nieco krótszego łańcucha tylko coś w tym rodzaju.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Order</span><span class="o">::</span><span class="n">getCustomerCityName</span><span class="p">()</span> <span class="k">const</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">Order</span><span class="o">::</span><span class="n">getCustomerCityName</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">customer</span><span class="p">.</span><span class="n">getCityName</span><span class="p">();</span>
 <span class="p">}</span>
@@ -648,13 +649,14 @@
 <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Shape</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">Rectangle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Shape</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
-    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Rectangle</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -667,7 +669,7 @@
         <span class="o">:</span> <span class="n">color</span><span class="p">(</span><span class="n">inputColor</span><span class="p">)</span>
     <span class="p">{}</span>
 
-    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color</span> <span class="o">&lt;&lt;</span> <span class="s">" rectangle</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
     <span class="p">}</span>
@@ -686,7 +688,7 @@
         <span class="o">:</span> <span class="n">shape</span><span class="p">(</span><span class="n">inputShape</span><span class="p">),</span> <span class="n">color</span><span class="p">(</span><span class="n">inputColor</span><span class="p">)</span>
     <span class="p">{}</span>
 
-    <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span>
+    <span class="k">auto</span> <span class="n">draw</span><span class="p">()</span> <span class="k">override</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Drawing "</span> <span class="o">&lt;&lt;</span> <span class="n">color</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
         <span class="n">shape</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
@@ -781,7 +783,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
       
   <nav class="pagination">
     
-      <a href="/multithreading/exception-in-thread/" class="pagination--pager" title="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.">Poprzednia</a>
+      <a href="/multithreading/exception-in-thread/" class="pagination--pager" title="Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.">Poprzednia</a>
     
     
       <a href="/unit-testing/handling-globals/" class="pagination--pager" title="Zależności globalne - jak poradzić sobie z nimi w unit testach">Następna</a>
@@ -979,7 +981,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/multithreading/exception-in-thread/" rel="permalink">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.
+        <a href="/multithreading/exception-in-thread/" rel="permalink">Wątki i wyjątki. Jak radzić sobie z nieoczekiwanymi zachowaniami w wielowątkowym kodzie.
 </a>
       
     </h2>
