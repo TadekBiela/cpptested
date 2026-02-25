@@ -31,7 +31,7 @@ A&nbsp;teraz przejdźmy już do konkretów.
 DRY - Don't Repeat Yourself - unikaj powielania wiedzy. Zasada ta jest prosta, jeśli widzisz w&nbsp;swoim kodzie ciągle powtarzające się linijki, to&nbsp;należy je odpowiednio nazwać i&nbsp;przenieść do funkcji lub metody, w&nbsp;zależności od kontekstu. Dzięki temu, gdy&nbsp;przyjdzie czas na zmianę (a&nbsp;z&nbsp;pewnością przyjdzie), będziemy musieli edytować tylko jedno miejsce, a&nbsp;nie wiele. Unikniemy sytuacji, gdy&nbsp;trzeba zmienić kod w&nbsp;kilku miejscach i&nbsp;o&nbsp;którymś zapomnimy. Daje nam to również możliwość zwiększenia czytelności naszego kodu. Nowa funkcja czy metoda musi mieć nazwę, warto, by&nbsp;była ona wyjaśniająca, tłumaczyła w&nbsp;krótki sposób, co&nbsp;robi wewnątrz.
 
 ```cpp
-Money calculateSalary(const Employee& employee)
+auto calculateSalary(const Employee& employee) -> Money
 {
     if(18 <= employee.getAge())
     {
@@ -43,7 +43,7 @@ Money calculateSalary(const Employee& employee)
     }
 }
 
-int freeDays(const Employee& employee)
+auto freeDays(const Employee& employee) -> int
 {
     if(18 <= employee.getAge())
     {
@@ -59,13 +59,13 @@ int freeDays(const Employee& employee)
 Widać tutaj powtórzenie, **"18&nbsp;<=&nbsp;employee.getAge()"**. Jest to pewien element wiedzy biznesowej. Jeśli pracownik jest niepełnoletni, to&nbsp;jego wynagrodzenie i&nbsp;liczba dni wolnych jest inna. Spróbujmy to lepiej wyrazić i&nbsp;zastosować DRY.
 
 ```cpp
-bool isAdult(const Employee& employee)
+auto isAdult(const Employee& employee) -> bool
 {
     const unsigned adultAge { 18 };
     return adultAge <= employee.getAge();
 }
 
-Money calculateSalary(const Employee& employee)
+auto calculateSalary(const Employee& employee) -> Money
 {
     if(isAdult(employee))
     {
@@ -77,7 +77,7 @@ Money calculateSalary(const Employee& employee)
     }
 }
 
-int freeDays(const Employee& employee)
+auto freeDays(const Employee& employee) -> int
 {
     if(isAdult(employee))
     {
@@ -98,23 +98,24 @@ Mamy klasę **UserService**, która odpowiada za logowanie (pomińmy na razie as
 class UserService
 {
 public:
-    bool login(const std::string& username, const std::string& password)
+    auto login(const std::string& username, const std::string& password) -> bool
     {
         return username == "admin" && password == "1234";
     }
 };
 
-void checkLogin(UserService& service,
+auto checkLogin(UserService& service,
                 const std::string& user,
                 const std::string& pass,
-                bool expected)
+                bool expected) -> void
 {
     EXPECT_EQ(expected, service.login(user, pass));
 }
 
 TEST(UserServiceTest, AllLogins)
 {
-    UserService service;
+    UserService service {};
+
     checkLogin(service, "admin", "1234", true);
     checkLogin(service, "admin", "wrong", false);
     checkLogin(service, "user", "1234", false);
@@ -128,27 +129,27 @@ Teraz porównaj to z&nbsp;poniższymi testami.
 ```cpp
 TEST(UserServiceTest, login_ValidCredentials_ReturnTrue)
 {
-    UserService service;
+    UserService service {};
 
-    bool result = service.login("admin", "1234");
+    const bool result { service.login("admin", "1234") };
 
     EXPECT_TRUE(result);
 }
 
 TEST(UserServiceTest, login_WrongPassword_ReturnFalse)
 {
-    UserService service;
+    UserService service {};
 
-    bool result = service.login("admin", "wrong");
+    const bool result { service.login("admin", "wrong") };
 
     EXPECT_FALSE(result);
 }
 
 TEST(UserServiceTest, login_UnknownUser_ReturnFalse)
 {
-    UserService service;
+    UserService service {};
 
-    bool result = service.login("user", "1234");
+    const bool result { service.login("user", "1234") };
 
     EXPECT_FALSE(result);
 }
@@ -172,14 +173,14 @@ Wróćmy do **UserService**. Założenie jest proste, klasa odpowiada za logowan
 class UserService
 {
 public:
-    bool login(const std::string& username, const std::string& password)
+    auto login(const std::string& username, const std::string& password) ->bool
     {
         return username == "admin" && password == "1234";
     }
 
-    void logout() {}
-    void resetPassword() {}
-    void twoFactorAuth() {}
+    auto logout() -> void {}
+    auto resetPassword() -> void {}
+    auto twoFactorAuth() -> void {}
 };
 ```
 
@@ -189,7 +190,7 @@ Nie traćmy czasu i&nbsp;zasobów na tworzenie kodu, którego nikt w&nbsp;danym 
 
 ### KISS - prosto ale skutecznie
 
-KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w&nbsp;branży IT wydaje mi się na całkiem wysokim poziomie, i&nbsp;nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o&nbsp;tym, aby&nbsp;nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to&nbsp;taki kod, który nie tylko łatwo napisać, ale&nbsp;przede wszystkim zrozumieć i&nbsp;zmienić, gdy&nbsp;będzie to potrzebne. Prosty kod też łatwiej się testuje.
+KISS - Keep It Simple, Stupid, dość wymowna nazwa. Kultura w&nbsp;branży IT wydaje mi się na całkiem wysokim poziomie i&nbsp;nikt raczej nie wyzywa nikogo od idiotów :). Zasada ta mówi o&nbsp;tym, aby&nbsp;nie dodawać nadmiernej złożoności do naszego kodu. Kod prosty, to&nbsp;taki kod, który nie tylko łatwo napisać, ale&nbsp;przede wszystkim zrozumieć i&nbsp;zmienić, gdy&nbsp;będzie to potrzebne. Prosty kod też łatwiej się testuje.
 
 Tutaj chcę zaznaczyć, że&nbsp;sama złożoność kodu nie jest zła, jeśli wynika ze złożoności problemu, który rozwiązuje. KISS trochę łączy się z&nbsp;YAGNI, bo&nbsp;możemy dodać więcej kodu, tworząc bardziej elastyczne rozwiązanie, potencjalnie łatwiejsze w&nbsp;rozszerzaniu. Może stosując jakiś wzorzec projektowy.
 
@@ -202,22 +203,22 @@ class IValidator
 {
 public:
     virtual ~IValidator() = default;
-    virtual bool validate(const std::string& value) const = 0;
+    virtual auto validate(const std::string& value) const -> bool = 0;
 };
 
 class EmailValidator : public IValidator
 {
 public:
-    bool validate(const std::string& value) const override
+    auto validate(const std::string& value) const override -> bool
     {
-        return value.find('@') != std::string::npos;
+        return value.contains('@');
     }
 };
 
 class PasswordValidator : public IValidator
 {
 public:
-    bool validate(const std::string& value) const override
+    auto validate(const std::string& value) const override -> bool
     {
         return 8 <= value.size();
     }
@@ -232,7 +233,7 @@ public:
           passwordValidator(std::move(inputPasswordValidator))
     {}
 
-    bool registerUser(const std::string& email, const std::string& password)
+    auto registerUser(const std::string& email, const std::string& password) -> bool
     {
         return emailValidator->validate(email) && passwordValidator->validate(password);
     }
@@ -249,7 +250,7 @@ Widać tutaj zdecydowany overengineering. Tyle konstrukcji tylko po to, by&nbsp;
 class UserService
 {
 public:
-    bool registerUser(const std::string& email, const std::string& password)
+    auto registerUser(const std::string& email, const std::string& password) -> bool
     {
         if (email.find('@') == std::string::npos)
             return false;
@@ -288,7 +289,7 @@ Mamy tutaj klasę **FileWriter** z&nbsp;jedną metodą **write**. Pozornie wszys
 class FileWriter
 {
 public:
-    void write(const std::string& path, const std::string& data)
+    auto write(const std::string& path, const std::string& data) -> void
     {
         std::ofstream file(path);
         if (!file.is_open())
@@ -309,7 +310,7 @@ Metoda **write** próbuje otworzyć podany w&nbsp;**path** plik. Jeśli się nie
 class FileWriter
 {
 public:
-    void write(const std::string& path, const std::string& data)
+    auto write(const std::string& path, const std::string& data) -> void
     {
         std::ofstream file(path);
         if (!file.is_open())
@@ -337,7 +338,7 @@ Przyjrzyjmy się metodzie **sendReport** klasy **ReportService**. Metoda ta korz
 class Report
 {
 public:
-    std::string generate() const
+    auto generate() const -> std::string
     {
         return "Daily report data";
     }
@@ -346,7 +347,7 @@ public:
 class EmailClient
 {
 public:
-    void send(const std::string& recipient, const std::string& content)
+    auto send(const std::string& recipient, const std::string& content) -> void
     {
         std::cout << "Sending email to " << recipient << " with content:\n"
                   << content << "\n";
@@ -356,7 +357,7 @@ public:
 class Config
 {
 public:
-    static std::string getDefaultRecipient()
+    static auto getDefaultRecipient() -> std::string
     {
         return "admin@example.com";
     }
@@ -365,16 +366,16 @@ public:
 class ReportService
 {
 public:
-    void sendReport(const std::string& customRecipient = "")
+    auto sendReport(const std::string& customRecipient = "") -> void
     {
         // użycie argumentu metody
-        std::string recipient = customRecipient.empty()
+        std::string recipient { customRecipient.empty()
             ? Config::getDefaultRecipient()  // globalne źródło wiedzy
-            : customRecipient;
+            : customRecipient };
 
         // stworzenie i użycie obiektu lokalnego
         Report report;
-        std::string content = report.generate();
+        const std::string content { report.generate() };
 
         // wysłanie raportu przez własne pole emailClient
         emailClient.send(recipient, reportTitle + "\n" + content);
@@ -401,7 +402,7 @@ order.getCustomerCityName();
 Wewnątrz tej metody nie powinno być kolejnego, nieco krótszego łańcucha tylko coś w&nbsp;tym rodzaju.
 
 ```cpp
-std::string Order::getCustomerCityName() const
+auto Order::getCustomerCityName() const -> std::string
 {
     return customer.getCityName();
 }
@@ -424,13 +425,14 @@ class Shape
 {
 public:
     virtual ~Shape() = default;
-    virtual void draw() = 0;
+    virtual auto draw() -> void = 0;
 };
 
 class Rectangle : public Shape
 {
 public:
-    void draw() override
+    virtual ~Rectangle() = default;
+    virtual auto draw() override -> void
     {
         std::cout << "Drawing rectangle\n";
     }
@@ -443,7 +445,7 @@ public:
         : color(inputColor)
     {}
 
-    void draw() override
+    auto draw() override -> void
     {
         std::cout << "Drawing " << color << " rectangle\n";
     }
@@ -463,7 +465,7 @@ public:
         : shape(inputShape), color(inputColor)
     {}
 
-    void draw() override
+    auto draw() override -> void
     {
         std::cout << "Drawing " << color << " ";
         shape.draw();
