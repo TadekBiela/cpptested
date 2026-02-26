@@ -22,12 +22,12 @@ Wyobraźmy sobie klasę do naliczania rabatów **DiscountCalculator**. Zamiast n
 ```cpp
 TEST_F(DiscountCalculatorTest, calculate_CheckAllDiscounts_ShouldApplyCorrectRates)
 {
-    const std::vector<double> purchases { 50.0, 150.0, 300.0 };
-    DiscountCalculator calculator {};
+    const std::vector<double> purchases{ 50.0, 150.0, 300.0 };
+    DiscountCalculator calculator{};
 
     for (const auto& amount : purchases)
     {
-        const auto result { calculator.calculate(amount) };
+        const auto result{ calculator.calculate(amount) };
 
         if (amount < 100.0)
         {
@@ -51,30 +51,30 @@ A tutaj prawidłowo napisane testy dla metody **calculate**.
 ```cpp
 TEST_F(DiscountCalculatorTest, calculate_TooLowAmount_ShouldReturnNoDiscount)
 {
-    const auto amount { 50.0 };
-    DiscountCalculator calculator {};
+    const auto amount{ 50.0 };
+    DiscountCalculator calculator{};
 
-    const auto result { calculator.calculate(amount) };
+    const auto result{ calculator.calculate(amount) };
 
     EXPECT_NEAR(0.0, result, 0.001);
 }
 
 TEST_F(DiscountCalculatorTest, calculate_FirstThresholdAmount_ShouldReturn10PercentDiscount)
 {
-    const auto amount { 150.0 };
-    DiscountCalculator calculator {};
+    const auto amount{ 150.0 };
+    DiscountCalculator calculator{};
 
-    const auto result { calculator.calculate(amount) };
+    const auto result{ calculator.calculate(amount) };
 
     EXPECT_NEAR(15.0, result, 0.001);
 }
 
 TEST_F(DiscountCalculatorTest, calculate_SecondThresholdAmount_ShouldReturn20PercentDiscount)
 {
-    const auto amount { 300.0 };
-    DiscountCalculator calculator {};
+    const auto amount{ 300.0 };
+    DiscountCalculator calculator{};
 
-    const auto result { calculator.calculate(amount) };
+    const auto result{ calculator.calculate(amount) };
 
     EXPECT_NEAR(60.0, result, 0.001);
 }
@@ -115,9 +115,9 @@ protected:
 TEST_F(OrderProcessorTest, process_GoldCustomerWithoutDiscount_ShouldWork)
 {
     setupProcessor(true, false);
-    OrderProcessor processor { customerServiceMock, discountServiceMock };
+    OrderProcessor processor{ customerServiceMock, discountServiceMock };
 
-    const auto result { processor.process(Order{}) };
+    const auto result{ processor.process(Order{}) };
 
     EXPECT_TRUE(result.success);
 }
@@ -147,9 +147,9 @@ protected:
 TEST_F(OrderProcessorTest, process_GoldCustomerWithoutDiscount_ShouldWork)
 {
     setupProcessorForCustomerWithoutDiscount(Status::Gold);
-    OrderProcessor processor { customerServiceMock, discountServiceMock };
+    OrderProcessor processor{ customerServiceMock, discountServiceMock };
 
-    const auto result { processor.process(Order{}) };
+    const auto result{ processor.process(Order{}) };
 
     EXPECT_TRUE(result.success);
 }
@@ -167,10 +167,10 @@ Logiką, w&nbsp;tym przypadku, jest&nbsp;kopia algorytmu z&nbsp;kodu produkcyjne
 ```cpp
 TEST_F(LoyaltyPointsTest, calculatePoints_LargeOrder_ShouldReturnPointsWithBonus)
 {
-    const double orderValue { 600.0 };
-    const double baseRate { 10.0 };
-    const double bonusMultiplier { 1.05 };
-    LoyaltyPointsCalculator calculator {};
+    const double orderValue{ 600.0 };
+    const double baseRate{ 10.0 };
+    const double bonusMultiplier{ 1.05 };
+    LoyaltyPointsCalculator calculator{};
 
     EXPECT_NEAR((orderValue / baseRate) * bonusMultiplier, calculator.calculate(orderValue), 0.001);
 }
@@ -181,10 +181,10 @@ To nic innego jak fragment implementacji przeklejony do testu. Nie&nbsp;mamy ża
 ```cpp
 TEST_F(LoyaltyPointsTest, calculatePoints_LargeOrder_ShouldReturnPointsWithBonus)
 {
-    const auto orderValue { 600.0 };
-    LoyaltyPointsCalculator calculator {};
+    const auto orderValue{ 600.0 };
+    LoyaltyPointsCalculator calculator{};
 
-    const auto result { calculator.calculate(orderValue) };
+    const auto result{ calculator.calculate(orderValue) };
 
     EXPECT_NEAR(63.0, result, 0.1);
 }
@@ -201,12 +201,12 @@ Dla przykładu mamy klasę **OrderNotifier**, która między innymi nadaje prior
 ```cpp
 TEST(OrderNotifierTest, determinePriority_MultipleStatuses_ShouldReturnCorrectPriority)
 {
-    std::vector<OrderStatus> statuses { OrderStatus::New, OrderStatus::Shipped, OrderStatus::Cancelled };
-    OrderNotifier notifier {};
+    std::vector<OrderStatus> statuses{ OrderStatus::New, OrderStatus::Shipped, OrderStatus::Cancelled };
+    OrderNotifier notifier{};
 
     for (const auto& status : statuses)
     {
-        const auto priority { notifier.determinePriority(status) };
+        const auto priority{ notifier.determinePriority(status) };
 
         switch (status)
         {
@@ -232,27 +232,27 @@ Zobacz jak to powinno wyglądać poprawnie.
 ```cpp
 TEST_F(OrderNotifierTest, determinePriority_NewOrder_ShouldReturnLowPriority)
 {
-    OrderNotifier notifier {};
+    OrderNotifier notifier{};
 
-    const auto priority { notifier.determinePriority(OrderStatus::New) };
+    const auto priority{ notifier.determinePriority(OrderStatus::New) };
 
     EXPECT_EQ(Priority::Low, priority);
 }
 
 TEST_F(OrderNotifierTest, determinePriority_OrderShipped_ShouldReturnHighPriority)
 {
-    OrderNotifier notifier {};
+    OrderNotifier notifier{};
 
-    const auto priority { notifier.determinePriority(OrderStatus::Shipped) };
+    const auto priority{ notifier.determinePriority(OrderStatus::Shipped) };
 
     EXPECT_EQ(Priority::High, priority);
 }
 
 TEST_F(OrderNotifierTest, determinePriority_OrderCancelled_ShouldReturnCriticalPriority)
 {
-    OrderNotifier notifier {};
+    OrderNotifier notifier{};
 
-    const auto priority { notifier.determinePriority(OrderStatus::Cancelled) };
+    const auto priority{ notifier.determinePriority(OrderStatus::Cancelled) };
 
     EXPECT_EQ(Priority::Critical, priority);
 }
@@ -268,12 +268,12 @@ Jeśli odpowiedź brzmi tak, śmiało użyj pętli.
 ```cpp
 TEST_F(ReportBatchProcessorTest, processReports_AllValidReports_EachReportIsMarkedAsProcessedAndNoErrors)
 {
-    const std::vector<Report> reports { { "ID_1" }, { "ID_2" }, { "ID_3" } };
-    ReportBatchProcessor processor { reports };
+    const std::vector<Report> reports{ { "ID_1" },{ "ID_2" },{ "ID_3" } };
+    ReportBatchProcessor processor{ reports };
 
     processor.processReports();
 
-    const auto results { processor.getProcessedReports() };
+    const auto results{ processor.getProcessedReports() };
     ASSERT_THAT(results, testing::SizeIs(reports.size()));
     for (const auto& report : results)
     {

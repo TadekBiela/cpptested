@@ -37,7 +37,7 @@ auto TemperatureSensor::getAvgTemperature() -> float
     if(sensorDrivers.empty())
       return 0.0f;
 
-    float tempSum { 0.0f };
+    float tempSum{ 0.0f };
     for(const auto& sensorDriver : sensorDrivers)
     {
         tempSum += i2c::getSensorTemp(sensorDriver.address);
@@ -123,7 +123,7 @@ Technika ta polega na zmianie bezpośredniego wywołania zależności globalnej,
 
 ```cpp
 
-int g_gameObjectsCounter { 0 };
+int g_gameObjectsCounter{ 0 };
 
 ```
 
@@ -132,7 +132,7 @@ Tutaj przykład jej użycia
 ```cpp
 auto Weapon::fire(const Position& position, const Rotation& position) -> void
 {
-    auto bullet { std::make_unique<Bullet>(g_gameObjectsCounter++, bulletTexture, position, position) };
+    auto bullet{ std::make_unique<Bullet>(g_gameObjectsCounter++, bulletTexture, position, position) };
 
     display->add(std::move(bullet));
 }
@@ -163,7 +163,7 @@ Weapon::Weapon(int& inputBulletId)
 
 auto Weapon::fire(const Position& position, const Rotation& position) -> void
 {
-    auto bullet { std::make_unique<Bullet>(bulletId++, bulletTexture, position, position) };
+    auto bullet{ std::make_unique<Bullet>(bulletId++, bulletTexture, position, position) };
 
     display->add(std::move(bullet));
 }
@@ -200,7 +200,7 @@ Player::Player(const Position& inputPosition, const Rotation& inputRotation)
   : position(inputPosition)
   , rotation(inputRotation)
 {
-    const auto& graphicsStorage { TextureStorage::instance() };
+    const auto& graphicsStorage{ TextureStorage::instance() };
     texture = getTexture(TextureId::PLAYER);
 
     //Reszta implementacji konstruktora...
@@ -208,7 +208,7 @@ Player::Player(const Position& inputPosition, const Rotation& inputRotation)
 
 auto Player::changeLook(const TextureId& newTexture) -> void
 {
-    const auto& graphicsStorage { TextureStorage::instance() };
+    const auto& graphicsStorage{ TextureStorage::instance() };
     texture = getTexture(newTexture);
 }
 ```
@@ -266,12 +266,12 @@ Ostatnim i&nbsp;w&nbsp;mojej ocenie najlepszym rozwiązaniem do szybkiego, popra
 Mamy klasę **LoanScheduleGenerator**, która wykorzystuje zmienną globalną **g_interestRate** w&nbsp;metodzie **generate**.
 
 ```cpp
-double g_interestRate { 0.035 };
+double g_interestRate{ 0.035 };
 
 auto LoanScheduleGenerator::generate(const Loan& loan) -> PaymentSchedule
 {
-    const unsigned numOfMonths { 12 };
-    double monthlyRate { g_interestRate / numOfMonths };
+    const unsigned numOfMonths{ 12 };
+    double monthlyRate{ g_interestRate / numOfMonths };
     // dalsza część implementacji generowania harmonogramu spłaty kredytu
 }
 ```
@@ -299,8 +299,8 @@ auto LoanScheduleGenerator::getInterestRate() const -> double
 
 auto LoanScheduleGenerator::generate(const Loan& loan) -> PaymentSchedule
 {
-    const unsigned numOfMonths { 12 };
-    double monthlyRate { getInterestRate() / numOfMonths };
+    const unsigned numOfMonths{ 12 };
+    double monthlyRate{ getInterestRate() / numOfMonths };
     // dalsza część implementacji generowania harmonogramu spłaty kredytu
 }
 ```

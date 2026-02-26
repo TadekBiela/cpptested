@@ -79,11 +79,11 @@ Ten błąd może kosztować życie (naszego wątku uruchamiającego testy). Dlac
 ```cpp
 TEST_F(WidgetFactoryTests, create_ButtonWidgetType_ReturnButtonWidget)
 {
-    const Rect expectedRect { 300, 400, 120, 30 };
-    const std::string expectedText { "Test Button" };
-    WidgetFactory factory {};
+    const Rect expectedRect{ 300, 400, 120, 30 };
+    const std::string expectedText{ "Test Button" };
+    WidgetFactory factory{};
 
-    const auto resultWidget { factory.create(WidgetType::BUTTON, expectedRect, expectedText)};
+    const auto resultWidget{ factory.create(WidgetType::BUTTON, expectedRect, expectedText)};
 
     EXPECT_EQ(WidgetType::LABEL, resultWidget.getType()); // Ta asercja się nie powiedzie
     EXPECT_EQ(expectedRect, resultWidget.getRect()); // Ta i następna zostaną wywołane
@@ -96,17 +96,17 @@ TEST_F(WidgetFactoryTests, create_ButtonWidgetType_ReturnButtonWidget)
 ```cpp
 TEST_F(WidgetsFactorySfmlTests, create_LabelType_CreateLabelWidget)
 {
-    const auto sfmlWindow { std::make_shared<MockSfmlWindow>() };
+    const auto sfmlWindow{ std::make_shared<MockSfmlWindow>() };
     EXPECT_CALL(*sfmlWindow, getRenderTarget()).WillOnce(ReturnRef(getWindow()));
     EXPECT_CALL(*sfmlWindow, add(_));
-    WidgetsFactorySfml factory { nullptr, sfmlWindow, nullptr };
+    WidgetsFactorySfml factory{ nullptr, sfmlWindow, nullptr };
 
     const auto resultWidget {
         factory.create(
             WidgetType::LABEL,
-            WidgetGeometry {},
-            WidgetText {},
-            WidgetStyle {}
+            WidgetGeometry{},
+            WidgetText{},
+            WidgetStyle{}
         )
     }; // Jeśli ta metoda zwróci nullptr
 
@@ -121,17 +121,17 @@ Co nam to daje? Bardzo wiele, zwłaszcza gdy kolejne asercje opierają się na n
 ```cpp
 TEST_F(WidgetsFactorySfmlTests, create_LabelType_CreateLabelWidget)
 {
-    const auto sfmlWindow { std::make_shared<MockSfmlWindow>() };
+    const auto sfmlWindow{ std::make_shared<MockSfmlWindow>() };
     EXPECT_CALL(*sfmlWindow, getRenderTarget()).WillOnce(ReturnRef(getWindow()));
     EXPECT_CALL(*sfmlWindow, add(_));
-    WidgetsFactorySfml factory { nullptr, sfmlWindow, nullptr };
+    WidgetsFactorySfml factory{ nullptr, sfmlWindow, nullptr };
 
     const auto resultWidget {
         factory.create(
             WidgetType::LABEL,
-            WidgetGeometry {},
-            WidgetText {},
-            WidgetStyle {}
+            WidgetGeometry{},
+            WidgetText{},
+            WidgetStyle{}
         )
     }; 
 
@@ -158,7 +158,7 @@ Dlaczego więc nie stosować **ASSERT** zawsze? Jak już pisałem, **ASSERT** za
 
 Jeśli oczekiwanym wynikiem może być kontener to sprawdź jego rozmiar **ASSERT**em zanim zaczniesz weryfikować jego konkretne elementy. Albo, gdy&nbsp;wynikiem będzie wskaźnik, sprawdź czy nie jest on **nullptr** zanim zaczniesz odwoływać się do obiektu pod nim. To tylko najczęściej powtarzające się sytuacje, gdzie należy stosować **ASSERT**. Z&nbsp;pewnością jest ich więcej.
 
-### Porównywanie float'ów bez precyzji
+### Porównywanie floatów bez precyzji
 
 Reprezentacja liczb zmiennoprzecinkowych przez komputer nie jest doskonała i&nbsp;wie to każdy doświadczony programista. Porównywanie wartości typu **float** czy **double** ze sobą nie jest takie proste jak liczb całkowitych. Weryfikacja testu odbywa się właśnie przez porównanie, a&nbsp;wyniki zapisane w&nbsp;liczbach zmiennoprzecinkowych mogą się nieznacznie różnić od tych oczekiwanych.
 
@@ -171,10 +171,10 @@ To mi przypomina moje początki nauki pisania unit testów i&nbsp;pracy z&nbsp;G
 ```cpp
 TEST(DemodulationTests, llr16QamIMsb_PositiveRealSampleValueAndPositiveNoise_ReturnCorrectLlr)
 {
-    const std::complex<double> sample { 1.0, 0.0 };
-    const double noise { 0.394 };
+    const std::complex<double> sample{ 1.0, 0.0 };
+    const double noise{ 0.394 };
   
-    const auto resultLlr { llr16QamIMsb(sample, noise) };
+    const auto resultLlr{ llr16QamIMsb(sample, noise) };
 
     EXPECT_EQ(5.0761421319796952, resultLlr);
 }
@@ -185,10 +185,10 @@ Teraz, gdy&nbsp;o&nbsp;tym myślę, chce mi się śmiać, ale&nbsp;kto nie pope�
 ```cpp
 TEST(DemodulationTests, llr16QamIMsb_PositiveRealSampleValueAndPositiveNoise_ReturnCorrectLlr)
 {
-    const std::complex<double> sample { 1.0, 0.0 };
-    const double noise { 0.394 };
+    const std::complex<double> sample{ 1.0, 0.0 };
+    const double noise{ 0.394 };
   
-    const auto resultLlr { llr16QamIMsb(sample, noise) };
+    const auto resultLlr{ llr16QamIMsb(sample, noise) };
 
     EXPECT_NEAR(5.07614, resultLlr, 0.00001);
 }
@@ -228,7 +228,7 @@ public:
     );
 
     //...
-    virtual auto update(const SceneUpdate& sceneUpdate) override -> void;
+    auto update(const SceneUpdate& sceneUpdate) -> void;
 
 private:
     //...
@@ -336,15 +336,15 @@ Natomiast w&nbsp;unit testach chcemy przetestować metodę **addPlayer** klasy *
 ```cpp
 TEST_F(GameSessionTests, addPlayer_OneNewPlayer_ReturnNewPlayerId)
 {
-    auto factory { std::make_unique<MockSceneItemFactory>() };
+    auto factory{ std::make_unique<MockSceneItemFactory>() };
     EXPECT_CALL(*factory, create(_, _, _));
-    MockGameSession gameSession { std::move(factory) };
+    MockGameSession gameSession{ std::move(factory) };
     EXPECT_CALL(gameSession, getTexture(_)).WillOnce(Return(Texture())); // Mockowanie zależności odczytu z pliku
     EXPECT_CALL(gameSession, addPlayer()).WillOnce(Invoke([&](){ // Mockowana metoda wykonuje tą prawdziwą
         return gameSession.GameSession::addPlayer();
     }));
 
-    const auto resultPlayerId { gameSession.addPlayer() }; // Wywołanie mockowanej metody
+    const auto resultPlayerId{ gameSession.addPlayer() }; // Wywołanie mockowanej metody
 
     EXPECT_EQ(0, resultPlayerId);
 }

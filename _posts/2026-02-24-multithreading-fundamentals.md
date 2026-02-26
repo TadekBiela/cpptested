@@ -95,7 +95,7 @@ public:
     }
 
 private:
-    int value { 0 };
+    int value{ 0 };
 };
 ```
 
@@ -141,7 +141,7 @@ Wróćmy do przykładu z&nbsp;funkcją **transfer** i&nbsp;dodajmy do niej **mut
 ```cpp
 auto transfer(Account& account, Money value) -> void
 {
-    std::lock_guard<std::mutex> transferLock { transferMutex };
+    std::lock_guard<std::mutex> transferLock{ transferMutex };
     account->withdraw(value);
     this->balance += value;
 }
@@ -172,7 +172,7 @@ public:
     }
 
 private:
-    int value { 0 };
+    int value{ 0 };
     mutable std::mutex valueMutex;
 };
 ```

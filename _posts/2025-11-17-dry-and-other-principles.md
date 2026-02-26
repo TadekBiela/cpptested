@@ -61,7 +61,7 @@ Widać tutaj powtórzenie, **"18&nbsp;<=&nbsp;employee.getAge()"**. Jest to pewi
 ```cpp
 auto isAdult(const Employee& employee) -> bool
 {
-    const unsigned adultAge { 18 };
+    const unsigned adultAge{ 18 };
     return adultAge <= employee.getAge();
 }
 
@@ -114,7 +114,7 @@ auto checkLogin(UserService& service,
 
 TEST(UserServiceTest, AllLogins)
 {
-    UserService service {};
+    UserService service{};
 
     checkLogin(service, "admin", "1234", true);
     checkLogin(service, "admin", "wrong", false);
@@ -129,27 +129,27 @@ Teraz porównaj to z&nbsp;poniższymi testami.
 ```cpp
 TEST(UserServiceTest, login_ValidCredentials_ReturnTrue)
 {
-    UserService service {};
+    UserService service{};
 
-    const bool result { service.login("admin", "1234") };
+    const bool result{ service.login("admin", "1234") };
 
     EXPECT_TRUE(result);
 }
 
 TEST(UserServiceTest, login_WrongPassword_ReturnFalse)
 {
-    UserService service {};
+    UserService service{};
 
-    const bool result { service.login("admin", "wrong") };
+    const bool result{ service.login("admin", "wrong") };
 
     EXPECT_FALSE(result);
 }
 
 TEST(UserServiceTest, login_UnknownUser_ReturnFalse)
 {
-    UserService service {};
+    UserService service{};
 
-    const bool result { service.login("user", "1234") };
+    const bool result{ service.login("user", "1234") };
 
     EXPECT_FALSE(result);
 }
@@ -369,13 +369,13 @@ public:
     auto sendReport(const std::string& customRecipient = "") -> void
     {
         // użycie argumentu metody
-        std::string recipient { customRecipient.empty()
+        std::string recipient{ customRecipient.empty()
             ? Config::getDefaultRecipient()  // globalne źródło wiedzy
             : customRecipient };
 
         // stworzenie i użycie obiektu lokalnego
         Report report;
-        const std::string content { report.generate() };
+        const std::string content{ report.generate() };
 
         // wysłanie raportu przez własne pole emailClient
         emailClient.send(recipient, reportTitle + "\n" + content);
@@ -383,7 +383,7 @@ public:
 
 private:
     EmailClient emailClient;
-    std::string reportTitle { "Daily Report" };
+    std::string reportTitle{ "Daily Report" };
 };
 ```
 
