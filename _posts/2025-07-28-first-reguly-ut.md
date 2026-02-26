@@ -23,7 +23,7 @@ Znani i&nbsp;cenieni specjaliści, jak Robert C. Martin czy Kent Beck, w&nbsp;sw
 Jeśli testy "kręcą się" kilka lub kilkanaście minut, często zniechęca to&nbsp;programistów do&nbsp;regularnego ich uruchamiania. Dodatkowo, &nbsp;gdy weźmiemy pod uwagę Test Driven Development, to&nbsp;praktycznie paraliżuje to&nbsp;rozwój kodu i&nbsp;rodzi sporo frustracji.
 
 Kiedy testy "kręcą się" za długo? Tutaj sprawa już nie jest taka prosta. Czy 5 s jest OK? Myślę, że&nbsp;tak. 30&nbsp;s – jeszcze akceptowalne. 1–2 min? Tutaj już może pojawić się myśl: "Czy zdążę zrobić sobie kawę/herbatę?"
-Gdy zaczynamy myśleć o&nbsp;zrobieniu czegoś innego, oczekując na wyniki unit testów, to&nbsp;już jest znak, że&nbsp;trwa to za długo. Gdy pracujemy w&nbsp;TDD, to&nbsp;zmiany często są&nbsp;minimalne, trwające kilka sekund. Nie możemy pozwolić, by&nbsp;ich weryfikacja trwała kilkukrotnie dłużej, bo&nbsp;wybije nas to&nbsp;z&nbsp;rytmu.
+Gdy zaczynamy myśleć o&nbsp;zrobieniu czegoś innego, oczekując na wyniki unit testów, to&nbsp;już jest znak, że&nbsp;trwa to za długo. Gdy pracujemy w&nbsp;[TDD](https://cpptested.com/tdd/about-tdd/){:target="_blank" rel="noopener"}, to&nbsp;zmiany często są&nbsp;minimalne, trwające kilka sekund. Nie możemy pozwolić, by&nbsp;ich weryfikacja trwała kilkukrotnie dłużej, bo&nbsp;wybije nas to&nbsp;z&nbsp;rytmu.
 
 Przyczyn długiego oczekiwania na zakończenie unit testów może być kilka:
 
@@ -33,7 +33,7 @@ Przyczyn długiego oczekiwania na zakończenie unit testów może być kilka:
 **2)** Dostęp do&nbsp;plików.
    Pojedynczy przypadek raczej nie wpłynie znacząco na czas wykonywania unit testów. Gdy takich odczytów jest więcej, zaczynają one mieć znaczenie.
 
-**3)** Zewnętrzny framework do&nbsp;przesyłania message’y/eventów.
+**3)** Zewnętrzny framework do&nbsp;przesyłania messagey/eventów.
    Jeśli nasz kod produkcyjny korzysta z&nbsp;takich rozwiązań, może to&nbsp;w&nbsp;testach doprowadzić do&nbsp;opóźnień. Na&nbsp;przykład, gdy&nbsp; message nie przyjdzie na czas z&nbsp;powodu obciążenia sprzętu, na&nbsp;którym uruchamiamy testy (współdzielony serwer).
 
 Z pewnością każdy z&nbsp;Was może znaleźć też inne przyczyny opóźnień. Najczęstszym rozwiązaniem jest wprowadzenie warstwy pośredniej, rodzaj interfejsu, aby&nbsp;móc zastąpić implementację problematycznych zależności mockami.
@@ -49,7 +49,7 @@ Sytuacja, w&nbsp;której jeden test nie przechodzi tylko dlatego, że&nbsp;inny 
 Framework testowy Google Test domyślnie uruchamia testy w&nbsp;sposób losowy, dzięki czemu złamanie tej reguły powinno wyjść bardzo szybko.
 
 Częstym powodem zależności między testami są&nbsp;zmienne globalne. Istnieją techniki odcinania zależności od&nbsp;zmiennych globalnych czy wolnych funkcji (niezwiązanych z&nbsp;żadnym obiektem).
-W&nbsp;mojej ocenie jedną z&nbsp;najlepszych jest opakowanie użycia zmiennej globalnej (czy też funkcji) w&nbsp;metodę klasy w&nbsp;sekcji protected. Tak, aby&nbsp;można było przysłonić jej zachowanie w&nbsp;testach, tworząc klasę Testable.
+W&nbsp;mojej ocenie jedną z&nbsp;najlepszych jest opakowanie użycia zmiennej globalnej (czy też funkcji) w&nbsp;metodę klasy w&nbsp;sekcji protected. Tak, aby&nbsp;można było przysłonić jej zachowanie w&nbsp;testach, tworząc klasę Testable. Nieco więcej na temat tej techniki piszę w poście o&nbsp;["odcinaniu zależności globalnych w testach"](https://cpptested.com/unit-testing/handling-globals/){:target="_blank" rel="noopener"}.
 
 Technik radzenia sobie ze zmiennymi globalnymi jest więcej i&nbsp;można je znaleźć w&nbsp;tak świetnych książkach jak "Praca z&nbsp;zastanym kodem" czy "Refaktoryzacja. Ulepszanie struktury istniejącego kodu".
 
@@ -74,12 +74,12 @@ W&nbsp;mojej ocenie korzystanie z&nbsp;zewnętrznych zależności w&nbsp;testach
 Unit test powinien zwracać jednoznaczny wynik – test się powiódł lub nie.
 Testy jednostkowe to&nbsp;jedno z&nbsp;wielu zautomatyzowanych narzędzi wspierających naszą pracę z&nbsp;kodem i&nbsp;podnoszących jego jakość.
 
-Gdy musimy ręcznie weryfikować wyniki testów, marnujemy sporo czasu lub co gorasze, możemy błędnie odczytać ich wynik – dostarczając wadliwy kod lub niepotrzebnie debuggując go, gdy&nbsp;jednak jest poprawny, szukając błędu, który nie istnieje.
+Gdy musimy ręcznie weryfikować wyniki testów, marnujemy sporo czasu lub co gorsze, możemy błędnie odczytać ich wynik – dostarczając wadliwy kod lub niepotrzebnie debuggując go, gdy&nbsp;jednak jest poprawny, szukając błędu, który nie istnieje.
 Jeśli test wymaga ręcznego sprawdzenia logów, by&nbsp;potwierdzić, czy&nbsp;testowany kod działa, to&nbsp;znaczy, że&nbsp;coś jest nie tak.
 
 Czy możemy wtedy mówić o&nbsp;zautomatyzowanym teście? Zdecydowanie nie.
 Informacja zwrotna powinna być jasna – Twój kod działa/nie działa.
-Myślę, że ten punkt jest jasny i&nbsp;bez niego nie możemy mówić o&nbsp;cyklu TDD: Red → Green → Refactor. Bez jasnego sygnału, jak zakończyły się testy, nie możemy płynnie pracować w&nbsp;tym rytmie.
+Myślę, że&nbsp;ten punkt jest jasny i&nbsp;bez niego nie możemy mówić o&nbsp;cyklu TDD: Red → Green → Refactor. Bez jasnego sygnału, jak zakończyły się testy, nie możemy płynnie pracować w&nbsp;tym rytmie.
 
 
 ### T jak Timely
