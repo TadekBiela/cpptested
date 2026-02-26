@@ -18,7 +18,7 @@ A czym jest to całe AAA? Zacznijmy od początku.
 
 ### AAA - złoty standard
 
-O zasadzie AAA (triple A) piszę w&nbsp;swojej świetnej książce: [Testy jednostkowe. Świat niezawodnych aplikacji](https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji){:target="_blank" rel="noopener"} (The Art of Unit Testing) - Roy Osherove. Nie&nbsp;jest on wprawdzie jej bezpośrednim autorem, lecz&nbsp;wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie&nbsp;jest&nbsp;zależna od użytej technologii. Świetnie sprawdza się również w&nbsp;świecie&nbsp;C++.
+O zasadzie AAA (triple A) piszę w&nbsp;swojej świetnej książce [Testy jednostkowe. Świat niezawodnych aplikacji](https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji){:target="_blank" rel="noopener"} (The Art of Unit Testing) - Roy Osherove. Nie&nbsp;jest on wprawdzie jej bezpośrednim autorem, lecz&nbsp;wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie&nbsp;jest&nbsp;zależna od użytej technologii. Świetnie sprawdza się również w&nbsp;świecie&nbsp;C++.
 
 No dobrze, ale&nbsp;czym ta zasada jest i&nbsp;o&nbsp;czym mówi?
 
@@ -43,9 +43,9 @@ Spójrz na poniższy przykład testu niekorzystającego z&nbsp;AAA, czy&nbsp;pot
 ```cpp
 TEST_F(TemperatureSensorManagerTest, testCollectingTemperatures)
 {
-    TemperatureSensorManager manager;
+    TemperatureSensorManager manager{};
 
-    TemperatureSensorFactoryStub factory;
+    TemperatureSensorFactoryStub factory{};
 
     const auto expectedSensorName1{ "temp_core_1" };
     manager.addSensor(factory.createSensor(expectedSensorName1, 47.3));
@@ -54,7 +54,7 @@ TEST_F(TemperatureSensorManagerTest, testCollectingTemperatures)
     const auto expectedSensorName3{ "temp_board_0" };
     manager.addSensor(factory.createSensor(expectedSensorName3, 65.1));
 
-    auto temps = manager.getTemps();
+    auto temps{ manager.getTemps() };
     ASSERT_EQ(3, temps.size());
 
     EXPECT_EQ(expectedSensorName1, temps.at(0).getName());
@@ -65,7 +65,7 @@ TEST_F(TemperatureSensorManagerTest, testCollectingTemperatures)
 }
 ```
 
-A teraz ten sam test, tylko&nbsp;sformatowany zgodnie z&nbsp;triple A(na co dzień nie dodaję takich komentarzy ;) ):
+A teraz ten sam test, tylko&nbsp;sformatowany zgodnie z&nbsp;triple A( na co dzień nie dodaję takich komentarzy ;) ):
 
 ```cpp
 TEST_F(TemperatureSensorManagerTest, testCollectingTemperatures)
@@ -74,8 +74,8 @@ TEST_F(TemperatureSensorManagerTest, testCollectingTemperatures)
     const auto expectedSensorName1{ "temp_core_1" };
     const auto expectedSensorName2{ "temp_core_2" };
     const auto expectedSensorName3{ "temp_board_0" };
-    TemperatureSensorFactoryStub factory;
-    TemperatureSensorManager manager;
+    TemperatureSensorFactoryStub factory{};
+    TemperatureSensorManager manager{};
 
     //Act
     manager.addSensor(factory.createSensor(expectedSensorName1, 47.3));
@@ -83,7 +83,7 @@ TEST_F(TemperatureSensorManagerTest, testCollectingTemperatures)
     manager.addSensor(factory.createSensor(expectedSensorName3, 65.1));
 
     //Assert
-    auto temps = manager.getTemps();
+    auto temps{ manager.getTemps() };
     ASSERT_EQ(3, temps.size());
     EXPECT_EQ(expectedSensorName1, temps.at(0).getName());
     EXPECT_EQ(expectedSensorName2, temps.at(1).getName());
@@ -109,7 +109,7 @@ Jeśli się domyślasz, ale&nbsp;tego nie wiesz, już&nbsp;po samej nazwie, to&n
 Ok, spróbujmy teraz z&nbsp;taką nazwą:
 
 ```cpp
-TEST_F(TemperatureSensorTests, calculateAverageTemp_emptyTemperatureInput_ReturnZero)
+TEST_F(TemperatureSensorTests, calculateAverageTemp_emptyTemperatureInput_ReturnsZero)
 ```
 
 Lepiej? Nie wiem jak dla Ciebie, ale&nbsp;dla&nbsp;mnie, tak! Zdecydowanie widać co jest testowane, jak&nbsp;i&nbsp;co będzie wynikiem.
@@ -150,12 +150,12 @@ Przeglądając taki zestaw nazw, szybko zweryfikujemy, czy&nbsp;i&nbsp;jakie met
 Od podziału na 3&nbsp;bloki są pewne wyjątki. Możemy mieć sytuację, gdy&nbsp;chcemy, na&nbsp;przykład przetestować domyślne zachowanie konstruktora i&nbsp;w&nbsp;tym&nbsp;przypadku akurat nie mamy nic do zainicjalizowania. Wtedy po prostu bloku **Arrange** nie ma w teście i&nbsp;to&nbsp;jest&nbsp;ok.
 
 ```cpp
-TEST_F(DoorsLockTests, constructor_DefaultBehavior_ShouldReturnEmptyTemps)
+TEST_F(TemperatureSensorManagerTests, constructor_DefaultBehavior_ShouldReturnEmptyTemps)
 {
-    TemperatureSensorManager manager;
+    TemperatureSensorManager manager{};
 
-    auto temps = manager.getTemps();
-    ASSERT_EQ(3, temps.size());
+    auto temps{ manager.getTemps() };
+    ASSERT_EQ(0, temps.size());
 }
 ```
 
@@ -164,7 +164,7 @@ Inny przykład, gdy&nbsp;jedynym oczekiwanym wynikiem naszej testowanej metody j
 ```cpp
 TEST_F(TemperatureSensorManagerTest, getAvgTemp_NoAddedSensors_ReturnsZero)
 {
-    TemperatureSensorManager manager;
+    TemperatureSensorManager manager{};
 
     EXPECT_FLOAT_EQ(0.0, manager.getAvgTemp());
 }
@@ -175,9 +175,9 @@ Możemy również dodać zmienną wynikową, by&nbsp;zachować podział na&nbsp;
 ```cpp
 TEST_F(TemperatureSensorManagerTest, getAvgTemp_NoAddedSensors_ReturnsZero)
 {
-    TemperatureSensorManager manager;
+    TemperatureSensorManager manager{};
 
-    auto result{ manager.getAvgTemp() };
+    const auto result{ manager.getAvgTemp() };
 
     EXPECT_FLOAT_EQ(0.0, result);
 }
@@ -197,7 +197,7 @@ Zauważ, że&nbsp;we&nbsp;wszystkich przykładach nazwa wciąż zawiera podział
 ### GWT
 
 W Internecie możesz spotkać się z&nbsp;nazwą GWT. To&nbsp;w&nbsp;zasadzie to samo.
-GWT czyli Give(Arrnage) When(Act) Then(Assert). Ja&nbsp;osobiście wolę triple A&nbsp;;)
+GWT czyli Give(Arrange) When(Act) Then(Assert). Ja&nbsp;osobiście wolę triple A&nbsp;;)
 
 ### Podsumowanie
 
