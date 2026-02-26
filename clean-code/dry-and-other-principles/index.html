@@ -291,7 +291,7 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">isAdult</span><span class="p">(</span><span class="k">const</span> <span class="n">Employee</span><span class="o">&amp;</span> <span class="n">employee</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
 <span class="p">{</span>
-    <span class="k">const</span> <span class="kt">unsigned</span> <span class="n">adultAge</span> <span class="p">{</span> <span class="mi">18</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="kt">unsigned</span> <span class="n">adultAge</span><span class="p">{</span> <span class="mi">18</span> <span class="p">};</span>
     <span class="k">return</span> <span class="n">adultAge</span> <span class="o">&lt;=</span> <span class="n">employee</span><span class="p">.</span><span class="n">getAge</span><span class="p">();</span>
 <span class="p">}</span>
 
@@ -343,7 +343,7 @@
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">AllLogins</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">{};</span>
 
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
     <span class="n">checkLogin</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
@@ -357,27 +357,27 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_ValidCredentials_ReturnTrue</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">{};</span>
 
-    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span><span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_WrongPassword_ReturnFalse</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">{};</span>
 
-    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">)</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span><span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"admin"</span><span class="p">,</span> <span class="s">"wrong"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">TEST</span><span class="p">(</span><span class="n">UserServiceTest</span><span class="p">,</span> <span class="n">login_UnknownUser_ReturnFalse</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">UserService</span> <span class="n">service</span> <span class="p">{};</span>
+    <span class="n">UserService</span> <span class="n">service</span><span class="p">{};</span>
 
-    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span> <span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="kt">bool</span> <span class="n">result</span><span class="p">{</span> <span class="n">service</span><span class="p">.</span><span class="n">login</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"1234"</span><span class="p">)</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
@@ -597,13 +597,13 @@
     <span class="k">auto</span> <span class="n">sendReport</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">customRecipient</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
         <span class="c1">// użycie argumentu metody</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span> <span class="p">{</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recipient</span><span class="p">{</span> <span class="n">customRecipient</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
             <span class="o">?</span> <span class="n">Config</span><span class="o">::</span><span class="n">getDefaultRecipient</span><span class="p">()</span>  <span class="c1">// globalne źródło wiedzy</span>
             <span class="o">:</span> <span class="n">customRecipient</span> <span class="p">};</span>
 
         <span class="c1">// stworzenie i użycie obiektu lokalnego</span>
         <span class="n">Report</span> <span class="n">report</span><span class="p">;</span>
-        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span> <span class="p">{</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">()</span> <span class="p">};</span>
+        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">content</span><span class="p">{</span> <span class="n">report</span><span class="p">.</span><span class="n">generate</span><span class="p">()</span> <span class="p">};</span>
 
         <span class="c1">// wysłanie raportu przez własne pole emailClient</span>
         <span class="n">emailClient</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">reportTitle</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">content</span><span class="p">);</span>
@@ -611,7 +611,7 @@
 
 <span class="nl">private:</span>
     <span class="n">EmailClient</span> <span class="n">emailClient</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reportTitle</span> <span class="p">{</span> <span class="s">"Daily Report"</span> <span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reportTitle</span><span class="p">{</span> <span class="s">"Daily Report"</span> <span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div></div>
 

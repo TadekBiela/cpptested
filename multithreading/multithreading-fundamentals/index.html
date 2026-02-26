@@ -326,7 +326,7 @@
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="kt">int</span> <span class="n">value</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -376,7 +376,7 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">transferLock</span> <span class="p">{</span> <span class="n">transferMutex</span> <span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">transferLock</span><span class="p">{</span> <span class="n">transferMutex</span> <span class="p">};</span>
     <span class="n">account</span><span class="o">-&gt;</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
     <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
 <span class="p">}</span>
@@ -408,7 +408,7 @@
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="kt">int</span> <span class="n">value</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
     <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">valueMutex</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
@@ -574,7 +574,7 @@ Programista C++ | Entuzjasta TDD | Fan unit testów</p>
       <span class="page__meta-readtime">
         <i class="far fa-fw fa-clock" aria-hidden="true"></i>
         
-          11 minut(y)
+          10 minut(y)
         
       </span>
     
