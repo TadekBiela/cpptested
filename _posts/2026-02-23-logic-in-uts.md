@@ -93,29 +93,29 @@ protected:
     {
         if (isGoldCustomer)
         {
-            EXPECT_CALL(customerServiceMock, getStatus(_)).WillRepeatedly(Return(Status::Gold));
+            EXPECT_CALL(customerServiceMock_, getStatus(_)).WillRepeatedly(Return(Status::Gold));
         }
 
         if (hasDiscount)
         {
-            EXPECT_CALL(discountServiceMock, apply(_)).WillOnce(Return(true));
+            EXPECT_CALL(discountServiceMock_, apply(_)).WillOnce(Return(true));
         }
         else
         {
             // Brak zniżki może zmieniać stan mocka w&nbsp;sposób, 
             // którego inny test się nie spodziewa
-            EXPECT_CALL(discountServiceMock, apply(_)).Times(0);
+            EXPECT_CALL(discountServiceMock_, apply(_)).Times(0);
         }
     }
 
-    MockCustomerService customerServiceMock;
-    MockDiscountService discountServiceMock;
+    MockCustomerService customerServiceMock_;
+    MockDiscountService discountServiceMock_;
 };
 
 TEST_F(OrderProcessorTest, process_GoldCustomerWithoutDiscount_ShouldWork)
 {
     setupProcessor(true, false);
-    OrderProcessor processor{ customerServiceMock, discountServiceMock };
+    OrderProcessor processor{ customerServiceMock_, discountServiceMock_ };
 
     const auto result{ processor.process(Order{}) };
 
@@ -131,23 +131,23 @@ class OrderProcessorTest : public testing::Test
 protected:
     auto setupProcessorForCustomerWithoutDiscount(const Status customerStatus) -> void
     {
-        EXPECT_CALL(customerServiceMock, getStatus(_)).WillRepeatedly(Return(customerStatus));
+        EXPECT_CALL(customerServiceMock_, getStatus(_)).WillRepeatedly(Return(customerStatus));
     }
 
     auto setupProcessorForCustomerWithDiscount(const Status customerStatus) -> void
     {
-        EXPECT_CALL(customerServiceMock, getStatus(_)).WillRepeatedly(Return(customerStatus));
-        EXPECT_CALL(discountServiceMock, apply(_)).WillOnce(Return(true));
+        EXPECT_CALL(customerServiceMock_, getStatus(_)).WillRepeatedly(Return(customerStatus));
+        EXPECT_CALL(discountServiceMock_, apply(_)).WillOnce(Return(true));
     }
   
-    MockCustomerService customerServiceMock;
-    MockDiscountService discountServiceMock;
+    MockCustomerService customerServiceMock_;
+    MockDiscountService discountServiceMock_;
 };
 
 TEST_F(OrderProcessorTest, process_GoldCustomerWithoutDiscount_ShouldWork)
 {
     setupProcessorForCustomerWithoutDiscount(Status::Gold);
-    OrderProcessor processor{ customerServiceMock, discountServiceMock };
+    OrderProcessor processor{ customerServiceMock_, discountServiceMock_ };
 
     const auto result{ processor.process(Order{}) };
 

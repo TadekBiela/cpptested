@@ -34,16 +34,16 @@ Tutaj fragment z&nbsp;implementacji klasy **TemperatureSensor** z&nbsp;użyciem 
 ```cpp
 auto TemperatureSensor::getAvgTemperature() -> float
 {
-    if(sensorDrivers.empty())
+    if(sensorDrivers_.empty())
       return 0.0f;
 
     float tempSum{ 0.0f };
-    for(const auto& sensorDriver : sensorDrivers)
+    for(const auto& sensorDriver : sensorDrivers_)
     {
         tempSum += i2c::getSensorTemp(sensorDriver.address);
     }
 
-    return tempSum / sensorDrivers.size();
+    return tempSum / sensorDrivers_.size();
 }
 ```
 
@@ -134,7 +134,7 @@ auto Weapon::fire(const Position& position, const Rotation& position) -> void
 {
     auto bullet{ std::make_unique<Bullet>(g_gameObjectsCounter++, bulletTexture, position, position) };
 
-    display->add(std::move(bullet));
+    display_->add(std::move(bullet));
 }
 ```
 
@@ -146,10 +146,10 @@ Teraz spróbujmy przekazywać wartość zmiennej globalnej jako parametr konstru
 class Weapon
 {
 public:
-    Weapon(int& inputBulletId = g_gameObjectsCounter);
+    Weapon(int& bulletId = g_gameObjectsCounter);
     //...
 private:
-    int& bulletId;
+    int& bulletId_;
     //...
 };
 ```
@@ -157,15 +157,15 @@ private:
 Jak widać, możemy nadać bardziej konkretną nazwę, przekazanej zmiennej globalnej, co&nbsp;poprawia czytelność dodając więcej kontekstu do miejsca jej użycia.
 
 ```cpp
-Weapon::Weapon(int& inputBulletId)
-  : bulletId(inputBulletId)
+Weapon::Weapon(int& bulletId)
+  : bulletId_(bulletId)
 {}
 
 auto Weapon::fire(const Position& position, const Rotation& position) -> void
 {
-    auto bullet{ std::make_unique<Bullet>(bulletId++, bulletTexture, position, position) };
+    auto bullet{ std::make_unique<Bullet>(bulletId_++, bulletTexture, position, position) };
 
-    display->add(std::move(bullet));
+    display_->add(std::move(bullet));
 }
 ```
 
@@ -186,7 +186,7 @@ public:
     auto getTexture(const TextureId& id) -> const Texture&;
 
 private:
-    std::map<TextureId, Texture> textures;
+    std::map<TextureId, Texture> textures_;
 
     TextureStorage();
     ~TextureStorage();
@@ -196,9 +196,9 @@ private:
 A tutaj jego użycie w&nbsp;naszej testowanej klasie **Player**.
 
 ```cpp
-Player::Player(const Position& inputPosition, const Rotation& inputRotation)
-  : position(inputPosition)
-  , rotation(inputRotation)
+Player::Player(const Position& position, const Rotation& rotation)
+  : position_(position)
+  , rotation_(rotation)
 {
     const auto& graphicsStorage{ TextureStorage::instance() };
     texture = getTexture(TextureId::PLAYER);
@@ -242,11 +242,11 @@ W naszej klasie **Player** należy dodać referencję do **ITextureStorage** i&n
 class Player
 {
 public:
-    Player(const Position& inputPosition, const Rotation& rotation inputRotation, const ITextureStorage& inputTextureStorage);
+    Player(const Position& position, const Rotation& rotation rotation, const ITextureStorage& textureStorage);
 
     //...
 private:
-    const ITextureStorage& textureStorage;
+    const ITextureStorage& textureStorage_;
     //...
 };
 ```

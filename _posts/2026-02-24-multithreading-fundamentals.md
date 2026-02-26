@@ -56,16 +56,16 @@ Mamy metodę klasy **Account**, która ma taką implementację metody **transfer
 auto transfer(Account& account, Money value) -> void
 {
     account.withdraw(value);
-    this->balance += value;
+    balance_ += value;
 }
 ```
 
 Niezmiennikami mogą być, w&nbsp;takim przypadku, poniższe założenia:
 
 1. Saldo każdego konta jest zawsze ≥ 0.
-2. Suma środków **account.balance** i&nbsp;**this->balance** jest taka sama w&nbsp;każdym obserwowanym momencie.
+2. Suma środków **account.balance** i&nbsp;**balance_** jest taka sama w&nbsp;każdym obserwowanym momencie.
 3. Metoda transfer jest niepodzielną zmianą systemu.
-4. Jeśli zmniejszone zostało **account.balance** to zwiększone zostało **this->balance**.
+4. Jeśli zmniejszone zostało **account.balance** to zwiększone zostało **balance_**.
 
 Powyższe 4 punkty to są założenia, które metoda **transfer** powinna spełniać. Czy&nbsp;tak jest? No niestety nie. W&nbsp;wyniku wykonywania tej metody, nie&nbsp;ma żadnych ograniczeń w&nbsp;tym, by&nbsp; inny wątek odwołał się do tych obiektów.
 
@@ -73,8 +73,8 @@ Powyższe 4 punkty to są założenia, które metoda **transfer** powinna spełn
 auto transfer(Account& account, Money value) -> void
 {
     account.withdraw(value);
-    // W&nbsp;tym momencie obserwacji, część niezmienników nie jest prawdziwa
-    this->balance += value;
+    // W tym momencie obserwacji, część niezmienników nie jest prawdziwa
+    balance_ += value;
 }
 ```
 
@@ -86,22 +86,22 @@ class Counter
 public:
     auto increment() -> void
     {
-        value++;
+        value_++;
     }
 
     auto getValue() const -> int
     {
-        return value;
+        return value_;
     }
 
 private:
-    int value{ 0 };
+    int value_{ 0 };
 };
 ```
 
 1. Co jest stanem naszego obiektu klasy **Counter**?
 
-Stanem jest zmienna **value**, a&nbsp;raczej to jaką wartość posiada w&nbsp;każdym momencie obserwacji.
+Stanem jest zmienna **value_**, a&nbsp;raczej to jaką wartość posiada w&nbsp;każdym momencie obserwacji.
 
 2. Kto może obserwować stan obiektu klasy **Colunter**?
 
@@ -109,24 +109,24 @@ Każdy inny wątek w&nbsp;dowolnym momencie. Nie&nbsp;tylko przed i&nbsp;po wywo
 
 3. Jaki stan jest niedozwolony? Sprawia, że&nbsp;obiekt klasy **Counter** jest niespójny?
 
-**value** jest ujemne.
+**value_** jest ujemne.
 
-Naszym niezmiennikiem będzie więc: "Stan zmiennej **value** jest nieujemny w&nbsp;każdym momencie obserwacji."
+Naszym niezmiennikiem będzie więc: "Stan zmiennej **value_** jest nieujemny w&nbsp;każdym momencie obserwacji."
 
 Zastanówmy się, czy&nbsp;jest w&nbsp;ogóle możliwość, aby&nbsp; ten niezmiennik był złamany? Dla przykładu metoda **increment**.
 
 ```cpp
 auto increment() -> void
 {
-    value++;
+    value_++;
 }
 ```
 
-Czy istnieje moment, w&nbsp;którym **value** może być ujemny? Weź pod uwagę dowolny przeplot wątków. Zakładamy brak synchronizacji i&nbsp;wiele wątków korzystających z&nbsp;tego samego obiektu klasy **Counter**. Wartość **value** jest inicjalizowana jako 0.
+Czy istnieje moment, w&nbsp;którym **value_** może być ujemny? Weź pod uwagę dowolny przeplot wątków. Zakładamy brak synchronizacji i&nbsp;wiele wątków korzystających z&nbsp;tego samego obiektu klasy **Counter**. Wartość **value_** jest inicjalizowana jako 0.
 
 Odpowiedź brzmi: tak.
 
-Intuicyjnie jest to przecież niemożliwe, prawda? Przecież zaczynamy od 0 i&nbsp;tylko inkrementujemy. Tak,&nbsp;to&nbsp;prawda, jednak przy przetwarzaniu wielowątkowym, w&nbsp;przypadku naszej klasy **Counter**, mamy do czynienia z&nbsp;**data race**. Wątki konkurują ze sobą o&nbsp;dostęp do **value**. Gdy jeden z&nbsp;wątków właśnie pracuje nad zwiększeniem **value**, inny, w&nbsp;dowolnym momencie może zaobserwować **value** i&nbsp;odczytać jej stan jako dowolny ciąg bitów. **value** może być jeszcze w&nbsp;rejestrze CPU, może zawierać starą wartość, może zawierać tylko fragment nowej wartości (w reprezentacji bitowej). Standard C++ określa **data race** jako Undefined Behavior. Po dokładne szczegóły [odsyłam do oficjalnej dokumentacji](https://cppreference.net/cpp/language/multithread.html){:target="_blank" rel="noopener"}.
+Intuicyjnie jest to przecież niemożliwe, prawda? Przecież zaczynamy od 0 i&nbsp;tylko inkrementujemy. Tak,&nbsp;to&nbsp;prawda, jednak przy przetwarzaniu wielowątkowym, w&nbsp;przypadku naszej klasy **Counter**, mamy do czynienia z&nbsp;**data race**. Wątki konkurują ze sobą o&nbsp;dostęp do **value_**. Gdy jeden z&nbsp;wątków właśnie pracuje nad zwiększeniem **value_**, inny, w&nbsp;dowolnym momencie może zaobserwować **value_** i&nbsp;odczytać jej stan jako dowolny ciąg bitów. **value_** może być jeszcze w&nbsp;rejestrze CPU, może zawierać starą wartość, może zawierać tylko fragment nowej wartości (w reprezentacji bitowej). Standard C++ określa **data race** jako Undefined Behavior. Po dokładne szczegóły [odsyłam do oficjalnej dokumentacji](https://cppreference.net/cpp/language/multithread.html){:target="_blank" rel="noopener"}.
 
 Wyznaczanie niezmienników nie jest rzeczą trywialną i&nbsp;wymaga ćwiczeń, niemniej znając ich definicje i&nbsp;założenia będzie to znacznie prostsze.
 
@@ -141,19 +141,19 @@ Wróćmy do przykładu z&nbsp;funkcją **transfer** i&nbsp;dodajmy do niej **mut
 ```cpp
 auto transfer(Account& account, Money value) -> void
 {
-    std::lock_guard<std::mutex> transferLock{ transferMutex };
+    std::lock_guard<std::mutex> transferLock{ transferMutex_ };
     account->withdraw(value);
-    this->balance += value;
+    balance_ += value;
 }
 ```
 
 **std::lock_guard** to narzędzie typu [RAII](https://pl.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization){:target="_blank" rel="noopener"}, samo blokuje **mutex** w&nbsp;chwili tworzenia i&nbsp;odblokowuje w&nbsp;momencie destrukcji. Teraz funkcja **transfer** zachowuje niezmiennik:
 
-4. Jeśli zmniejszone zostało **account.balance** to zwiększone zostało **this->balance**.
+4. Jeśli zmniejszone zostało **account.balance** to zwiększone zostało **balance_**.
 
 Obserwowalny moment jest tylko przed zablokowaniem **mutexa** i&nbsp;po jego odblokowaniu, czyli całe ciało funkcji **transfer** nie jest dostępne dla innych wątków. Nie&nbsp;zawsze sekcja krytyczna to występujące po sobie linijki kodu. Najważniejsze są **niezmienniki**. Należy zawsze, przy analizie kodu wielowątkowego, zadawać sobie pytanie o&nbsp;poprawny stan naszej zmiennej czy obiektu.
 
-Dla klasy **Counter** sekcją krytyczną będą wszystkie operacje na zmiennej **value**.
+Dla klasy **Counter** sekcją krytyczną będą wszystkie operacje na zmiennej **value_**.
 
 ```cpp
 class Counter
@@ -161,19 +161,19 @@ class Counter
 public:
     auto increment() -> void
     {
-        std::lock_guard<std::mutex> valueLock{valueMutex};
-        value++;
+        std::lock_guard<std::mutex> valueLock{ valueMutex_ };
+        value_++;
     }
 
     auto getValue() const -> int
     {
-        std::lock_guard<std::mutex> valueLock{valueMutex};
-        return value;
+        std::lock_guard<std::mutex> valueLock{ valueMutex_ };
+        return value_;
     }
 
 private:
-    int value{ 0 };
-    mutable std::mutex valueMutex;
+    int value_{ 0 };
+    mutable std::mutex valueMutex_;
 };
 ```
 

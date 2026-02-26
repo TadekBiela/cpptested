@@ -223,7 +223,7 @@ class SfmlWindow
 public:
     SfmlWindow(
         //...
-        std::unique_ptr<RenderSceneBuilder> inputSceneBuilder = nullptr
+        std::unique_ptr<RenderSceneBuilder> sceneBuilder = nullptr
         //...
     );
 
@@ -232,7 +232,7 @@ public:
 
 private:
     //...
-    std::unique_ptr<RenderSceneBuilder> sceneBuilder;
+    std::unique_ptr<RenderSceneBuilder> sceneBuilder_;
     //...
 };
 ```
@@ -256,7 +256,7 @@ Drugi sposób - do destruktora oraz wszystkich publicznych metod klasy, którą 
 class GameSession
 {
 public:
-    explicit GameSession(std::unique_ptr<SceneItemFactory> inputFactory = nullptr);
+    explicit GameSession(std::unique_ptr<SceneItemFactory> factory = nullptr);
     virtual ~GameSession() = default;
 
     virtual auto addPlayer() -> PlayerID;

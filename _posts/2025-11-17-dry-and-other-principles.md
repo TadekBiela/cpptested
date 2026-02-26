@@ -227,20 +227,20 @@ public:
 class UserService
 {
 public:
-    UserService(std::unique_ptr<IValidator> inputEmailValidator,
-                std::unique_ptr<IValidator> inputPasswordValidator)
-        : emailValidator(std::move(inputEmailValidator)),
-          passwordValidator(std::move(inputPasswordValidator))
+    UserService(std::unique_ptr<IValidator> emailValidator,
+                std::unique_ptr<IValidator> passwordValidator)
+        : emailValidator_(std::move(emailValidator)),
+          passwordValidator_(std::move(passwordValidator))
     {}
 
     auto registerUser(const std::string& email, const std::string& password) -> bool
     {
-        return emailValidator->validate(email) && passwordValidator->validate(password);
+        return emailValidator_->validate(email) && passwordValidator_->validate(password);
     }
 
 private:
-    std::unique_ptr<IValidator> emailValidator;
-    std::unique_ptr<IValidator> passwordValidator;
+    std::unique_ptr<IValidator> emailValidator_;
+    std::unique_ptr<IValidator> passwordValidator_;
 };
 ```
 
@@ -377,13 +377,13 @@ public:
         Report report;
         const std::string content{ report.generate() };
 
-        // wysłanie raportu przez własne pole emailClient
-        emailClient.send(recipient, reportTitle + "\n" + content);
+        // wysłanie raportu przez własne pole emailClient_
+        emailClient_.send(recipient, reportTitle_ + "\n" + content);
     }
 
 private:
-    EmailClient emailClient;
-    std::string reportTitle{ "Daily Report" };
+    EmailClient emailClient_;
+    std::string reportTitle_{ "Daily Report" };
 };
 ```
 
@@ -404,7 +404,7 @@ Wewnątrz tej metody nie powinno być kolejnego, nieco krótszego łańcucha tyl
 ```cpp
 auto Order::getCustomerCityName() const -> std::string
 {
-    return customer.getCityName();
+    return customer_.getCityName();
 }
 ```
 
@@ -441,17 +441,17 @@ public:
 class ColoredRectangle : public Rectangle
 {
 public:
-    ColoredRectangle(const std::string& inputColor)
-        : color(inputColor)
+    ColoredRectangle(const std::string& color)
+        : color_(color)
     {}
 
     auto draw() override -> void
     {
-        std::cout << "Drawing " << color << " rectangle\n";
+        std::cout << "Drawing " << color_ << " rectangle\n";
     }
 
 private:
-    std::string color;
+    std::string color_;
 };
 ```
 
@@ -461,19 +461,20 @@ Mamy tutaj interfejs **Shape**. Klasa **Rectangle** dziedziczy po interfejsie i&
 class ColoredShape : public Shape
 {
 public:
-    ColoredShape(Shape& inputShape, const std::string& inputColor)
-        : shape(inputShape), color(inputColor)
+    ColoredShape(Shape& shape, const std::string& color)
+        : shape_(shape)
+        , color_(color)
     {}
 
     auto draw() override -> void
     {
-        std::cout << "Drawing " << color << " ";
-        shape.draw();
+        std::cout << "Drawing " << color_ << " ";
+        shape_.draw();
     }
 
 private:
-    Shape& shape;
-    std::string color;
+    Shape& shape_;
+    std::string color_;
 };
 ```
 
