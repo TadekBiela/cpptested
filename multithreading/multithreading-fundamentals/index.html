@@ -287,7 +287,7 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
     <span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="n">balance_</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -295,9 +295,9 @@
 
 <ol>
   <li>Saldo każdego konta jest zawsze ≥ 0.</li>
-  <li>Suma środków <strong>account.balance</strong> i <strong>this-&gt;balance</strong> jest taka sama w każdym obserwowanym momencie.</li>
+  <li>Suma środków <strong>account.balance</strong> i <strong>balance_</strong> jest taka sama w każdym obserwowanym momencie.</li>
   <li>Metoda transfer jest niepodzielną zmianą systemu.</li>
-  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>this-&gt;balance</strong>.</li>
+  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>balance_</strong>.</li>
 </ol>
 
 <p>Powyższe 4 punkty to są założenia, które metoda <strong>transfer</strong> powinna spełniać. Czy tak jest? No niestety nie. W wyniku wykonywania tej metody, nie ma żadnych ograniczeń w tym, by  inny wątek odwołał się do tych obiektów.</p>
@@ -305,8 +305,8 @@
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="nf">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
     <span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
-    <span class="c1">// W&amp;nbsp;tym momencie obserwacji, część niezmienników nie jest prawdziwa</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="c1">// W tym momencie obserwacji, część niezmienników nie jest prawdziwa</span>
+    <span class="n">balance_</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -317,16 +317,16 @@
 <span class="nl">public:</span>
     <span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
-        <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">value_</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="k">auto</span> <span class="n">getValue</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">int</span>
     <span class="p">{</span>
-        <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">value_</span><span class="p">;</span>
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="kt">int</span> <span class="n">value</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">value_</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
@@ -334,7 +334,7 @@
   <li>Co jest stanem naszego obiektu klasy <strong>Counter</strong>?</li>
 </ol>
 
-<p>Stanem jest zmienna <strong>value</strong>, a raczej to jaką wartość posiada w każdym momencie obserwacji.</p>
+<p>Stanem jest zmienna <strong>value_</strong>, a raczej to jaką wartość posiada w każdym momencie obserwacji.</p>
 
 <ol>
   <li>Kto może obserwować stan obiektu klasy <strong>Colunter</strong>?</li>
@@ -346,23 +346,23 @@
   <li>Jaki stan jest niedozwolony? Sprawia, że obiekt klasy <strong>Counter</strong> jest niespójny?</li>
 </ol>
 
-<p><strong>value</strong> jest ujemne.</p>
+<p><strong>value_</strong> jest ujemne.</p>
 
-<p>Naszym niezmiennikiem będzie więc: “Stan zmiennej <strong>value</strong> jest nieujemny w każdym momencie obserwacji.”</p>
+<p>Naszym niezmiennikiem będzie więc: “Stan zmiennej <strong>value_</strong> jest nieujemny w każdym momencie obserwacji.”</p>
 
 <p>Zastanówmy się, czy jest w ogóle możliwość, aby  ten niezmiennik był złamany? Dla przykładu metoda <strong>increment</strong>.</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
-    <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">value_</span><span class="o">++</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Czy istnieje moment, w którym <strong>value</strong> może być ujemny? Weź pod uwagę dowolny przeplot wątków. Zakładamy brak synchronizacji i wiele wątków korzystających z tego samego obiektu klasy <strong>Counter</strong>. Wartość <strong>value</strong> jest inicjalizowana jako 0.</p>
+<p>Czy istnieje moment, w którym <strong>value_</strong> może być ujemny? Weź pod uwagę dowolny przeplot wątków. Zakładamy brak synchronizacji i wiele wątków korzystających z tego samego obiektu klasy <strong>Counter</strong>. Wartość <strong>value_</strong> jest inicjalizowana jako 0.</p>
 
 <p>Odpowiedź brzmi: tak.</p>
 
-<p>Intuicyjnie jest to przecież niemożliwe, prawda? Przecież zaczynamy od 0 i tylko inkrementujemy. Tak, to prawda, jednak przy przetwarzaniu wielowątkowym, w przypadku naszej klasy <strong>Counter</strong>, mamy do czynienia z <strong>data race</strong>. Wątki konkurują ze sobą o dostęp do <strong>value</strong>. Gdy jeden z wątków właśnie pracuje nad zwiększeniem <strong>value</strong>, inny, w dowolnym momencie może zaobserwować <strong>value</strong> i odczytać jej stan jako dowolny ciąg bitów. <strong>value</strong> może być jeszcze w rejestrze CPU, może zawierać starą wartość, może zawierać tylko fragment nowej wartości (w reprezentacji bitowej). Standard C++ określa <strong>data race</strong> jako Undefined Behavior. Po dokładne szczegóły <a href="https://cppreference.net/cpp/language/multithread.html" target="_blank" rel="noopener">odsyłam do oficjalnej dokumentacji</a>.</p>
+<p>Intuicyjnie jest to przecież niemożliwe, prawda? Przecież zaczynamy od 0 i tylko inkrementujemy. Tak, to prawda, jednak przy przetwarzaniu wielowątkowym, w przypadku naszej klasy <strong>Counter</strong>, mamy do czynienia z <strong>data race</strong>. Wątki konkurują ze sobą o dostęp do <strong>value_</strong>. Gdy jeden z wątków właśnie pracuje nad zwiększeniem <strong>value_</strong>, inny, w dowolnym momencie może zaobserwować <strong>value_</strong> i odczytać jej stan jako dowolny ciąg bitów. <strong>value_</strong> może być jeszcze w rejestrze CPU, może zawierać starą wartość, może zawierać tylko fragment nowej wartości (w reprezentacji bitowej). Standard C++ określa <strong>data race</strong> jako Undefined Behavior. Po dokładne szczegóły <a href="https://cppreference.net/cpp/language/multithread.html" target="_blank" rel="noopener">odsyłam do oficjalnej dokumentacji</a>.</p>
 
 <p>Wyznaczanie niezmienników nie jest rzeczą trywialną i wymaga ćwiczeń, niemniej znając ich definicje i założenia będzie to znacznie prostsze.</p>
 
@@ -376,40 +376,40 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">transfer</span><span class="p">(</span><span class="n">Account</span><span class="o">&amp;</span> <span class="n">account</span><span class="p">,</span> <span class="n">Money</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
 <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">transferLock</span><span class="p">{</span> <span class="n">transferMutex</span> <span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">transferLock</span><span class="p">{</span> <span class="n">transferMutex_</span> <span class="p">};</span>
     <span class="n">account</span><span class="o">-&gt;</span><span class="n">withdraw</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="n">balance_</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <p><strong>std::lock_guard</strong> to narzędzie typu <a href="https://pl.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization" target="_blank" rel="noopener">RAII</a>, samo blokuje <strong>mutex</strong> w chwili tworzenia i odblokowuje w momencie destrukcji. Teraz funkcja <strong>transfer</strong> zachowuje niezmiennik:</p>
 
 <ol>
-  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>this-&gt;balance</strong>.</li>
+  <li>Jeśli zmniejszone zostało <strong>account.balance</strong> to zwiększone zostało <strong>balance_</strong>.</li>
 </ol>
 
 <p>Obserwowalny moment jest tylko przed zablokowaniem <strong>mutexa</strong> i po jego odblokowaniu, czyli całe ciało funkcji <strong>transfer</strong> nie jest dostępne dla innych wątków. Nie zawsze sekcja krytyczna to występujące po sobie linijki kodu. Najważniejsze są <strong>niezmienniki</strong>. Należy zawsze, przy analizie kodu wielowątkowego, zadawać sobie pytanie o poprawny stan naszej zmiennej czy obiektu.</p>
 
-<p>Dla klasy <strong>Counter</strong> sekcją krytyczną będą wszystkie operacje na zmiennej <strong>value</strong>.</p>
+<p>Dla klasy <strong>Counter</strong> sekcją krytyczną będą wszystkie operacje na zmiennej <strong>value_</strong>.</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Counter</span>
 <span class="p">{</span>
 <span class="nl">public:</span>
     <span class="k">auto</span> <span class="n">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
     <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span><span class="n">valueMutex</span><span class="p">};</span>
-        <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span> <span class="n">valueMutex_</span> <span class="p">};</span>
+        <span class="n">value_</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="k">auto</span> <span class="n">getValue</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">int</span>
     <span class="p">{</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span><span class="n">valueMutex</span><span class="p">};</span>
-        <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">valueLock</span><span class="p">{</span> <span class="n">valueMutex_</span> <span class="p">};</span>
+        <span class="k">return</span> <span class="n">value_</span><span class="p">;</span>
     <span class="p">}</span>
 
 <span class="nl">private:</span>
-    <span class="kt">int</span> <span class="n">value</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
-    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">valueMutex</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">value_</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">valueMutex_</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
