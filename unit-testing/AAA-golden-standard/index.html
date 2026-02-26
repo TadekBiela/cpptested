@@ -247,7 +247,7 @@
 
 <h3 id="aaa---złoty-standard">AAA - złoty standard</h3>
 
-<p>O zasadzie AAA (triple A) piszę w swojej świetnej książce: <a href="https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji" target="_blank" rel="noopener">Testy jednostkowe. Świat niezawodnych aplikacji</a> (The Art of Unit Testing) - Roy Osherove. Nie jest on wprawdzie jej bezpośrednim autorem, lecz wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie jest zależna od użytej technologii. Świetnie sprawdza się również w świecie C++.</p>
+<p>O zasadzie AAA (triple A) piszę w swojej świetnej książce <a href="https://lubimyczytac.pl/ksiazka/243300/testy-jednostkowe-swiat-niezawodnych-aplikacji" target="_blank" rel="noopener">Testy jednostkowe. Świat niezawodnych aplikacji</a> (The Art of Unit Testing) - Roy Osherove. Nie jest on wprawdzie jej bezpośrednim autorem, lecz wielkim fanem, zresztą nie tylko on ;). AAA wywodzi się ze środowiska .NET, niemniej, nie jest zależna od użytej technologii. Świetnie sprawdza się również w świecie C++.</p>
 
 <p>No dobrze, ale czym ta zasada jest i o czym mówi?</p>
 
@@ -271,9 +271,9 @@
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">testCollectingTemperatures</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">{};</span>
 
-    <span class="n">TemperatureSensorFactoryStub</span> <span class="n">factory</span><span class="p">;</span>
+    <span class="n">TemperatureSensorFactoryStub</span> <span class="n">factory</span><span class="p">{};</span>
 
     <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName1</span><span class="p">{</span> <span class="s">"temp_core_1"</span> <span class="p">};</span>
     <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="mf">47.3</span><span class="p">));</span>
@@ -282,7 +282,7 @@
     <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName3</span><span class="p">{</span> <span class="s">"temp_board_0"</span> <span class="p">};</span>
     <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName3</span><span class="p">,</span> <span class="mf">65.1</span><span class="p">));</span>
 
-    <span class="k">auto</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">temps</span><span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">()</span> <span class="p">};</span>
     <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
 
     <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
@@ -293,7 +293,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>A teraz ten sam test, tylko sformatowany zgodnie z triple A(na co dzień nie dodaję takich komentarzy ;) ):</p>
+<p>A teraz ten sam test, tylko sformatowany zgodnie z triple A( na co dzień nie dodaję takich komentarzy ;) ):</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">testCollectingTemperatures</span><span class="p">)</span>
 <span class="p">{</span>
@@ -301,8 +301,8 @@
     <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName1</span><span class="p">{</span> <span class="s">"temp_core_1"</span> <span class="p">};</span>
     <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName2</span><span class="p">{</span> <span class="s">"temp_core_2"</span> <span class="p">};</span>
     <span class="k">const</span> <span class="k">auto</span> <span class="n">expectedSensorName3</span><span class="p">{</span> <span class="s">"temp_board_0"</span> <span class="p">};</span>
-    <span class="n">TemperatureSensorFactoryStub</span> <span class="n">factory</span><span class="p">;</span>
-    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">TemperatureSensorFactoryStub</span> <span class="n">factory</span><span class="p">{};</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">{};</span>
 
     <span class="c1">//Act</span>
     <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="mf">47.3</span><span class="p">));</span>
@@ -310,7 +310,7 @@
     <span class="n">manager</span><span class="p">.</span><span class="n">addSensor</span><span class="p">(</span><span class="n">factory</span><span class="p">.</span><span class="n">createSensor</span><span class="p">(</span><span class="n">expectedSensorName3</span><span class="p">,</span> <span class="mf">65.1</span><span class="p">));</span>
 
     <span class="c1">//Assert</span>
-    <span class="k">auto</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">temps</span><span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">()</span> <span class="p">};</span>
     <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
     <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName1</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
     <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expectedSensorName2</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">getName</span><span class="p">());</span>
@@ -334,7 +334,7 @@ Jeśli się domyślasz, ale tego nie wiesz, już po samej nazwie, to nie jest
 
 <p>Ok, spróbujmy teraz z taką nazwą:</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorTests</span><span class="p">,</span> <span class="n">calculateAverageTemp_emptyTemperatureInput_ReturnZero</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorTests</span><span class="p">,</span> <span class="n">calculateAverageTemp_emptyTemperatureInput_ReturnsZero</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Lepiej? Nie wiem jak dla Ciebie, ale dla mnie, tak! Zdecydowanie widać co jest testowane, jak i co będzie wynikiem.
@@ -370,12 +370,12 @@ Tym właśnie jest AAA - trzy części nazwy unit testu, w skrócie, schemat bu
 
 <p>Od podziału na 3 bloki są pewne wyjątki. Możemy mieć sytuację, gdy chcemy, na przykład przetestować domyślne zachowanie konstruktora i w tym przypadku akurat nie mamy nic do zainicjalizowania. Wtedy po prostu bloku <strong>Arrange</strong> nie ma w teście i to jest ok.</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">DoorsLockTests</span><span class="p">,</span> <span class="n">constructor_DefaultBehavior_ShouldReturnEmptyTemps</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTests</span><span class="p">,</span> <span class="n">constructor_DefaultBehavior_ShouldReturnEmptyTemps</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">{};</span>
 
-    <span class="k">auto</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">();</span>
-    <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="k">auto</span> <span class="n">temps</span><span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">getTemps</span><span class="p">()</span> <span class="p">};</span>
+    <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">temps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -383,7 +383,7 @@ Tym właśnie jest AAA - trzy części nazwy unit testu, w skrócie, schemat bu
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getAvgTemp_NoAddedSensors_ReturnsZero</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">{};</span>
 
     <span class="n">EXPECT_FLOAT_EQ</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">());</span>
 <span class="p">}</span>
@@ -393,9 +393,9 @@ Tym właśnie jest AAA - trzy części nazwy unit testu, w skrócie, schemat bu
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">TemperatureSensorManagerTest</span><span class="p">,</span> <span class="n">getAvgTemp_NoAddedSensors_ReturnsZero</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">;</span>
+    <span class="n">TemperatureSensorManager</span> <span class="n">manager</span><span class="p">{};</span>
 
-    <span class="k">auto</span> <span class="n">result</span><span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">()</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">result</span><span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">getAvgTemp</span><span class="p">()</span> <span class="p">};</span>
 
     <span class="n">EXPECT_FLOAT_EQ</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
@@ -414,7 +414,7 @@ Tym właśnie jest AAA - trzy części nazwy unit testu, w skrócie, schemat bu
 <h3 id="gwt">GWT</h3>
 
 <p>W Internecie możesz spotkać się z nazwą GWT. To w zasadzie to samo.
-GWT czyli Give(Arrnage) When(Act) Then(Assert). Ja osobiście wolę triple A ;)</p>
+GWT czyli Give(Arrange) When(Act) Then(Assert). Ja osobiście wolę triple A ;)</p>
 
 <h3 id="podsumowanie">Podsumowanie</h3>
 
