@@ -1,6 +1,6 @@
 ---
 title: "Największy wróg unit testów - logika."
-date: 2027-02-23
+date: 2026-03-23
 author: "Tadeusz Biela"
 categories:
   - unit-testing
