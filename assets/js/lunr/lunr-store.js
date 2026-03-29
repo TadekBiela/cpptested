@@ -36,9 +36,9 @@ var store = [{
         "teaser": null
       },{
         "title": "6 najczęstszych błędów z&nbsp;Google Test.",
-        "excerpt":"Google Test to chyba najbardziej znany i używany framework testowy w projektach C++. Zawiera w sobie masę przydatnych narzędzi do tworzenia różnych rodzajów testów. Ja osobiście stosuję go w swoich projektach pisząc unit testy, ale nic nie stoi na przeszkodzie by tworzyć testy modułowe czy komponentowe (typu black box). Ceniony za swą uniwersalność oraz...","categories": ["clean code"],
+        "excerpt":"Google Test to chyba najbardziej znany i używany framework testowy w projektach C++. Zawiera w sobie masę przydatnych narzędzi do tworzenia różnych rodzajów testów. Ja osobiście stosuję go w swoich projektach pisząc unit testy, ale nic nie stoi na przeszkodzie by tworzyć testy modułowe czy komponentowe (typu black box). Ceniony za swą uniwersalność oraz...","categories": ["clean-code"],
         "tags": ["clean code","code quality","developer practices","software"],
-        "url": "/clean%20code/gtest-mistakes/",
+        "url": "/clean-code/gtest-mistakes/",
         "teaser": null
       },{
         "title": "Fundamenty myślenia wielowątkowego",
