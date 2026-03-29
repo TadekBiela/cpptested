@@ -3,7 +3,7 @@ title: "6 najczęstszych błędów z&nbsp;Google Test."
 date: 2026-01-26
 author: "Tadeusz Biela"
 categories:
-  - clean code
+  - clean-code
 tags:
   - clean code
   - code quality
