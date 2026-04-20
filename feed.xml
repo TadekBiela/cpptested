@@ -1,4 +1,374 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-03-29T21:57:39+02:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Największy wróg unit testów - logika.</title><link href="https://cpptested.com/unit-testing/logic-in-uts/" rel="alternate" type="text/html" title="Największy wróg unit testów - logika." /><published>2026-03-23T00:00:00+01:00</published><updated>2026-03-23T00:00:00+01:00</updated><id>https://cpptested.com/unit-testing/logic-in-uts</id><content type="html" xml:base="https://cpptested.com/unit-testing/logic-in-uts/"><![CDATA[<p>Logika, przepływ sterowania, instrukcje warunkowe - to dzięki nim nasze programy mogą spełniać szeregi wymagań i oczekiwań. Dzięki nim możemy rozbudowywać nasz program, rozwijać obecne funkcjonalności oraz dodawać nowe. Każdy programista wie, że bez nich tworzenie oprogramowania nie mogłoby mieć miejsca. Czy zatem nasze unit testy, również powinny zawierać logikę? Zdecydowanie nie, i w tym wpisie wyjaśnię dlaczego, tym razem odpowiedź jest taka klarowna, a nie, jak to nieraz w naszej branży bywa - “to zależy”.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-04-20T22:28:35+02:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów.</title><link href="https://cpptested.com/unit-testing/uts-logging-improvements/" rel="alternate" type="text/html" title="Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów." /><published>2026-04-19T00:00:00+02:00</published><updated>2026-04-19T00:00:00+02:00</updated><id>https://cpptested.com/unit-testing/uts-logging-improvements</id><content type="html" xml:base="https://cpptested.com/unit-testing/uts-logging-improvements/"><![CDATA[<p>Czytelność komunikatów logowanych podczas niepowodzenia unit testów często jest bardzo niskiej jakości. Sam wcześniej nie zwracałem na to zbytniej uwagi. Dziś uważam, że to błąd! Gdy testy świecą się na zielono, to w zasadzie problem nie istnieje. Gdy zaś na czerwono, wtedy zaczynają się schody. Najczęściej po prostu sięgamy od razu do kodu i szukamy przyczyny próbując jednocześnie odczytać “zaszyfrowane” wartości z logów failującego testu. A gdyby tak te logi mogłyby być czytelne nawet dla laika? Z pewnością ułatwiłoby to wszystkim pracę :)</p>
+
+<h3 id="enum-jak-enigma">Enum jak enigma</h3>
+
+<p>W unit testach porównujemy różnego rodzaju zmienne wynikowe z oczekiwanymi. Jeśli są to zmienne typu liczbowego to zazwyczaj ich odczytanie nie stanowi problemu. Inaczej dzieje się w przypadku typów wyliczeniowych. Nie zawsze pamiętamy co ich reprezentacja liczbowa oznacza. Dla przykładu mamy poniższy test.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">SceneItemFactoryTests</span><span class="p">,</span> <span class="n">create_OneObject_ReturnCorrectSceneItem</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">SceneItemFactoryTestable</span> <span class="n">factory</span><span class="p">{};</span>
+
+    <span class="k">auto</span> <span class="n">resultObject</span><span class="p">{</span> <span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">,</span> <span class="p">{</span> <span class="mf">40.5</span><span class="n">F</span><span class="p">,</span> <span class="mf">7.9</span><span class="n">F</span> <span class="p">},</span> <span class="mf">45.0</span><span class="n">F</span><span class="p">)</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">resultObject</span><span class="p">.</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">WEAPON</span><span class="p">,</span> <span class="n">resultObject</span><span class="p">.</span><span class="n">type</span><span class="p">);</span> <span class="c1">// Celowo podana zła wartość enum</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A oto wynik naszego unit testu:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:34: Failure
+Expected equality of these values:
+  expectedType
+    Which is: 4-byte object &lt;01-00 00-00&gt;
+  resultObject.type
+    Which is: 4-byte object &lt;00-00 00-00&gt;
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>No cóż możemy sobie sprawdzić co oznacza 1 i 0, niemniej przyznać trzeba, że średnio ten komunikat jest czytelny. Musimy sięgnąć do kodu i to sprawdzić. Spróbujmy zmienić rodzaj asercji na <strong>EXPECT_THAT</strong>. Oto wynik:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:35: Failure
+Value of: resultObject.type
+Expected: is equal to 4-byte object &lt;01-00 00-00&gt;
+  Actual: 4-byte object &lt;00-00 00-00&gt; <span class="o">(</span>of <span class="nb">type </span>SceneItemType<span class="o">)</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Jest trochę lepiej, już teraz wiemy przynajmniej jakiego typu są wartości: <strong>(of type SceneItemType)</strong>. Niemniej wciąż ten log niewiele pomaga. Co możemy zrobić? Dodać <strong>operator«</strong> ! Operator ten należy zdefiniować w tym samym pliku, w którym znajduje się nasz <strong>enum</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">inline</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">*</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">SceneItemType</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">typeStr</span><span class="p">{};</span>
+    <span class="k">switch</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">:</span>
+            <span class="n">typeStr</span> <span class="o">=</span> <span class="s">"PLAYER"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">SceneItemType</span><span class="o">::</span><span class="n">WEAPON</span><span class="p">:</span>
+            <span class="n">typeStr</span> <span class="o">=</span> <span class="s">"WEAPON"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">typeStr</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Taki zabieg pozwala Google Test użyć go w swoich asercjach. Gdy asercja nie przechodzi, GTest przeszukuje naszą bazę kodu w poszukiwaniu narzędzi umożliwiających wypisanie wartości parametrów asercji w formie tekstowej. Jeśli zdefiniujemy dla porównywanego typu, asercje Google Test użyje jej do budowy swoich logów.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:35: Failure
+Value of: resultObject.type
+Expected: is equal to WEAPON
+  Actual: PLAYER <span class="o">(</span>of <span class="nb">type </span>SceneItemType<span class="o">)</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Teraz zdecydowanie, dokładnie wiadomo co się wydarzyło w teście. Nasza testowana fabryka utworzyła obiekt typu <strong>PLAYER</strong>, a miała stworzyć <strong>WEAPON</strong> ;) W tym miejscu muszę wspomnieć o jeszcze jednym sposobie uzyskania podobnego efektu. Można zdefiniować funkcję <strong>PrintTo</strong>. Jest to specjalna metoda Google Test, która działa w zasadzie tak samo. Plusem może okazać się brak ingerencji w kod produkcyjny. Jeśli to dla kogoś problem warto zainteresować się tematem. Poniżej odpowiednik naszego operatora w wersji <strong>PrintTo</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">inline</span> <span class="k">auto</span> <span class="n">PrintTo</span><span class="p">(</span><span class="k">const</span> <span class="n">SceneItemType</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">*</span> <span class="n">os</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">typeStr</span><span class="p">{};</span>
+    <span class="k">switch</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">:</span>
+            <span class="n">typeStr</span> <span class="o">=</span> <span class="s">"PLAYER"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">SceneItemType</span><span class="o">::</span><span class="n">WEAPON</span><span class="p">:</span>
+            <span class="n">typeStr</span> <span class="o">=</span> <span class="s">"WEAPON"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">typeStr</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Oba rozwiązania muszą znajdować się w tej samej przestrzeni nazw, gdyż Google Test szuka <strong>operator«</strong> oraz <strong>PrintTo</strong> za pomocą <a href="https://en.cppreference.com/w/cpp/language/adl.html" target="_blank" rel="noopener">ADL</a>. Zauważ, że w instrukcji <strong>switch</strong> celowo pominąłem sekcję <strong>default</strong>. Dzięki temu, gdy w przyszłości dodasz nową wartość do <strong>enum</strong>a, kompilator przypomni Ci o konieczności aktualizacji również tego fragmentu kodu.</p>
+
+<h3 id="struct-czyli-puchnące-testy">struct, czyli puchnące testy</h3>
+
+<p>W przypadku porównywania struktur możemy w każdej asercji sprawdzać pojedyncze jej pola.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">SceneItemFactoryTests</span><span class="p">,</span> <span class="n">create_OneObject_ReturnCorrectSceneItem</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">SceneItemFactoryTestable</span> <span class="n">factory</span><span class="p">{};</span>
+
+    <span class="k">auto</span> <span class="n">resultObject</span><span class="p">{</span> <span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">,</span> <span class="p">{</span> <span class="mf">40.1</span><span class="n">F</span><span class="p">,</span> <span class="mf">7.9</span><span class="n">F</span> <span class="p">},</span> <span class="mf">45.0</span><span class="n">F</span><span class="p">)</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">));</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">FloatEq</span><span class="p">(</span><span class="mf">40.5</span><span class="n">F</span><span class="p">));</span> <span class="c1">// Sprawdzamy każde pole</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">FloatEq</span><span class="p">(</span><span class="mf">7.9</span><span class="n">F</span><span class="p">));</span> <span class="c1">// struktury Position osobno</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">rotation</span><span class="p">,</span> <span class="n">FloatEq</span><span class="p">(</span><span class="mf">45.0</span><span class="n">F</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Gdy struktura jest mała, może to być rozwiązanie całkiem ok. Jednak są na to lepsze metody. Jeżeli chcemy, aby jedna asercja porównywała całą strukturę musimy zdefiniować <strong>operator==</strong>. Dzięki temu Google Test użyje go automatyczne.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Position</span>
+<span class="p">{</span>
+    <span class="kt">float</span> <span class="n">x</span><span class="p">{</span> <span class="mf">0.0</span><span class="n">F</span> <span class="p">};</span>
+    <span class="kt">float</span> <span class="n">y</span><span class="p">{</span> <span class="mf">0.0</span><span class="n">F</span> <span class="p">};</span>
+
+    <span class="k">auto</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Position</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+    <span class="p">{</span>
+        <span class="c1">// Używamy std::abs i małej tolerancji (epsilon)</span>
+        <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">eps</span><span class="p">{</span> <span class="mf">1e-5</span><span class="n">F</span> <span class="p">};</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">other</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">eps</span> <span class="n">and</span> 
+               <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">other</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// W C++20 wystarczy to, by działało EXPECT_THAT</span>
+    <span class="k">auto</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Position</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="o">=</span> <span class="k">default</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Po dodaniu operatora porównania, nasz test wygląda następująco.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">SceneItemFactoryTests</span><span class="p">,</span> <span class="n">create_OneObject_ReturnCorrectSceneItem</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">SceneItemFactoryTestable</span> <span class="n">factory</span><span class="p">{};</span>
+
+    <span class="k">auto</span> <span class="n">resultObject</span><span class="p">{</span> <span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">,</span> <span class="p">{</span> <span class="mf">40.1</span><span class="n">F</span><span class="p">,</span> <span class="mf">7.9</span><span class="n">F</span> <span class="p">},</span> <span class="mf">45.0</span><span class="n">F</span><span class="p">)</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">resultObject</span><span class="p">.</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">));</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">position</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="n">Position</span><span class="p">{</span> <span class="mf">40.5</span><span class="n">F</span><span class="p">,</span> <span class="mf">7.9</span><span class="n">F</span> <span class="p">}));</span> <span class="c1">// Jedna asercja na całą strukturę</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">rotation</span><span class="p">,</span> <span class="n">FloatEq</span><span class="p">(</span><span class="mf">45.0</span><span class="n">F</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Choć zdecydowanie, dodanie operatora pomaga w ograniczaniu rozmiaru naszego unit testu, to nie chroni on od pojawiających się oktetów, gdy asercja się nie powiedzie.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:33: Failure
+Value of: resultObject.position
+Expected: is equal to 8-byte object &lt;00-00 22-42 CD-CC FC-40&gt;
+  Actual: 8-byte object &lt;66-66 20-42 CD-CC FC-40&gt; <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Innym rozwiązaniem może być utworzenie własnego matchera. Jedną z zasad pisania unit testów jest założenie, że nie powinniśmy zmieniać kodu produkcyjnego tylko ze względu na testy. Są oczywiście techniki jak <strong>Dependency Injection</strong>, które wpływają nieco na kod produkcyjny, ale w tej zasadzie bardziej chodzi o to, by nie oddawać API do naszej testowanej klasy, czy w tym przypadku struktury.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MATCHER_P2</span><span class="p">(</span><span class="n">PositionNear</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">xDiff</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">expected</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">yDiff</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">expected</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="p">};</span>
+
+    <span class="o">*</span><span class="n">result_listener</span> <span class="o">&lt;&lt;</span> <span class="s">"where x diff is "</span> <span class="o">&lt;&lt;</span> <span class="n">xDiff</span> <span class="o">&lt;&lt;</span> <span class="s">" and y diff is "</span> <span class="o">&lt;&lt;</span> <span class="n">yDiff</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">xDiff</span> <span class="o">&lt;=</span> <span class="n">tolerance</span> <span class="n">and</span> <span class="n">yDiff</span> <span class="o">&lt;=</span> <span class="n">tolerance</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Prawda, że elegancki? A teraz jak to wygląda w praktyce, czyli odświeżony test.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">SceneItemFactoryTests</span><span class="p">,</span> <span class="n">create_OneObject_ReturnCorrectSceneItem</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">SceneItemFactoryTestable</span> <span class="n">factory</span><span class="p">{};</span>
+
+    <span class="k">auto</span> <span class="n">resultObject</span><span class="p">{</span> <span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">,</span> <span class="p">{</span> <span class="mf">40.1</span><span class="n">F</span><span class="p">,</span> <span class="mf">7.9</span><span class="n">F</span> <span class="p">},</span> <span class="mf">45.0</span><span class="n">F</span><span class="p">)</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">resultObject</span><span class="p">.</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="n">SceneItemType</span><span class="o">::</span><span class="n">PLAYER</span><span class="p">));</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">position</span><span class="p">,</span> <span class="n">PositionNear</span><span class="p">(</span><span class="n">Position</span><span class="p">{</span> <span class="mf">40.5</span><span class="n">F</span><span class="p">,</span> <span class="mf">7.9</span><span class="n">F</span> <span class="p">},</span> <span class="mf">1e-5</span><span class="n">F</span><span class="p">));</span> <span class="c1">// Użycie naszego matchera do porównywania struktury Position</span>
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultObject</span><span class="p">.</span><span class="n">rotation</span><span class="p">,</span> <span class="n">FloatEq</span><span class="p">(</span><span class="mf">45.0</span><span class="n">F</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>No to czas na werdykt, czy nasze logi rzeczywiście poprawiły się dzięki temu zabiegowi?</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:43: Failure
+Value of: resultObject.position
+Expected: position near <span class="o">(</span>expected: 8-byte object &lt;00-00 22-42 CD-CC FC-40&gt;, tolerance: 1e-05<span class="o">)</span>
+  Actual: 8-byte object &lt;66-66 20-42 CD-CC FC-40&gt; <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>, where x diff is 0.400002 and y diff is 0
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>No magiczne oktety wciąż się pojawiają. To dlatego, że tak naprawdę Google Test dalej nie wie w jaki sposób wyświetlić naszą strukturę <strong>Position</strong>. I tutaj wracamy się z powrotem do operatora wstawiania do strumienia: <strong>operator«</strong>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">inline</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">Position</span><span class="o">&amp;</span> <span class="n">position</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"Position{ x: "</span> <span class="o">&lt;&lt;</span> <span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">", y: "</span> <span class="o">&lt;&lt;</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">" }"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Po dodaniu takiego operatora nasze logi z testu wyglądają następująco.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:43: Failure
+Value of: resultObject.position
+Expected: position near <span class="o">(</span>expected: Position<span class="o">{</span> x: 40.5, y: 7.9 <span class="o">}</span>, tolerance: 1e-05<span class="o">)</span>
+  Actual: Position<span class="o">{</span> x: 40.1, y: 7.9 <span class="o">}</span> <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>, where x diff is 0.400002 and y diff is 0
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Teraz można śmiało stwierdzić, że każdy będzie w stanie zrozumieć co dokładnie się wydarzyło i dlaczego test nie przechodzi. I dla porównania logi z testu z użyciem <strong>operator==</strong> zamiast matchera.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
+/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:33: Failure
+Value of: resultObject.position
+Expected: is equal to Position<span class="o">{</span> x: 40.5, y: 7.9 <span class="o">}</span>
+  Actual: Position<span class="o">{</span> x: 40.1, y: 7.9 <span class="o">}</span> <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>To czy należy korzystać z <strong>operator==</strong> czy jednak z matchera to w zasadzie może zależeć od wielu czynników. Oba rozwiązania mają swoje wady i zalety. Tak jak to często w naszym zawodzie bywa, trzeba wybrać to rozwiązanie, które najbardziej pasuje do założeń naszego projektu, dobrych praktyk w naszym zespole, standardów kodzenia w naszej organizacji lub po prostu naszych preferencji :)</p>
+
+<h3 id="kontenery">Kontenery</h3>
+
+<p>Podczas porównywania elementów dowolnego kontenera w C++ przy użyciu Google Test, najczęstszym problemem jest brak informacji, które elementy nie zgadzają się z ich oczekiwaną wartością. Mamy poniższy test.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">OrderProcessorTest</span><span class="p">,</span> <span class="n">getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">OrderProcessor</span> <span class="n">processor</span><span class="p">{};</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">expected</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">};</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">result</span><span class="p">{</span> <span class="n">processor</span><span class="p">.</span><span class="n">getProcessedIds</span><span class="p">({</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="p">})</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A oto wynik z konsoli.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad
+/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:85: Failure
+Expected equality of these values:
+  expected
+    Which is: <span class="o">{</span> 1, 2, 3 <span class="o">}</span>
+  result
+    Which is: <span class="o">{</span> 3, 1, 2 <span class="o">}</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Jak widać w takim przypadku, gdy kontener zawiera niewielką ilość elementów, znalezienie różnicy nie bywa wymagające. Co innego, gdy taki <strong>std::vector</strong> zawiera ich znacznie więcej.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">OrderProcessorTest</span><span class="p">,</span> <span class="n">getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">OrderProcessor</span> <span class="n">processor</span><span class="p">{};</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">expected</span><span class="p">{</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>
+                                     <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span> <span class="p">};</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">result</span><span class="p">{</span> <span class="n">processor</span><span class="p">.</span><span class="n">getProcessedIds</span><span class="p">({</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>
+                                                   <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span> <span class="p">})</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Znalezienie różnicy może być znacznie utrudnione.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad
+/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:88: Failure
+Expected equality of these values:
+  expected
+    Which is: <span class="o">{</span> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 <span class="o">}</span>
+  result
+    Which is: <span class="o">{</span> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 15, 17, 18, 19, 20 <span class="o">}</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Aby poradzić sobie z tym problemem możemy zastosować matchera <strong>Pointwise</strong> w połączeniu z Eq(), oczywiście przy użyciu asercji <strong>EXPECT_THAT</strong> zamiast <strong>EXPECT_EQ</strong>. Tym razem widać znaczącą różnice w możliwościach tych dwóch typów asercji.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">OrderProcessorTest</span><span class="p">,</span> <span class="n">getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">OrderProcessor</span> <span class="n">processor</span><span class="p">{};</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">expected</span><span class="p">{</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>
+                                     <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span> <span class="p">};</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">result</span><span class="p">{</span> <span class="n">processor</span><span class="p">.</span><span class="n">getProcessedIds</span><span class="p">({</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>
+                                                   <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span> <span class="p">})</span> <span class="p">};</span>
+
+    <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">Pointwise</span><span class="p">(</span><span class="n">Eq</span><span class="p">(),</span> <span class="n">expected</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I wynik z konsoli.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Value of: result
+Expected: contains 20 values, where each value and its corresponding value <span class="k">in</span> <span class="o">{</span> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 <span class="o">}</span> are an equal pair
+  Actual: <span class="o">{</span> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 15, 17, 18, 19, 20 <span class="o">}</span>, where the value pair <span class="o">(</span>16, 15<span class="o">)</span> at index <span class="c">#14 don't match</span>
+</code></pre></div></div>
+
+<p>Nie tylko dostajemy numer indeksu niepasujących wartości ale również jakie one są. Jedynym minusem jest fakt, że zostajemy poinformowani tylko o pierwszej niepasującej parze wartości. Innym przypadkiem może być sytuacja, w której porównujemy kontener z elementami typu struktury lub klasy z operatorem porównania za pomocą pętli <strong>for</strong>. Wtedy możemy zastosować ciekawą właściwość makr asercji Google Test i potraktować je jak strumień wyjścia.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Product</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Product</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">id</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">id</span> <span class="n">and</span> <span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">friend</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">Product</span><span class="o">&amp;</span> <span class="n">product</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"Product{ id: "</span> <span class="o">&lt;&lt;</span> <span class="n">product</span><span class="p">.</span><span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">", name: "</span> <span class="o">&lt;&lt;</span> <span class="n">product</span><span class="p">.</span><span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">" }"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Warehouse</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">auto</span> <span class="n">getProducts</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="n">Product</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Keyboard"</span> <span class="p">},</span> <span class="n">Product</span><span class="p">{</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"Gamepad"</span> <span class="p">}</span> <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">WarehouseTest</span><span class="p">,</span> <span class="n">getProducts_WhenInventoryNotEmpty_ReturnsAllItemsWithStreamInfo</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span> <span class="n">expectedItems</span><span class="p">{</span> <span class="n">Product</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Keyboard"</span> <span class="p">},</span> <span class="n">Product</span><span class="p">{</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"Mouse"</span> <span class="p">}</span> <span class="p">};</span>
+    <span class="n">Warehouse</span> <span class="n">warehouse</span><span class="p">{};</span>
+
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">resultItems</span><span class="p">{</span> <span class="n">warehouse</span><span class="p">.</span><span class="n">getProducts</span><span class="p">()</span> <span class="p">};</span>
+
+    <span class="n">ASSERT_THAT</span><span class="p">(</span><span class="n">resultItems</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">Eq</span><span class="p">(</span><span class="n">expectedItems</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">idx</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">resultItems</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">idx</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">resultItems</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">Eq</span><span class="p">(</span><span class="n">expectedItems</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">idx</span><span class="p">)))</span>
+            <span class="o">&lt;&lt;</span> <span class="s">" mismatch at index: "</span> <span class="o">&lt;&lt;</span> <span class="n">idx</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A tak się prezentuje komunikat w konsoli.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> WarehouseTest.getProducts_WhenInventoryNotEmpty_ReturnsAllItemsWithStreamInfo
+/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:131: Failure
+Value of: resultItems.at<span class="o">(</span>idx<span class="o">)</span>
+Expected: is equal to Product<span class="o">{</span> <span class="nb">id</span>: 2, name: Mouse <span class="o">}</span>
+  Actual: Product<span class="o">{</span> <span class="nb">id</span>: 2, name: Gamepad <span class="o">}</span> <span class="o">(</span>of <span class="nb">type </span>Product<span class="o">)</span>
+ mismatch at index: 1
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> WarehouseTest.getProducts_WhenInventoryNotEmpty_ReturnsAllItemsWithStreamInfo <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Dzięki zastosowaniu <strong>operator«</strong>, widzimy co znajduje się w strukturach. Natomiast dzięki dodaniu komunikatu na końcu asercji mamy informację o tym, który element nie pasuje do wartości oczekiwanej.</p>
+
+<h3 id="podsumowanie">Podsumowanie</h3>
+
+<p>Na ten moment to już wszystko ode mnie w temacie poprawy czytelności wyników testów. Jeśli natrafię na inne przypadki, gdzie testy nie są zbyt rozmowne to z pewnością postaram się zaprezentować nowe przykłady i dodam je do tego wpisu. Mam nadzieję, że przedstawiona tutaj treść pomoże Ci pisać nie tylko lepsze i bardziej skuteczne unit testy, ale również bardziej konkretne komunikaty, gdy testy failują. Jeśli masz inne przypadki, gdzie logi wyników testów bywają słabo pomocne opisz problem w komentarzu lub napisz do mnie bezpośrednio! Podziel się również swoją opinią na temat tego wpisu i ogólnie co myślisz o moim blogu. Chętnie dowiem się Twojej opinii! :)</p>
+
+<p><strong>Autor:</strong> Tadeusz Biela<br />
+Programista C++ | Entuzjasta TDD | Fan unit testów</p>
+
+<p><a href="https://www.linkedin.com/in/tadeuszbiela/" target="_blank" rel="noopener">LinkedIn</a></p>]]></content><author><name>Tadeusz Biela</name></author><category term="unit-testing" /><category term="clean code" /><category term="software testing" /><category term="code quality" /><category term="developer practices" /><summary type="html"><![CDATA[Czytelność komunikatów logowanych podczas niepowodzenia unit testów często jest bardzo niskiej jakości. Sam wcześniej nie zwracałem na to zbytniej uwagi. Dziś uważam, że to błąd! Gdy testy świecą się na zielono, to w zasadzie problem nie istnieje. Gdy zaś na czerwono, wtedy zaczynają się schody. Najczęściej po prostu sięgamy od razu do kodu i szukamy przyczyny próbując jednocześnie odczytać “zaszyfrowane” wartości z logów failującego testu. A gdyby tak te logi mogłyby być czytelne nawet dla laika? Z pewnością ułatwiłoby to wszystkim pracę :)]]></summary></entry><entry><title type="html">Największy wróg unit testów - logika.</title><link href="https://cpptested.com/unit-testing/logic-in-uts/" rel="alternate" type="text/html" title="Największy wróg unit testów - logika." /><published>2026-03-23T00:00:00+01:00</published><updated>2026-03-23T00:00:00+01:00</updated><id>https://cpptested.com/unit-testing/logic-in-uts</id><content type="html" xml:base="https://cpptested.com/unit-testing/logic-in-uts/"><![CDATA[<p>Logika, przepływ sterowania, instrukcje warunkowe - to dzięki nim nasze programy mogą spełniać szeregi wymagań i oczekiwań. Dzięki nim możemy rozbudowywać nasz program, rozwijać obecne funkcjonalności oraz dodawać nowe. Każdy programista wie, że bez nich tworzenie oprogramowania nie mogłoby mieć miejsca. Czy zatem nasze unit testy, również powinny zawierać logikę? Zdecydowanie nie, i w tym wpisie wyjaśnię dlaczego, tym razem odpowiedź jest taka klarowna, a nie, jak to nieraz w naszej branży bywa - “to zależy”.</p>
 
 <h3 id="logika-zwiększa-ryzyko-błędu">Logika zwiększa ryzyko błędu</h3>
 

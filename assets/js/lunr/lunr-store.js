@@ -52,4 +52,10 @@ var store = [{
         "tags": ["clean code","software testing","code quality","developer practices"],
         "url": "/unit-testing/logic-in-uts/",
         "teaser": null
+      },{
+        "title": "Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów.",
+        "excerpt":"Czytelność komunikatów logowanych podczas niepowodzenia unit testów często jest bardzo niskiej jakości. Sam wcześniej nie zwracałem na to zbytniej uwagi. Dziś uważam, że to błąd! Gdy testy świecą się na zielono, to w zasadzie problem nie istnieje. Gdy zaś na czerwono, wtedy zaczynają się schody. Najczęściej po prostu sięgamy od razu do kodu i szukamy...","categories": ["unit-testing"],
+        "tags": ["clean code","software testing","code quality","developer practices"],
+        "url": "/unit-testing/uts-logging-improvements/",
+        "teaser": null
       }]
