@@ -33,7 +33,7 @@ A oto wynik naszego unit testu:
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:34: Failure
+
 Expected equality of these values:
   expectedType
     Which is: 4-byte object <01-00 00-00>
@@ -47,7 +47,7 @@ No cóż możemy sobie sprawdzić co oznacza 1 i&nbsp;0, niemniej przyznać trze
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:35: Failure
+
 Value of: resultObject.type
 Expected: is equal to 4-byte object <01-00 00-00>
   Actual: 4-byte object <00-00 00-00> (of type SceneItemType)
@@ -80,7 +80,7 @@ Taki zabieg pozwala Google Test użyć go w&nbsp;swoich asercjach. Gdy&nbsp;aser
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:35: Failure
+
 Value of: resultObject.type
 Expected: is equal to WEAPON
   Actual: PLAYER (of type SceneItemType)
@@ -170,7 +170,7 @@ Choć zdecydowanie, dodanie operatora pomaga w&nbsp;ograniczaniu rozmiaru naszeg
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:33: Failure
+
 Value of: resultObject.position
 Expected: is equal to 8-byte object <00-00 22-42 CD-CC FC-40>
   Actual: 8-byte object <66-66 20-42 CD-CC FC-40> (of type Position)
@@ -212,7 +212,7 @@ No to czas na werdykt, czy&nbsp;nasze logi rzeczywiście poprawiły się dzięki
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:43: Failure
+
 Value of: resultObject.position
 Expected: position near (expected: 8-byte object <00-00 22-42 CD-CC FC-40>, tolerance: 1e-05)
   Actual: 8-byte object <66-66 20-42 CD-CC FC-40> (of type Position), where x diff is 0.400002 and y diff is 0
@@ -233,7 +233,7 @@ Po dodaniu takiego operatora nasze logi z&nbsp;testu wyglądają następująco.
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:43: Failure
+
 Value of: resultObject.position
 Expected: position near (expected: Position{ x: 40.5, y: 7.9 }, tolerance: 1e-05)
   Actual: Position{ x: 40.1, y: 7.9 } (of type Position), where x diff is 0.400002 and y diff is 0
@@ -245,7 +245,7 @@ Teraz można śmiało stwierdzić, że&nbsp;każdy będzie w&nbsp;stanie zrozumi
 
 ```bash
 [ RUN      ] SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:33: Failure
+
 Value of: resultObject.position
 Expected: is equal to Position{ x: 40.5, y: 7.9 }
   Actual: Position{ x: 40.1, y: 7.9 } (of type Position)
@@ -275,7 +275,7 @@ A oto wynik z&nbsp;konsoli.
 
 ```bash
 [ RUN      ] OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad
-/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:85: Failure
+
 Expected equality of these values:
   expected
     Which is: { 1, 2, 3 }
@@ -305,7 +305,7 @@ Znalezienie różnicy może być znacznie utrudnione.
 
 ```bash
 [ RUN      ] OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad
-/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:88: Failure
+
 Expected equality of these values:
   expected
     Which is: { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }
@@ -387,7 +387,7 @@ A tak się prezentuje komunikat w&nbsp;konsoli.
 
 ```bash
 [ RUN      ] WarehouseTest.getProducts_WhenInventoryNotEmpty_ReturnsAllItemsWithStreamInfo
-/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:131: Failure
+
 Value of: resultItems.at(idx)
 Expected: is equal to Product{ id: 2, name: Mouse }
   Actual: Product{ id: 2, name: Gamepad } (of type Product)
@@ -397,6 +397,101 @@ Expected: is equal to Product{ id: 2, name: Mouse }
 ```
 
 Dzięki zastosowaniu **operator<<**, widzimy co znajduje się w&nbsp;strukturach. Natomiast dzięki dodaniu komunikatu na końcu asercji mamy informację o&nbsp;tym, który element nie pasuje do wartości oczekiwanej.
+
+### Komunikaty wyjątków
+
+Okazuje się, że&nbsp;matchery nie zawsze są idealnym rozwiązaniem i choć kod testu wygląda elegancko to jest to okupione bardzo słabym komunikatem w przypadku niepowodzenia naszego unit testu. Na&nbsp;taką sytuację możemy natrafić, gdy&nbsp;zależy nam na zweryfikowaniu, nie&nbsp;tylko czy i jaki wyjątek powinna rzucać testowana metoda, ale&nbsp;również chcemy mieć pewność, że&nbsp;niesiony przez wyjątek komunikat zawiera konkretną treść. Ważne w przypadkach, gdy&nbsp;testowana metoda może rzucić wiele wyjątków tego samego typu, ale&nbsp;z&nbsp;różnych powodów. By&nbsp;to zweryfikować musimy sprawdzić jaki komunikat o błędzie dany wyjątek ma w sobie.
+
+Przyjrzyjmy się najpierw temu jakże pięknemu testowi! Jego kod jest przejrzysty, matcher jasno określa co jest sprawdzane i jaki komunikat jest oczekiwany.
+
+```cpp
+TEST_F(LevelLoaderTests, load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage)
+{
+    const std::string expectedMessage{ "Level data cannot be empty" };
+    const std::string emptyLevelData{ "" };
+    const LevelLoader loader{};
+
+    EXPECT_THAT(
+        [&]()
+        {
+            loader.load(emptyLevelData);
+        },
+        testing::ThrowsMessage<std::runtime_error>(testing::StrEq(expectedMessage))
+    );
+}
+```
+
+Widać tutaj, że&nbsp;bloki **Act** i **Assert** są połączone, nie&nbsp;jest możliwe oddzielić asercji od wykonania metody jeśli oczekiwanym wynikiem ma być rzucenie wyjątku. A&nbsp;teraz druga wersja tego testu. Tym&nbsp;razem matcher też ma tutaj swoje zastosowanie ale już w mniejszym zakresie.
+
+```cpp
+TEST_F(LevelLoaderTests, load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage)
+{
+    const std::string expectedMessage{ "Level data cannot be empty" };
+    const std::string emptyLevelData{ "" };
+    const LevelLoader loader{};
+
+    try
+    {
+        loader.load(emptyLevelData);
+        FAIL() << " LevelLoader::load() should throw std::runtime_error when level data is empty.";
+    }
+    catch (const std::runtime_error& ex)
+    {
+        EXPECT_THAT(std::string{ ex.what() }, StrEq(expectedMessage));
+    }
+}
+```
+
+Na pierwszy rzut oka, gdy&nbsp;je porównamy to pierwsza wersja wydaje się lepsza i sam bym ją pewnie wybrał oraz zatwierdził w code review, ale&nbsp;najpierw sprawdźmy jakie komunikaty generują oba testy, gdy&nbsp;nasza testowana metoda rzuci, wprawdzie wyjątek ale z innym komunikatem.
+
+Oto wyjście z pierwszej wersji testu:
+
+```bash
+[ RUN      ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Value of: [&]() { loader.load(emptyLevelData); }
+Expected: throws an exception which is a std::runtime_error which contains .what() that is equal to "Level data cannot be empty"
+  Actual: 8-byte object <AB-F9 BC-03 AC-F9 BC-03>, throws an exception which is a std::runtime_error which contains .what() (of value = Corrupted level header) that
+
+[  FAILED  ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage (34 ms)
+```
+
+A to z drugiej wersji:
+
+```bash
+[ RUN      ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Value of: std::string{ ex.what() }
+Expected: is equal to "Level data cannot be empty"
+  Actual: "Corrupted level header"
+
+[  FAILED  ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage (33 ms)
+```
+
+I co tu zrobić? No&nbsp;nie wiem jak dla Ciebie, ale&nbsp;dla mnie ten drugi jest bardziej czytelny. Pozostałe wnioski pozostawiam Tobie :)
+
+A na koniec jeszcze logi, gdy&nbsp; wyjątek w ogóle nie zostanie rzucony:
+
+```bash
+[ RUN      ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Value of: [&]() { loader.load(emptyLevelData); }
+Expected: throws an exception which is a std::runtime_error which contains .what() that is equal to "Level data cannot be empty"
+  Actual: 8-byte object <AB-F9 BE-03 AC-F9 BE-03>, does not throw any exception
+
+[  FAILED  ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage (29 ms)
+```
+
+I z drugiej wersji:
+
+```bash
+[ RUN      ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Failed
+ LevelLoader::load() should throw std::runtime_error when level data is empty.
+
+[  FAILED  ] LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage (11 ms)
+```
 
 ### Podsumowanie
 
