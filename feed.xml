@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-04-20T22:28:35+02:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów.</title><link href="https://cpptested.com/unit-testing/uts-logging-improvements/" rel="alternate" type="text/html" title="Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów." /><published>2026-04-19T00:00:00+02:00</published><updated>2026-04-19T00:00:00+02:00</updated><id>https://cpptested.com/unit-testing/uts-logging-improvements</id><content type="html" xml:base="https://cpptested.com/unit-testing/uts-logging-improvements/"><![CDATA[<p>Czytelność komunikatów logowanych podczas niepowodzenia unit testów często jest bardzo niskiej jakości. Sam wcześniej nie zwracałem na to zbytniej uwagi. Dziś uważam, że to błąd! Gdy testy świecą się na zielono, to w zasadzie problem nie istnieje. Gdy zaś na czerwono, wtedy zaczynają się schody. Najczęściej po prostu sięgamy od razu do kodu i szukamy przyczyny próbując jednocześnie odczytać “zaszyfrowane” wartości z logów failującego testu. A gdyby tak te logi mogłyby być czytelne nawet dla laika? Z pewnością ułatwiłoby to wszystkim pracę :)</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://cpptested.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://cpptested.com/" rel="alternate" type="text/html" /><updated>2026-05-28T08:20:36+02:00</updated><id>https://cpptested.com/feed.xml</id><title type="html">CppTested</title><subtitle>Blog o TDD, unit testach, nowoczesnym C++ i wielowątkowości. Jak pisać lepszy, bezpieczniejszy i bardziej przewidywalny kod.</subtitle><author><name>Tadeusz Biela</name></author><entry><title type="html">Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów.</title><link href="https://cpptested.com/unit-testing/uts-logging-improvements/" rel="alternate" type="text/html" title="Twoje unit testy przemówią! Czyli jak poprawić komunikaty testów." /><published>2026-04-19T00:00:00+02:00</published><updated>2026-04-19T00:00:00+02:00</updated><id>https://cpptested.com/unit-testing/uts-logging-improvements</id><content type="html" xml:base="https://cpptested.com/unit-testing/uts-logging-improvements/"><![CDATA[<p>Czytelność komunikatów logowanych podczas niepowodzenia unit testów często jest bardzo niskiej jakości. Sam wcześniej nie zwracałem na to zbytniej uwagi. Dziś uważam, że to błąd! Gdy testy świecą się na zielono, to w zasadzie problem nie istnieje. Gdy zaś na czerwono, wtedy zaczynają się schody. Najczęściej po prostu sięgamy od razu do kodu i szukamy przyczyny próbując jednocześnie odczytać “zaszyfrowane” wartości z logów failującego testu. A gdyby tak te logi mogłyby być czytelne nawet dla laika? Z pewnością ułatwiłoby to wszystkim pracę :)</p>
 
 <h3 id="enum-jak-enigma">Enum jak enigma</h3>
 
@@ -18,7 +18,7 @@
 <p>A oto wynik naszego unit testu:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:34: Failure
+
 Expected equality of these values:
   expectedType
     Which is: 4-byte object &lt;01-00 00-00&gt;
@@ -31,7 +31,7 @@ Expected equality of these values:
 <p>No cóż możemy sobie sprawdzić co oznacza 1 i 0, niemniej przyznać trzeba, że średnio ten komunikat jest czytelny. Musimy sięgnąć do kodu i to sprawdzić. Spróbujmy zmienić rodzaj asercji na <strong>EXPECT_THAT</strong>. Oto wynik:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:35: Failure
+
 Value of: resultObject.type
 Expected: is equal to 4-byte object &lt;01-00 00-00&gt;
   Actual: 4-byte object &lt;00-00 00-00&gt; <span class="o">(</span>of <span class="nb">type </span>SceneItemType<span class="o">)</span>
@@ -62,7 +62,7 @@ Expected: is equal to 4-byte object &lt;01-00 00-00&gt;
 <p>Taki zabieg pozwala Google Test użyć go w swoich asercjach. Gdy asercja nie przechodzi, GTest przeszukuje naszą bazę kodu w poszukiwaniu narzędzi umożliwiających wypisanie wartości parametrów asercji w formie tekstowej. Jeśli zdefiniujemy dla porównywanego typu, asercje Google Test użyje jej do budowy swoich logów.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:35: Failure
+
 Value of: resultObject.type
 Expected: is equal to WEAPON
   Actual: PLAYER <span class="o">(</span>of <span class="nb">type </span>SceneItemType<span class="o">)</span>
@@ -147,7 +147,7 @@ Expected: is equal to WEAPON
 <p>Choć zdecydowanie, dodanie operatora pomaga w ograniczaniu rozmiaru naszego unit testu, to nie chroni on od pojawiających się oktetów, gdy asercja się nie powiedzie.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:33: Failure
+
 Value of: resultObject.position
 Expected: is equal to 8-byte object &lt;00-00 22-42 CD-CC FC-40&gt;
   Actual: 8-byte object &lt;66-66 20-42 CD-CC FC-40&gt; <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>
@@ -186,7 +186,7 @@ Expected: is equal to 8-byte object &lt;00-00 22-42 CD-CC FC-40&gt;
 <p>No to czas na werdykt, czy nasze logi rzeczywiście poprawiły się dzięki temu zabiegowi?</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:43: Failure
+
 Value of: resultObject.position
 Expected: position near <span class="o">(</span>expected: 8-byte object &lt;00-00 22-42 CD-CC FC-40&gt;, tolerance: 1e-05<span class="o">)</span>
   Actual: 8-byte object &lt;66-66 20-42 CD-CC FC-40&gt; <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>, where x diff is 0.400002 and y diff is 0
@@ -205,7 +205,7 @@ Expected: position near <span class="o">(</span>expected: 8-byte object &lt;00-0
 <p>Po dodaniu takiego operatora nasze logi z testu wyglądają następująco.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:43: Failure
+
 Value of: resultObject.position
 Expected: position near <span class="o">(</span>expected: Position<span class="o">{</span> x: 40.5, y: 7.9 <span class="o">}</span>, tolerance: 1e-05<span class="o">)</span>
   Actual: Position<span class="o">{</span> x: 40.1, y: 7.9 <span class="o">}</span> <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>, where x diff is 0.400002 and y diff is 0
@@ -216,7 +216,7 @@ Expected: position near <span class="o">(</span>expected: Position<span class="o
 <p>Teraz można śmiało stwierdzić, że każdy będzie w stanie zrozumieć co dokładnie się wydarzyło i dlaczego test nie przechodzi. I dla porównania logi z testu z użyciem <strong>operator==</strong> zamiast matchera.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> SceneItemFactoryTests.create_OneObject_ReturnCorrectSceneItem
-/usr/src/heisttown/src/Scene/Tests/SceneItemFactoryTests.cpp:33: Failure
+
 Value of: resultObject.position
 Expected: is equal to Position<span class="o">{</span> x: 40.5, y: 7.9 <span class="o">}</span>
   Actual: Position<span class="o">{</span> x: 40.1, y: 7.9 <span class="o">}</span> <span class="o">(</span>of <span class="nb">type </span>Position<span class="o">)</span>
@@ -244,7 +244,7 @@ Expected: is equal to Position<span class="o">{</span> x: 40.5, y: 7.9 <span cla
 <p>A oto wynik z konsoli.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad
-/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:85: Failure
+
 Expected equality of these values:
   expected
     Which is: <span class="o">{</span> 1, 2, 3 <span class="o">}</span>
@@ -272,7 +272,7 @@ Expected equality of these values:
 <p>Znalezienie różnicy może być znacznie utrudnione.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> OrderProcessorTest.getProcessedIds_UnsortedIds_ReturnsSortedVector_Bad
-/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:88: Failure
+
 Expected equality of these values:
   expected
     Which is: <span class="o">{</span> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 <span class="o">}</span>
@@ -350,7 +350,7 @@ Expected: contains 20 values, where each value and its corresponding value <span
 <p>A tak się prezentuje komunikat w konsoli.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> WarehouseTest.getProducts_WhenInventoryNotEmpty_ReturnsAllItemsWithStreamInfo
-/var/fpwork/tbiela/alps/testing/src/ut/vetControl/TiltCalculusTest.cpp:131: Failure
+
 Value of: resultItems.at<span class="o">(</span>idx<span class="o">)</span>
 Expected: is equal to Product<span class="o">{</span> <span class="nb">id</span>: 2, name: Mouse <span class="o">}</span>
   Actual: Product<span class="o">{</span> <span class="nb">id</span>: 2, name: Gamepad <span class="o">}</span> <span class="o">(</span>of <span class="nb">type </span>Product<span class="o">)</span>
@@ -360,6 +360,95 @@ Expected: is equal to Product<span class="o">{</span> <span class="nb">id</span>
 </code></pre></div></div>
 
 <p>Dzięki zastosowaniu <strong>operator«</strong>, widzimy co znajduje się w strukturach. Natomiast dzięki dodaniu komunikatu na końcu asercji mamy informację o tym, który element nie pasuje do wartości oczekiwanej.</p>
+
+<h3 id="komunikaty-wyjątków">Komunikaty wyjątków</h3>
+
+<p>Okazuje się, że matchery nie zawsze są idealnym rozwiązaniem i choć kod testu wygląda elegancko to jest to okupione bardzo słabym komunikatem w przypadku niepowodzenia naszego unit testu. Na taką sytuację możemy natrafić, gdy zależy nam na zweryfikowaniu, nie tylko czy i jaki wyjątek powinna rzucać testowana metoda, ale również chcemy mieć pewność, że niesiony przez wyjątek komunikat zawiera konkretną treść. Ważne w przypadkach, gdy testowana metoda może rzucić wiele wyjątków tego samego typu, ale z różnych powodów. By to zweryfikować musimy sprawdzić jaki komunikat o błędzie dany wyjątek ma w sobie.</p>
+
+<p>Przyjrzyjmy się najpierw temu jakże pięknemu testowi! Jego kod jest przejrzysty, matcher jasno określa co jest sprawdzane i jaki komunikat jest oczekiwany.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">LevelLoaderTests</span><span class="p">,</span> <span class="n">load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">expectedMessage</span><span class="p">{</span> <span class="s">"Level data cannot be empty"</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">emptyLevelData</span><span class="p">{</span> <span class="s">""</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="n">LevelLoader</span> <span class="n">loader</span><span class="p">{};</span>
+
+    <span class="n">EXPECT_THAT</span><span class="p">(</span>
+        <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span>
+        <span class="p">{</span>
+            <span class="n">loader</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">emptyLevelData</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="n">testing</span><span class="o">::</span><span class="n">ThrowsMessage</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&gt;</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">StrEq</span><span class="p">(</span><span class="n">expectedMessage</span><span class="p">))</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Widać tutaj, że bloki <strong>Act</strong> i <strong>Assert</strong> są połączone, nie jest możliwe oddzielić asercji od wykonania metody jeśli oczekiwanym wynikiem ma być rzucenie wyjątku. A teraz druga wersja tego testu. Tym razem matcher też ma tutaj swoje zastosowanie ale już w mniejszym zakresie.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST_F</span><span class="p">(</span><span class="n">LevelLoaderTests</span><span class="p">,</span> <span class="n">load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">expectedMessage</span><span class="p">{</span> <span class="s">"Level data cannot be empty"</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">emptyLevelData</span><span class="p">{</span> <span class="s">""</span> <span class="p">};</span>
+    <span class="k">const</span> <span class="n">LevelLoader</span> <span class="n">loader</span><span class="p">{};</span>
+
+    <span class="k">try</span>
+    <span class="p">{</span>
+        <span class="n">loader</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">emptyLevelData</span><span class="p">);</span>
+        <span class="n">FAIL</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" LevelLoader::load() should throw std::runtime_error when level data is empty."</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">EXPECT_THAT</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">{</span> <span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">()</span> <span class="p">},</span> <span class="n">StrEq</span><span class="p">(</span><span class="n">expectedMessage</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Na pierwszy rzut oka, gdy je porównamy to pierwsza wersja wydaje się lepsza i sam bym ją pewnie wybrał oraz zatwierdził w code review, ale najpierw sprawdźmy jakie komunikaty generują oba testy, gdy nasza testowana metoda rzuci, wprawdzie wyjątek ale z innym komunikatem.</p>
+
+<p>Oto wyjście z pierwszej wersji testu:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Value of: <span class="o">[</span>&amp;]<span class="o">()</span> <span class="o">{</span> loader.load<span class="o">(</span>emptyLevelData<span class="o">)</span><span class="p">;</span> <span class="o">}</span>
+Expected: throws an exception which is a std::runtime_error which contains .what<span class="o">()</span> that is equal to <span class="s2">"Level data cannot be empty"</span>
+  Actual: 8-byte object &lt;AB-F9 BC-03 AC-F9 BC-03&gt;, throws an exception which is a std::runtime_error which contains .what<span class="o">()</span> <span class="o">(</span>of value <span class="o">=</span> Corrupted level header<span class="o">)</span> that
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage <span class="o">(</span>34 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>A to z drugiej wersji:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Value of: std::string<span class="o">{</span> ex.what<span class="o">()</span> <span class="o">}</span>
+Expected: is equal to <span class="s2">"Level data cannot be empty"</span>
+  Actual: <span class="s2">"Corrupted level header"</span>
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage <span class="o">(</span>33 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>I co tu zrobić? No nie wiem jak dla Ciebie, ale dla mnie ten drugi jest bardziej czytelny. Pozostałe wnioski pozostawiam Tobie :)</p>
+
+<p>A na koniec jeszcze logi, gd  wyjątek w ogóle nie zostanie rzucony:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Value of: <span class="o">[</span>&amp;]<span class="o">()</span> <span class="o">{</span> loader.load<span class="o">(</span>emptyLevelData<span class="o">)</span><span class="p">;</span> <span class="o">}</span>
+Expected: throws an exception which is a std::runtime_error which contains .what<span class="o">()</span> that is equal to <span class="s2">"Level data cannot be empty"</span>
+  Actual: 8-byte object &lt;AB-F9 BE-03 AC-F9 BE-03&gt;, does not throw any exception
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage <span class="o">(</span>29 ms<span class="o">)</span>
+</code></pre></div></div>
+
+<p>I z drugiej wersji:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span> RUN      <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage
+
+Failed
+ LevelLoader::load<span class="o">()</span> should throw std::runtime_error when level data is empty.
+
+<span class="o">[</span>  FAILED  <span class="o">]</span> LevelLoaderTests.load_EmptyLevelData_ThrowsRuntimeErrorWithEmptyLevelDataMessage <span class="o">(</span>11 ms<span class="o">)</span>
+</code></pre></div></div>
 
 <h3 id="podsumowanie">Podsumowanie</h3>
 
