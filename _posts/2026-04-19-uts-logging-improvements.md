@@ -58,7 +58,7 @@ Expected: is equal to 4-byte object <01-00 00-00>
 Jest trochę lepiej, już&nbsp;teraz wiemy przynajmniej jakiego typu są wartości: **(of type SceneItemType)**. Niemniej wciąż ten log niewiele pomaga. Co&nbsp;możemy zrobić? Dodać **operator<<** ! Operator ten należy zdefiniować w&nbsp;tym samym pliku, w&nbsp;którym znajduje się nasz **enum**.
 
 ```cpp
-inline auto operator<<(std::ostream* os, const SceneItemType& type) -> std::ostream&
+inline auto operator<<(std::ostream& os, const SceneItemType& type) -> std::ostream&
 {
     std::string typeStr{};
     switch(type)
@@ -144,9 +144,6 @@ struct Position
         return std::abs(x - other.x) < eps and 
                std::abs(y - other.y) < eps;
     }
-
-    // W C++20 wystarczy to, by działało EXPECT_THAT
-    auto operator==(const Position&) const -> bool = default
 };
 ```
 
