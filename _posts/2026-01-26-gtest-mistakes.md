@@ -51,7 +51,7 @@ Oczywiście jest ich znacznie więcej.
 Są dwa powody dlaczego warto najpierw podawać wartość oczekiwaną, a&nbsp;potem wynikową.
 
 1. Czytelność - przeglądając test, czytamy linijkę od lewej do prawej. Gdy&nbsp;wartością oczekiwaną jest po prostu stałą liczbową lub tekstową, szybciej dowiemy się co jest oczekiwane względem testowanej metody.
-2. Spójność z&nbsp;warunkami w&nbsp;kodzie - znasz ten ból, gdy&nbsp;w&nbsp;**if** zamiast użyć operatora porównania **==**, użyłeś operator przypisania **=**? Ja tak, dlatego warto najpierw wartość oczekiwaną podawać jako pierwszą. Jeśli jest to stała, kompilator szybko poinformuje nas o&nbsp;pomyłce.
+2. Spójność z&nbsp;warunkami w&nbsp;kodzie - znasz ten ból, gdy&nbsp;w&nbsp;**if** zamiast operatora porównania **==** użyłeś operatora przypisania **=**? Ja&nbsp;tak. W&nbsp;warunkach pomaga konwencja "stała po lewej stronie" - zapis `5 = i` się nie skompiluje, więc kompilator od&nbsp;razu złapie pomyłkę. W&nbsp;przypadku asercji kompilator nie będzie na nas krzyczał (to argumenty makra, nie wyrażenie z&nbsp;`==`), ale&nbsp;jeśli taka konwencja jest obecna w&nbsp;Twoim projekcie, warto zachować ten sam porządek również w&nbsp;asercjach - dla spójności.
 
 ```cpp
 
